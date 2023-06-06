@@ -2,10 +2,14 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const db = require("../models");
+const db = require("./models");
+const { Server } = require("http");
+const { authRouters } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
+
 const app = express();
+
 app.use(
   cors({
     origin: [
@@ -18,6 +22,7 @@ app.use(
 app.use(express.json());
 
 //#region API ROUTES
+app.use("/auth", authRouters);
 
 // ===========================
 // NOTE : Add your routes here
