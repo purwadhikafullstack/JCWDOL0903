@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    phone_num: DataTypes.INTEGER,
+    phone_num: DataTypes.STRING,
     gender: DataTypes.ENUM("Pria", "Wanita"),
     birthdate: DataTypes.DATE,
     profile_picture: DataTypes.STRING,
@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    timestamps: false,
   });
   return User;
 };
