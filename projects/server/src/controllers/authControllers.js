@@ -1,23 +1,61 @@
 const db = require("../models");
+const nanoid = require('nanoid')
+const user = db.User;
 
 module.exports = {
-  register: async (req, res) => {
+  login: async (req, res) => {
     try {
-      const { name, email, password, password_confirmation, phone_number } =
-        req.body;
+      const { username, password } = req.body;
 
-      if (!name || !email || !password || !phone_number)
-        throw "Please complete your data";
+      if (!username)
+        throw {
+          message: "Please insert username",
+        };
+      if (!password)
+        throw {
+          message: "Please insert password",
+        };
 
-      if (password !== password_confirmation) throw "Password does not match";
+      const userExist = await user.findOne({
+        where: {
+          username,
+        },
+      });
+
+      if (!userExist)
+        throw {
+          message: "User not found",
+        };
+
+      // console.log(userExist);
+
+      // const isvalid = await bcrypt.compare(password, userExist.password);
+
+      // if (!isvalid)
+      //   throw {
+      //     message: "Incorrect password",
+      //   };
+
+      // const storeExist = await user_store.findOne({
+      //   where: {
+      //     user_id: userExist.id,
+      //   },
+      // });
+
+      const payload = { id: userExist.id };
+      const token = jwt.sign(payload, process.env.TOKEN_KEY, {
+        expiresIn: "1h",
+      });
+
+      res.status(200).send({
+        message: "Login Success",
+        user: userExist,
+        store: storeExist,
+        token,
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);
     }
-  },
-
-  login: async (req, res) => {
-    try {
-    } catch (err) {}
-  },
+  }
 };

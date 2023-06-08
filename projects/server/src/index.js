@@ -4,7 +4,7 @@ const cors = require("cors");
 const { join } = require("path");
 const db = require("./models");
 const { Server } = require("http");
-const { authRouters } = require("./routers");
+// const { authRouters } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
 
@@ -22,7 +22,7 @@ app.use(
 app.use(express.json());
 
 //#region API ROUTES
-app.use("/auth", authRouters);
+// app.use("/auth", authRouters);
 
 // ===========================
 // NOTE : Add your routes here
@@ -36,6 +36,9 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+
+const { profillingRouter } = require("./routers")
+app.use("/profile", profillingRouter)
 
 // ===========================
 
@@ -70,6 +73,8 @@ app.get("*", (req, res) => {
 });
 
 //#endregion
+
+
 
 app.listen(PORT, (err) => {
   if (err) {

@@ -3,6 +3,9 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 import Navbar from "./components/navbar/navbar"
+import Carousel from "./components/carousel/carousel"
+import FrontPage from "./components/navbar/FrontPage"
+import Landing from "./components/pages/landingPage"
 
 function App() {
   const [message, setMessage] = useState("");
@@ -17,7 +20,7 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <Navbar />
+      <Landing />
     </div>
   );
 }
