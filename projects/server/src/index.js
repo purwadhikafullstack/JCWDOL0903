@@ -2,7 +2,8 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
-const db = require("../models");
+const db = require("./models");
+const { productRouter, categoryRouter } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -32,6 +33,10 @@ app.get("/api/greetings", (req, res, next) => {
   });
 });
 
+app.use("/products", productRouter);
+app.use("/category", categoryRouter);
+
+app.use("/static", express.static(join(__dirname, "..", "public")));
 // ===========================
 
 // not found
@@ -56,13 +61,13 @@ app.use((err, req, res, next) => {
 //#endregion
 
 //#region CLIENT
-const clientPath = "../../client/build";
-app.use(express.static(join(__dirname, clientPath)));
+// const clientPath = "../../client/build";
+// app.use(express.static(join(__dirname, clientPath)));
 
-// Serve the HTML page
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, clientPath, "index.html"));
-});
+// // Serve the HTML page
+// app.get("*", (req, res) => {
+//   res.sendFile(join(__dirname, clientPath, "index.html"));
+// });
 
 //#endregion
 
