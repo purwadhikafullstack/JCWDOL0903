@@ -3,10 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("./models");
-const { productRouter, categoryRouter } = require("./routers");
+const {
+  productRouter,
+  categoryRouter,
+  profillingRouter,
+} = require("./routers");
 
 const PORT = process.env.PORT || 8000;
+
 const app = express();
+
 app.use(
   cors({
     origin: [
@@ -19,6 +25,7 @@ app.use(
 app.use(express.json());
 
 //#region API ROUTES
+// app.use("/auth", authRouters);
 
 // ===========================
 // NOTE : Add your routes here
@@ -35,8 +42,10 @@ app.get("/api/greetings", (req, res, next) => {
 
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
+app.use("/profile", profillingRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
+
 // ===========================
 
 // not found
@@ -75,7 +84,7 @@ app.listen(PORT, (err) => {
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
-    // db.sequelize.sync({ alter: true });
+    // db.sequelize.sync({ alter: true })
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
