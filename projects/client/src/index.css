@@ -29,3 +29,9 @@
     @apply relative z-10 inline-flex items-center border border-red-500 bg-red-50 text-sm font-medium text-red-600 focus:z-20;
   }
 }
+
+@layer utillities {
+  .container-screen {
+    @apply mx-auto w-[80%] max-w-screen-xl;
+  }
+}

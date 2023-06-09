@@ -1,6 +1,6 @@
 /*
   This example requires some changes to your config:
-  
+
   ```
   // tailwind.config.js
   module.exports = {
@@ -12,24 +12,42 @@
   }
   ```
 */
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, BellIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
-import LogoWhite from './logoFull.png'
+import { Fragment } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  ShoppingCartIcon,
+} from "@heroicons/react/24/outline";
+import LogoWhite from "./logoFull.png";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const searchFilter = e.target.search.value;
+    if (searchFilter) {
+      navigate({
+        pathname: "/products",
+        search: `?q=${searchFilter}`,
+      });
+    }
+  }
   return (
     <Disclosure as="nav" className="bg-gray-100">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-1">
+          <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="flex items-center px-2 lg:px-0">
+              <Link to="/" className="flex items-center px-2 lg:px-0">
                 <div className="flex-shrink-0">
                   <img
                     className="block h-8 w-auto lg:hidden"
@@ -38,11 +56,11 @@ export default function Navbar() {
                   />
                   <img
                     className="hidden h-8 w-auto lg:block"
-                    src= {LogoWhite}
+                    src={LogoWhite}
                     alt="Company"
                   />
-                </div>               
-              </div>
+                </div>
+              </Link>
 
               <div className="flex  flex-1 px-7">
                 <div className="w-full max-w-xl lg:max-w-2xl">
@@ -51,15 +69,21 @@ export default function Navbar() {
                   </label>
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <MagnifyingGlassIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
                     </div>
-                    <input
-                      id="search"
-                      name="search"
-                      className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 focus:border-white focus:bg-white focus:text-gray-900 focus:outline-none focus:ring-white sm:text-sm"
-                      placeholder="Search"
-                      type="search"
-                    />
+                    <form onSubmit={handleSubmit}>
+                      <input
+                        id="search"
+                        name="search"
+                        className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 focus:border-white focus:bg-white focus:text-gray-900 focus:outline-none focus:ring-white sm:text-sm"
+                        placeholder="Search"
+                        type="search"
+                      />
+                      <input type="submit" hidden />
+                    </form>
                   </div>
                 </div>
               </div>
@@ -75,7 +99,7 @@ export default function Navbar() {
                   )}
                 </Disclosure.Button>
               </div>
-              
+
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex flex-auto items-center">
                   <button
@@ -83,7 +107,10 @@ export default function Navbar() {
                     className="flex-shrink-0 rounded-full bg-gray-100 p-1 text-grey-400 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="sr-only">View notifications</span>
-                    <ShoppingCartIcon className="h-6 w-6 mr-5" aria-hidden="true" />
+                    <ShoppingCartIcon
+                      className="h-6 w-6 mr-5"
+                      aria-hidden="true"
+                    />
                   </button>
 
                   <button
@@ -99,8 +126,6 @@ export default function Navbar() {
                   >
                     Register
                   </button>
-
-                  
 
                   {/* Profile dropdown */}
                   {/* <Menu as="div" className="relative ml-4 flex-shrink-0">
@@ -213,8 +238,12 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-white">Tom Cook</div>
-                  <div className="text-sm font-medium text-gray-400">tom@example.com</div>
+                  <div className="text-base font-medium text-white">
+                    Tom Cook
+                  </div>
+                  <div className="text-sm font-medium text-gray-400">
+                    tom@example.com
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -252,5 +281,5 @@ export default function Navbar() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }

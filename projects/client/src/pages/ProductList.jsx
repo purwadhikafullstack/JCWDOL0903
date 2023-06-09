@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
@@ -18,6 +19,9 @@ const sortOptions = [
 ];
 
 function ProductList() {
+  let [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("q");
+
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
@@ -31,10 +35,11 @@ function ProductList() {
 
   useEffect(() => {
     let query = `page=${currentPage}`;
+    if (searchQuery) query += `&q=${searchQuery}`;
     if (sortFilter) query += `&sort=${sortFilter}`;
     if (categoryFilter) query += `&categoryId=${categoryFilter}`;
     dispatch(fetchProducts(query));
-  }, [dispatch, sortFilter, categoryFilter, currentPage]);
+  }, [dispatch, sortFilter, categoryFilter, currentPage, searchQuery]);
 
   const categoryOptions = [{ value: "", label: "None" }];
   categoriesGlobal.forEach((category) => {
@@ -42,7 +47,7 @@ function ProductList() {
   });
 
   return (
-    <>
+    <div className="container-screen">
       <Filter>
         <FilterDropdown
           label="Sort"
@@ -65,7 +70,7 @@ function ProductList() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
-    </>
+    </div>
   );
 }
 
