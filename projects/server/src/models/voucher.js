@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Voucher extends Model {
     /**
@@ -12,18 +10,27 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Voucher.belongsTo(models.Products, {
-        foreignKey: "product_id"
-      })
+        foreignKey: "product_id",
+      });
     }
   }
-  Voucher.init({
-    voucher_type: DataTypes.ENUM("Produk", "Total Produk", "Gratis Ongkir", "Kode Referal"),
-    product_id: DataTypes.INTEGER,
-    amount: DataTypes.INTEGER,
-    percentage: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Voucher',
-  });
+  Voucher.init(
+    {
+      voucher_type: DataTypes.ENUM(
+        "Produk",
+        "Total Produk",
+        "Gratis Ongkir",
+        "Kode Referal"
+      ),
+      product_id: DataTypes.INTEGER,
+      amount: DataTypes.INTEGER,
+      percentage: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "Voucher",
+      paranoid: true,
+    }
+  );
   return Voucher;
 };

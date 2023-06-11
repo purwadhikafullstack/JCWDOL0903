@@ -28,7 +28,7 @@ async function getProducts(req, res) {
     const deletedClause = isDeleted ? { is_deleted: isDeleted } : {};
 
     const products = await Products.findAndCountAll({
-      attributes: ["id", "name", "price", "image_url", "is_deleted", "desc"],
+      attributes: ["id", "name", "price", "image_url", "desc"],
       where: {
         ...categoryClause,
         ...productClause,
