@@ -4,9 +4,10 @@ const user = db.User;
 const moment = require("moment");
 const { nanoid } = require("nanoid");
 const nodemailer = require("../helpers/nodemailer");
+const { Op } = require("sequelize");
 
 // Import model Token
-const tokenModel = db.Token;
+const Token = db.Token;
 
 module.exports = {
   register: async (req, res) => {
@@ -72,7 +73,7 @@ module.exports = {
         from: `Admin <banguninbang@gmail.com>`,
         to: `${email}`,
         subject: `Account Registration`,
-        html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here <a/> to verify your account </p>`,
+        html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here </a> to verify your account </p>`,
       };
 
       let response = await nodemailer.sendMail(mail);
@@ -85,6 +86,55 @@ module.exports = {
     } catch (err) {
       console.log(err);
       res.status(400).send(err);
+    }
+  },
+
+  verify: async (req, res) => {
+    try {
+      const { token } = req.body;
+
+      const data = await Token.findOne({
+        where: {
+          token,
+          valid: true,
+          expired: { [Op.gt]: moment() },
+          status: "VERIFICATION",
+        },
+      });
+      if (!data) {
+        return res.status(400).send({
+          message: "Token Invalid",
+        });
+      }
+
+      const userId = data.dataValues.user_id;
+      const tokenId = data.dataValues.id;
+
+      await user.update(
+        {
+          isVerified: true,
+        },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
+
+      await Token.update(
+        {
+          valid: false,
+        },
+        {
+          where: {
+            id: tokenId,
+          },
+        }
+      );
+      return res.status(200).send({ message: "Verified" });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(400).json({ error: error.message });
     }
   },
 

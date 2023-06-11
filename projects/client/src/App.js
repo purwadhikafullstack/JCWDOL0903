@@ -23,16 +23,29 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
       <Routes>
         <Route
+          path="/"
+          element={<Navbar />}
+        />
+        <Route
           path="/register"
-          element={<Register />}
+          element={
+            <>
+              <Navbar />
+              <Register />
+            </>
+          }
         />
 
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <>
+              <Navbar />
+              <Login />
+            </>
+          }
         />
         <Route
           path="/verification/:token"

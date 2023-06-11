@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       birthdate: DataTypes.DATE,
       profile_picture: DataTypes.STRING,
       referal_code: DataTypes.STRING,
+      isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        // allowNull: false,
+      },
       role: {
         type: DataTypes.ENUM("user", "admin", "superadmin"),
         defaultValue: "user",
