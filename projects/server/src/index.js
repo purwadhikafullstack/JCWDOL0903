@@ -10,15 +10,16 @@ const PORT = process.env.PORT || 8000;
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       process.env.WHITELISTED_DOMAIN &&
+//         process.env.WHITELISTED_DOMAIN.split(","),
+//     ],
+//   })
+// );
 
+app.use(cors());
 app.use(express.json());
 
 //#region API ROUTES
@@ -69,13 +70,18 @@ app.get("*", (req, res) => {
   res.sendFile(join(__dirname, clientPath, "index.html"));
 });
 
+// db.connect((err) => {
+//   if (err) return console.log(err);
+//   console.log("Success connect to mysql");
+// });
+
 //#endregion
 
 app.listen(PORT, (err) => {
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
-    // db.sequelize.sync({ alter: true })
+    // db.sequelize.sync({ alter: true });
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });

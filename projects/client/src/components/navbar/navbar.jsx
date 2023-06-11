@@ -12,19 +12,30 @@
   }
   ```
 */
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, BellIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
-import LogoWhite from './logoFull.png'
+import { useNavigate } from "react-router-dom";
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  ShoppingCartIcon,
+} from "@heroicons/react/24/outline";
+import LogoWhite from "./logoFull.png";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
   return (
-    <Disclosure as="nav" className="bg-white">
+    <Disclosure
+      as="nav"
+      className="bg-white"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-1">
@@ -38,20 +49,26 @@ export default function Navbar() {
                   />
                   <img
                     className="hidden h-8 w-auto lg:block"
-                    src= {LogoWhite}
+                    src={LogoWhite}
                     alt="Company"
                   />
-                </div>               
+                </div>
               </div>
 
               <div className="flex  flex-1 px-7">
                 <div className="w-full max-w-xl lg:max-w-2xl">
-                  <label htmlFor="search" className="sr-only">
+                  <label
+                    htmlFor="search"
+                    className="sr-only"
+                  >
                     Search
                   </label>
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <MagnifyingGlassIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
                     </div>
                     <input
                       id="search"
@@ -69,13 +86,19 @@ export default function Navbar() {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon
+                      className="block h-6 w-6"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <Bars3Icon
+                      className="block h-6 w-6"
+                      aria-hidden="true"
+                    />
                   )}
                 </Disclosure.Button>
               </div>
-              
+
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex flex-auto items-center">
                   <button
@@ -83,10 +106,14 @@ export default function Navbar() {
                     className="flex-shrink-0 rounded-full bg-white p-1 text-grey-400 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="sr-only">View notifications</span>
-                    <ShoppingCartIcon className="h-6 w-6 mr-5" aria-hidden="true" />
+                    <ShoppingCartIcon
+                      className="h-6 w-6 mr-5"
+                      aria-hidden="true"
+                    />
                   </button>
 
                   <button
+                    onClick={() => navigate("/login")}
                     type="button"
                     className="w-32 h-auto flex-shrink-0 rounded-lg bg-red-800 p-1 text-white  hover:bg-red-100 transition-colors duration-300 ease-in-out hover:text-red-700"
                   >
@@ -94,13 +121,12 @@ export default function Navbar() {
                   </button>
 
                   <button
+                    onClick={() => navigate("/register")}
                     type="button"
                     className="ml-2 h-auto w-32 flex-shrink-0 rounded-lg bg-red-800 p-1 text-white hover:bg-red-100  transition-colors duration-300 ease-in-out hover:text-red-700 "
                   >
                     Register
                   </button>
-
-                  
 
                   {/* Profile dropdown */}
                   {/* <Menu as="div" className="relative ml-4 flex-shrink-0">
@@ -213,15 +239,22 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-white">Tom Cook</div>
-                  <div className="text-sm font-medium text-gray-400">tom@example.com</div>
+                  <div className="text-base font-medium text-white">
+                    Tom Cook
+                  </div>
+                  <div className="text-sm font-medium text-gray-400">
+                    tom@example.com
+                  </div>
                 </div>
                 <button
                   type="button"
                   className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <BellIcon
+                    className="h-6 w-6"
+                    aria-hidden="true"
+                  />
                 </button>
               </div>
               <div className="mt-3 space-y-1 px-2">
@@ -252,5 +285,5 @@ export default function Navbar() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }
