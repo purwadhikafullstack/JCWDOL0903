@@ -12,7 +12,6 @@
   }
   ```
 */
-import { useNavigate } from "react-router-dom";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
@@ -29,8 +28,6 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-  const navigate = useNavigate();
-
   return (
     <Disclosure
       as="nav"
@@ -113,7 +110,6 @@ export default function Navbar() {
                   </button>
 
                   <button
-                    onClick={() => navigate("/login")}
                     type="button"
                     className="w-32 h-auto flex-shrink-0 rounded-lg bg-red-800 p-1 text-white  hover:bg-red-100 transition-colors duration-300 ease-in-out hover:text-red-700"
                   >
@@ -121,7 +117,6 @@ export default function Navbar() {
                   </button>
 
                   <button
-                    onClick={() => navigate("/register")}
                     type="button"
                     className="ml-2 h-auto w-32 flex-shrink-0 rounded-lg bg-red-800 p-1 text-white hover:bg-red-100  transition-colors duration-300 ease-in-out hover:text-red-700 "
                   >

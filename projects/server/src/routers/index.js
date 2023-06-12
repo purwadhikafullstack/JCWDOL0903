@@ -1,5 +1,11 @@
-const authRouters = require("./authRouters");
+const productRouter = require("./productRouter");
+const categoryRouter = require("./categoryRouter");
+const authRouter = require("./authRouters");
+const profillingRouter = require("./profilingRouter");
 
 module.exports = {
-  authRouters,
+  productRouter,
+  categoryRouter,
+  profillingRouter,
+  authRouter,
 };

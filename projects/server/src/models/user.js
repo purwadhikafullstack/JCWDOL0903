@@ -23,23 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      phone_num: DataTypes.STRING,
+      phone_num: DataTypes.INTEGER,
       gender: DataTypes.ENUM("Pria", "Wanita"),
       birthdate: DataTypes.DATE,
       profile_picture: DataTypes.STRING,
       referal_code: DataTypes.STRING,
-      isVerified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        // allowNull: false,
-      },
-      role: {
-        type: DataTypes.ENUM("user", "admin", "superadmin"),
-        defaultValue: "user",
-        allowNull: false,
-      },
-      // is_admin: DataTypes.BOOLEAN,
-      // is_branch: DataTypes.BOOLEAN
+      is_admin: DataTypes.BOOLEAN,
+      is_branch: DataTypes.BOOLEAN,
     },
     {
       sequelize,

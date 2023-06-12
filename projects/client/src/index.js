@@ -3,21 +3,21 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
-import HOC from "./HOC/hoc";
 import { Provider } from "react-redux";
-import store from "../src/redux/store";
+import HOC from "./HOC/hoc";
+import store from "./store";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <HOC>
-      <Provider store={store}>
+    <Provider store={store}>
+      <HOC>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </Provider>
-    </HOC>
+      </HOC>
+    </Provider>
   </React.StrictMode>
 );
 

@@ -200,4 +200,34 @@ module.exports = {
       res.status(400).send(err);
     }
   },
+  getUserByToken: async (req, res) => {
+    try {
+      const { token } = req.params;
+
+      //const token = select userId from tokens where token = token
+      // select * from users where id = userId
+
+      const userToken = await Token.findOne({
+        where: {
+          token,
+        },
+      });
+      console.log(userToken);
+
+      const findUser = await user.findOne({
+        where: {
+          id: userToken.dataValues.user_id,
+        },
+      });
+
+      console.log(findUser);
+      delete findUser.dataValues.password;
+      return res
+        .status(200)
+        .send({ message: "Success get User", user: findUser });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(400).json({ error: error.message });
+    }
+  },
 };
