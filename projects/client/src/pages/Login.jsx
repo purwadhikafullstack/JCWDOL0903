@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../reducers/userSlice";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { successAlert, errorAlertWithMessage } from "../helper/alerts";
 
 const url = "http://localhost:2000/auth/login";
 
@@ -22,6 +23,7 @@ const Login = () => {
 
     try {
       const result = await axios.post(url, data);
+      console.log("Ini result", result);
       localStorage.setItem("token", result.data.result.token.token);
 
       //akan menerima token saat login
@@ -47,24 +49,26 @@ const Login = () => {
       // document.getElementById("email").value = "";
       // document.getElementById("password").value = "";
 
-      Swal.fire({
-        icon: "Login",
-        title: result.data.message,
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      // Swal.fire({
+      //   icon: "Login",
+      //   title: result.data.message,
+      //   showConfirmButton: false,
+      //   timer: 1500,
+      // });
+      successAlert(result.data.message);
 
       //setelah menerima token akan di navigate ke home
       setTimeout(() => {
         navigate("/");
       }, 1500);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "username or password does not exist",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "username or password does not exist",
+      //   showConfirmButton: false,
+      //   timer: 1500,
+      // });
+      errorAlertWithMessage("Username or password does not exist");
     }
   };
 

@@ -5,7 +5,6 @@ const initialState = {
   id: 0,
   branch_id: 0,
   username: "",
-  name: "",
   email: "",
   phone_num: "",
   gender: "",

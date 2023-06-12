@@ -13,6 +13,8 @@ import Verification from "./pages/Verification";
 import api from "./api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
+import Dashboard from "./pages/Dashboard";
+import CategoryTable from "./components/CategoryTable";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -29,13 +31,6 @@ function App() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-
     async function fetchUser() {
       try {
         const token = localStorage.getItem("token");
@@ -97,6 +92,23 @@ function App() {
           }
         />
         <Route path="/verification/:token" element={<Verification />} />
+        <Route path="/dashboard" element={<Dashboard element={null} />} />
+        <Route
+          path="/dashboard/products"
+          element={<Dashboard element={<CategoryTable />} />}
+        />
+        <Route
+          path="/dashboard/transactions"
+          element={<Dashboard element={null} />}
+        />
+        <Route
+          path="/dashboard/discounts"
+          element={<Dashboard element={null} />}
+        />
+        <Route
+          path="/dashboard/reports"
+          element={<Dashboard element={null} />}
+        />
       </Routes>
     </div>
   );
