@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         "Produk",
         "Total Produk",
         "Gratis Ongkir",
-        "Kode Referal"
+        "Kode Referral"
       ),
       product_id: DataTypes.INTEGER,
       amount: DataTypes.INTEGER,
