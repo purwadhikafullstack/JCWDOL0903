@@ -194,7 +194,7 @@ module.exports = {
       });
 
       delete userExist.dataValues.password;
-      res.send({ message: "login", result: { user: userExist, token } });
+      res.send({ message: "login Succes", result: { user: userExist, token } });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);

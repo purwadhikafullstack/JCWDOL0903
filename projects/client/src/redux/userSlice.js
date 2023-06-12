@@ -3,12 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   value: {
     id: 0,
+    branch_id: 0,
     username: "",
     name: "",
     email: "",
     phone_num: "",
-    // gender: "",
-    role: "",
+    gender: "",
+    birthdate: "",
+    profile_picture: "",
+    // role: "",
   },
 };
 
@@ -18,6 +21,7 @@ export const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.value.id = action.payload.id;
+      state.value.branch_id = action.payload.branch_id;
       state.value.username = action.payload.username;
       state.value.name = action.payload.name;
       state.value.email = action.payload.email;

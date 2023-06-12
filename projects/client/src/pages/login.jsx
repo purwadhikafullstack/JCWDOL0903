@@ -5,11 +5,12 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../redux/userSlice";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const url = "http://localhost:2000/auth/login";
 
 const Login = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const OnLogin = async () => {
@@ -22,16 +23,56 @@ const Login = () => {
     try {
       const result = await axios.post(url, data);
       console.log("result", result);
-      // dispatch(
-      //   login({
-      //     id: result.data.data.id,
-      //     username: result.data.data.username,
-      //     email: result.data.data.email,
-      //     phone_number: result.data.data.phone_number,
-      //     merchant_status: result.data.data.merchant_status,
-      //   })
-      // );
-    } catch (error) {}
+      console.log("token nih", result.data.result.token.token);
+      // if (result) {
+      //   localStorage.setItem("token", result.data.result.token.token);
+      // } else {
+      //   console.log("males");
+      // }
+
+      localStorage.setItem("token", result.data.result.token.token);
+
+      //akan menerima token saat login
+      console.log("resultData", result.data.result.user.name);
+
+      dispatch(
+        login({
+          id: result.data.result.user.id,
+          branch_id: result.data.result.user.branch_id,
+          username: result.data.result.user.username,
+          name: result.data.result.user.name,
+          email: result.data.result.user.email,
+          phone_num: result.data.result.user.phone_num,
+          gender: result.data.result.user.gender,
+          birthdate: result.data.result.user.birthdate,
+          profile_picture: result.data.result.user.profile_picture,
+          role: result.data.result.user.role,
+        })
+      );
+
+      //untuk mereset form
+      // document.getElementById("email").value = "";
+      // document.getElementById("password").value = "";
+
+      Swal.fire({
+        icon: "Login",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      //setelah menerima token akan di navigate ke home
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "username or password does not exist",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
 
   return (
