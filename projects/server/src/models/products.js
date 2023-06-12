@@ -24,13 +24,13 @@ module.exports = (sequelize, DataTypes) => {
       category_id: DataTypes.INTEGER,
       price: DataTypes.INTEGER,
       image_url: DataTypes.STRING,
-      is_deleted: DataTypes.BOOLEAN,
       sold: DataTypes.INTEGER,
       desc: DataTypes.STRING(500),
     },
     {
       sequelize,
       modelName: "Products",
+      paranoid: true,
     }
   );
   return Products;

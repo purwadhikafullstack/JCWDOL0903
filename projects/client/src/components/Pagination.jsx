@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
 export default function Pagination({

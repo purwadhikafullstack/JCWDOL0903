@@ -24,7 +24,6 @@ function ProductList() {
 
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
-  console.log(productsGlobal)
   const categoriesGlobal = useSelector((state) => state.category);
   const [sortFilter, setSortFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");

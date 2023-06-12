@@ -28,7 +28,7 @@ async function getProducts(req, res) {
     const deletedClause = isDeleted ? { is_deleted: isDeleted } : {};
 
     const products = await Products.findAndCountAll({
-      attributes: ["id", "name", "price", "image_url", "is_deleted", "desc"],
+      attributes: ["id", "name", "price", "image_url", "desc"],
       where: {
         ...categoryClause,
         ...productClause,
@@ -55,7 +55,7 @@ async function getProducts(req, res) {
       offset: (page - 1) * itemsPerPage,
       order: sortMap[sortType] || null,
     });
-    console.log(products)
+
     return res.status(200).json({
       products,
     });
@@ -66,5 +66,5 @@ async function getProducts(req, res) {
 }
 
 module.exports = {
-  getProducts, 
+  getProducts,
 };
