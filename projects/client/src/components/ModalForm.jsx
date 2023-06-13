@@ -1,12 +1,13 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-export default function CategoryModalForm({
+export default function ModalForm({
+  title = "",
   open = false,
   setOpen,
   onSubmit,
   action = "add",
-  editedValue = "",
+  children,
 }) {
   const cancelButtonRef = useRef(null);
 
@@ -49,25 +50,9 @@ export default function CategoryModalForm({
                         as="h3"
                         className="text-lg font-medium leading-6 text-gray-900"
                       >
-                        {action[0].toUpperCase() + action.substring(1)} Category
+                        {action[0].toUpperCase() + action.substring(1)} {title}
                       </Dialog.Title>
-                      <div className="text-left mt-4">
-                        <div>
-                          <label
-                            htmlFor="categoryName"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                          >
-                            Name
-                          </label>
-                          <input
-                            type="text"
-                            name="categoryName"
-                            id="categoryName"
-                            defaultValue={editedValue}
-                            className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
-                          />
-                        </div>
-                      </div>
+                      <div className="text-left mt-4">{children}</div>
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">

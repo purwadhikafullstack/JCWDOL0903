@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       voucher_type: DataTypes.ENUM(
         "Produk",
-        "Total Produk",
+        "Total Belanja",
         "Gratis Ongkir",
         "Kode Referral"
       ),

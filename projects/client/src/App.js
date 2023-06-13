@@ -4,7 +4,8 @@ import ProductList from "./pages/ProductList";
 import Navbar from "./components/navbar/Navbar";
 import Landing from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
-import CategoryTable from "./components/CategoryTable";
+import ProductInventory from "./pages/ProductInventory";
+import Discount from "./components/Discount";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard element={null} />} />
         <Route
           path="/dashboard/products"
-          element={<Dashboard element={<CategoryTable />} />}
+          element={<Dashboard element={<ProductInventory />} />}
         />
         <Route
           path="/dashboard/transactions"
@@ -24,7 +25,7 @@ function App() {
         />
         <Route
           path="/dashboard/discounts"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Discount />} />}
         />
         <Route
           path="/dashboard/reports"

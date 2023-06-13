@@ -7,6 +7,7 @@ const {
   productRouter,
   categoryRouter,
   profillingRouter,
+  voucherRouter,
 } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
@@ -43,6 +44,7 @@ app.get("/api/greetings", (req, res, next) => {
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
+app.use("/vouchers", voucherRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
 
