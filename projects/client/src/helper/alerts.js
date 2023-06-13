@@ -18,6 +18,15 @@ function errorAlert() {
   });
 }
 
+function errorAlertWithMessage(message = "") {
+  Swal.fire({
+    icon: "error",
+    title: message,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+
 async function deleteConfirmationAlert(cb = () => {}) {
   const result = await Swal.fire({
     title: "Are you sure?",
@@ -33,4 +42,9 @@ async function deleteConfirmationAlert(cb = () => {}) {
   }
 }
 
-export { successAlert, errorAlert, deleteConfirmationAlert };
+export {
+  successAlert,
+  errorAlert,
+  deleteConfirmationAlert,
+  errorAlertWithMessage,
+};

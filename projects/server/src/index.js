@@ -5,6 +5,7 @@ const { join } = require("path");
 const db = require("./models");
 const {
   productRouter,
+  authRouter,
   categoryRouter,
   profillingRouter,
   voucherRouter,
@@ -14,15 +15,16 @@ const PORT = process.env.PORT || 8000;
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       process.env.WHITELISTED_DOMAIN &&
+//         process.env.WHITELISTED_DOMAIN.split(","),
+//     ],
+//   })
+// );
 
+app.use(cors());
 app.use(express.json());
 
 //#region API ROUTES
@@ -41,6 +43,7 @@ app.get("/api/greetings", (req, res, next) => {
   });
 });
 
+app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
@@ -78,6 +81,11 @@ app.use((err, req, res, next) => {
 // // Serve the HTML page
 // app.get("*", (req, res) => {
 //   res.sendFile(join(__dirname, clientPath, "index.html"));
+// });
+
+// db.connect((err) => {
+//   if (err) return console.log(err);
+//   console.log("Success connect to mysql");
 // });
 
 //#endregion

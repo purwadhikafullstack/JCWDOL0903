@@ -1,4 +1,4 @@
-import Carousel from "../components/carousel/Carousel";
+import Carousel from "../components/Carousel";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import opencage from "opencage-api-client";
@@ -40,7 +40,7 @@ function LandingPage() {
         .geocode({ q: `${latitude}+${longitude}`, key: API_key })
         .then((res) => {
           setSuburb(res.results[0].components.suburb);
-          setKota(res.results[0].components.state);
+          setKota(res.results[0].components.city_district);
           console.log(res);
         })
         .catch((error) => {
@@ -50,12 +50,10 @@ function LandingPage() {
   }, [latitude, longitude]);
 
   return (
-    <div className="App">
-      <div className="absolute left-9 bg-yellow-100">
-        <h3>
-          {suburb}, {kota}
-        </h3>
-      </div>
+    <div className="container-screen">
+      <h3>
+        Lokasi Anda: {suburb}, {kota}
+      </h3>
       <Carousel />
     </div>
   );
