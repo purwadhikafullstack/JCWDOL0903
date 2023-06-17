@@ -49,7 +49,7 @@ export default function Category() {
   }
 
   return (
-    <div className="mt-8">
+    <div>
       <ModalForm
         title="Category"
         open={openAddModal}

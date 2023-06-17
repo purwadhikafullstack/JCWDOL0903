@@ -31,15 +31,20 @@ async function createCategory(req, res) {
 }
 
 async function updateCategory(req, res) {
-  const categoryId = req.params.id;
-  const [isUpdated] = await Category.update(req.body, {
-    where: {
-      id: categoryId,
-    },
-  });
+  try {
+    const categoryId = req.params.id;
+    const [isUpdated] = await Category.update(req.body, {
+      where: {
+        id: categoryId,
+      },
+    });
 
-  if (!isUpdated) return res.status(404).end();
-  return res.status(200).end();
+    if (!isUpdated) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
 }
 
 async function deleteCategory(req, res) {

@@ -1,11 +1,57 @@
 const db = require("../models");
+const { Op } = require("sequelize");
+const { getValidVoucher } = require("../helpers/voucher");
 const Voucher = db.Voucher;
 
 async function getVouchers(req, res) {
   try {
-    const vouchers = await Voucher.findAll({
-      attributes: ["id", "voucher_type", "product_id", "amount", "percentage"],
+    const itemsPerPage = 12;
+
+    const page = parseInt(req.query.page);
+    const voucherType = req.query.q;
+    const productId = parseInt(req.query.productId);
+    const sortType = req.query.sort;
+
+    const sortMap = {
+      name_asc: [["voucher_type", "ASC"]],
+      name_desc: [["voucher_type", "DESC"]],
+    };
+
+    const offsetLimit = {};
+    if (page) {
+      offsetLimit.limit = itemsPerPage;
+      offsetLimit.offset = (page - 1) * itemsPerPage;
+    }
+
+    const productClause = productId ? { product_id: productId } : {};
+    const voucherClause = voucherType
+      ? { voucher_type: { [Op.like]: "%" + voucherType + "%" } }
+      : {};
+
+    const vouchers = await Voucher.findAndCountAll({
+      attributes: [
+        "id",
+        "voucher_type",
+        "product_id",
+        "amount",
+        "percentage",
+        "limit",
+        "min_purchase",
+      ],
+      where: {
+        ...productClause,
+        ...voucherClause,
+      },
+      include: [
+        {
+          model: db.Products,
+          attributes: ["id", "name", "image_url"],
+        },
+      ],
+      ...offsetLimit,
+      order: sortMap[sortType] || null,
     });
+
     return res.status(200).json({
       vouchers,
     });
@@ -15,6 +61,56 @@ async function getVouchers(req, res) {
   }
 }
 
+async function createVoucher(req, res) {
+  try {
+    const createVoucher = Voucher.create.bind(Voucher);
+    const newVoucher = await getValidVoucher(req.body, createVoucher);
+
+    return res.status(201).json({
+      voucher: newVoucher,
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+async function updateVoucher(req, res) {
+  try {
+    const voucherId = req.params.id;
+    req.body.voucherId = voucherId;
+
+    const updateVoucher = Voucher.update.bind(Voucher);
+    const [isUpdated] = await getValidVoucher(req.body, updateVoucher);
+
+    if (!isUpdated) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+async function deleteVoucher(req, res) {
+  try {
+    const voucherId = req.params.id;
+    const isDeleted = await Voucher.destroy({
+      where: {
+        id: voucherId,
+      },
+    });
+
+    if (!isDeleted) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
+
 module.exports = {
   getVouchers,
+  createVoucher,
+  updateVoucher,
+  deleteVoucher,
 };

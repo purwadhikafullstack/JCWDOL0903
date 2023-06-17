@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
 import ProductCard from "../components/ProductCard";
-import FilterDropdown from "../components/FilterDropdown";
+import Dropdown from "../components/Dropdown";
 
 import { fetchProducts } from "../reducers/productSlice";
 import { fetchCategories } from "../reducers/categorySlice";
@@ -18,6 +18,8 @@ const sortOptions = [
   { value: "price_desc", label: "Price (High - Low)" },
 ];
 
+const categoryOptions = [{ value: "", label: "None" }];
+
 function ProductList() {
   let [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q");
@@ -25,41 +27,57 @@ function ProductList() {
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
-  const [sortFilter, setSortFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortFilter, setSortFilter] = useState(sortOptions[0]);
+  const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
   useEffect(() => {
+    const newCategoryOptions = categoriesGlobal.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
+
+    categoryOptions.splice(
+      1,
+      categoryOptions.length - 1,
+      ...newCategoryOptions
+    );
+  }, [categoriesGlobal]);
+
+  useEffect(() => {
     let query = `page=${currentPage}`;
     if (searchQuery) query += `&q=${searchQuery}`;
-    if (sortFilter) query += `&sort=${sortFilter}`;
-    if (categoryFilter) query += `&categoryId=${categoryFilter}`;
+    if (sortFilter.value) query += `&sort=${sortFilter.value}`;
+    if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;
     dispatch(fetchProducts(query));
-  }, [dispatch, sortFilter, categoryFilter, currentPage, searchQuery]);
-
-  const categoryOptions = [{ value: "", label: "None" }];
-  categoriesGlobal.forEach((category) => {
-    categoryOptions.push({ value: category.id, label: category.name });
-  });
+  }, [
+    dispatch,
+    sortFilter.value,
+    categoryFilter.value,
+    currentPage,
+    searchQuery,
+  ]);
 
   return (
     <div className="container-screen">
       <Filter>
-        <FilterDropdown
+        <Dropdown
           label="Sort"
           options={sortOptions}
-          selected={sortFilter}
-          setSelected={setSortFilter}
+          selectedValue={sortFilter}
+          onChange={setSortFilter}
+          className="font-medium"
         />
-        <FilterDropdown
+        <Dropdown
           label="Category"
           options={categoryOptions}
-          selected={categoryFilter}
-          setSelected={setCategoryFilter}
+          selectedValue={categoryFilter}
+          onChange={setCategoryFilter}
+          className="font-medium"
         />
       </Filter>
       <ProductCard products={productsGlobal.products} />

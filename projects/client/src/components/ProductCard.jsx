@@ -1,4 +1,5 @@
 import ProductNotFound from "../components/ProductNotFound";
+import { numToIDRCurrency } from "../helper/currency";
 
 export default function ProductCard({ products = [] }) {
   if (!products.length) return <ProductNotFound />;
@@ -21,11 +22,7 @@ export default function ProductCard({ products = [] }) {
               </h3>
             </div>
             <p className="relative text-lg font-semibold text-red-400 truncate">
-              {product.price.toLocaleString("id", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
+              {numToIDRCurrency(product.price)}
             </p>
           </div>
           <div className="my-6">

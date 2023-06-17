@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import BanguninLogo from "./navbar/logoFull.png";
+import BanguninLogo from "../assets/logoFull.png";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -165,7 +165,7 @@ export default function DashboardSidebar({ navigation = [], children }) {
           <main className="flex-1">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                <div className="py-4">{children}</div>
+                <div className="pb-4 pt-12">{children}</div>
               </div>
             </div>
           </main>
