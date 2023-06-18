@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import AddDataHeader from "./AddDataHeader";
-import Table from "./Table";
-import ModalForm from "./ModalForm";
-import DiscountFormControl from "./DiscountFormControl";
+import AddDataHeader from "../components/AddDataHeader";
+import Table from "../components/Table";
+import ModalForm from "../components/ModalForm";
+import DiscountFormControl from "../components/DiscountFormControl";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchVouchers,
@@ -11,9 +11,9 @@ import {
   deleteVoucher,
 } from "../reducers/voucherSlice";
 import AsyncSelect from "react-select/async";
-import Dropdown from "./Dropdown";
-import DiscountTableBody from "./DiscountTableBody";
-import Pagination from "./Pagination";
+import Dropdown from "../components/Dropdown";
+import DiscountTableBody from "../components/DiscountTableBody";
+import Pagination from "../components/Pagination";
 import { style, loadProduct } from "../helper/reactSelect";
 import { voucherTypes } from "../helper/filterOptions";
 import { deleteConfirmationAlert } from "../helper/alerts";
@@ -116,66 +116,68 @@ export default function Discount() {
         onSubmit={handleEditVoucher}
         children={<DiscountFormControl voucher={editedVoucher} />}
       />
-      <AddDataHeader
-        title="Discounts"
-        desc="A list of all vouchers."
-        addButtonText="Add voucher"
-        onAddClick={() => setOpenAddModal(true)}
-      />
-      <div className="flex items-center justify-between flex-wrap sm:flex-nowrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
-        <AsyncSelect
-          className="w-full md:w-1/2"
-          onInputChange={setProductName}
-          onChange={(p) => setProductId(p?.id || "")}
-          loadOptions={() => loadProduct(productName)}
-          getOptionLabel={(e) => e.name}
-          getOptionValue={(e) => e.id}
-          cacheOptions
-          styles={style}
-          isClearable
-          placeholder="Search product"
+      <div>
+        <AddDataHeader
+          title="Discounts"
+          desc="A list of all vouchers."
+          addButtonText="Add voucher"
+          onAddClick={() => setOpenAddModal(true)}
         />
-        <div className="flex gap-2 items-center">
-          <Dropdown
-            label="Sort"
-            options={sortOptions}
-            selectedValue={sortFilter}
-            onChange={setSortFilter}
-            className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+        <div className="flex items-center justify-between flex-wrap sm:flex-nowrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
+          <AsyncSelect
+            className="w-full md:w-1/2"
+            onInputChange={setProductName}
+            onChange={(p) => setProductId(p?.id || "")}
+            loadOptions={() => loadProduct(productName)}
+            getOptionLabel={(e) => e.name}
+            getOptionValue={(e) => e.id}
+            cacheOptions
+            styles={style}
+            isClearable
+            placeholder="Search product"
           />
-          <Dropdown
-            label="Types"
-            options={voucherOptions}
-            selectedValue={typeFilter}
-            onChange={setTypeFilter}
-            className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-          />
+          <div className="flex gap-2 items-center">
+            <Dropdown
+              label="Sort"
+              options={sortOptions}
+              selectedValue={sortFilter}
+              onChange={setSortFilter}
+              className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+            />
+            <Dropdown
+              label="Types"
+              options={voucherOptions}
+              selectedValue={typeFilter}
+              onChange={setTypeFilter}
+              className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+            />
+          </div>
         </div>
+        <Table
+          className="mb-4"
+          headCols={[
+            "Voucher Type",
+            "Product",
+            "Discounts",
+            "Limit",
+            "Minimum Purchase",
+          ]}
+          tableBody={
+            <DiscountTableBody
+              vouchers={vouchersGlobal.vouchers}
+              onEdit={handleEditClick}
+              onDelete={handleDelete}
+            />
+          }
+        />
+        <Pagination
+          itemsInPage={vouchersGlobal.vouchers.length}
+          totalItems={vouchersGlobal.totalItems}
+          totalPages={vouchersGlobal.totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
-      <Table
-        headCols={[
-          "Voucher Type",
-          "Product",
-          "Discounts",
-          "Limit",
-          "Minimum Purchase",
-        ]}
-        tableBody={
-          <DiscountTableBody
-            vouchers={vouchersGlobal.vouchers}
-            onEdit={handleEditClick}
-            onDelete={handleDelete}
-          />
-        }
-        className="mb-4"
-      />
-      <Pagination
-        itemsInPage={vouchersGlobal.vouchers.length}
-        totalItems={vouchersGlobal.totalItems}
-        totalPages={vouchersGlobal.totalPages}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
     </div>
   );
 }

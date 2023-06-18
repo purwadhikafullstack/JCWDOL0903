@@ -65,7 +65,7 @@ export function updateVoucher(id, data, currPage = 1) {
       dispatch(fetchVouchers(`page=${currPage}`));
       successAlert("Updated!");
     } catch (err) {
-      errorAlert();
+      errorAlertWithMessage(err.response.data.error);
       console.log(err.response.data.error);
     }
   };

@@ -1,4 +1,5 @@
 const db = require("../models");
+const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
 const { getValidVoucher } = require("../helpers/voucher");
 const Voucher = db.Voucher;
@@ -13,8 +14,8 @@ async function getVouchers(req, res) {
     const sortType = req.query.sort;
 
     const sortMap = {
-      name_asc: [["voucher_type", "ASC"]],
-      name_desc: [["voucher_type", "DESC"]],
+      name_asc: [[Sequelize.literal("CAST(voucher_type AS CHAR)"), "ASC"]],
+      name_desc: [[Sequelize.literal("CAST(voucher_type AS CHAR)"), "DESC"]],
     };
 
     const offsetLimit = {};

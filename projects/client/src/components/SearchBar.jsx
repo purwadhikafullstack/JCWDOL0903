@@ -1,7 +1,7 @@
-export default function SearchBar({ className }) {
+export default function SearchBar({ className, onSubmit }) {
   return (
     <div className={`w-full md:w-1/2 ${className}`}>
-      <form className="flex items-center">
+      <form onSubmit={onSubmit} className="flex items-center">
         <label htmlFor="simple-search" className="sr-only">
           Search
         </label>
@@ -22,11 +22,11 @@ export default function SearchBar({ className }) {
             </svg>
           </div>
           <input
+            name="searchBar"
             type="text"
             id="simple-search"
             className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
             placeholder="Search"
-            required
           />
         </div>
       </form>

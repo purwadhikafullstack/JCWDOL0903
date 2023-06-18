@@ -36,7 +36,7 @@ function ProductList() {
   }, [dispatch]);
 
   useEffect(() => {
-    const newCategoryOptions = categoriesGlobal.map((category) => ({
+    const newCategoryOptions = categoriesGlobal.categories.map((category) => ({
       value: category.id,
       label: category.name,
     }));
@@ -46,7 +46,7 @@ function ProductList() {
       categoryOptions.length - 1,
       ...newCategoryOptions
     );
-  }, [categoriesGlobal]);
+  }, [categoriesGlobal.categories]);
 
   useEffect(() => {
     let query = `page=${currentPage}`;
