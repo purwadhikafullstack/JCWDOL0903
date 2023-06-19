@@ -29,7 +29,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(authorize);
+// app.use(authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);

@@ -1,6 +1,6 @@
-const ChangePassRouter = require("express").Router();
+const changePassRouter = require("express").Router();
 const changePassController = require("../controllers/changePassController");
 
-ChangePassRouter.put("/changepassword/:id", changePassController.changePass);
+changePassRouter.put("/changepassword/:id", changePassController.changePass);
 
-module.exports = ChangePassRouter;
+module.exports = changePassRouter;

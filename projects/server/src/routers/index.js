@@ -12,6 +12,6 @@ module.exports = {
   profillingRouter,
   authRouter,
   voucherRouter,
-  branchRouter
-  changePassRouter,
+  branchRouter,
+  changePassRouter
 };

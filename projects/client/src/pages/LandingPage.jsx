@@ -7,9 +7,9 @@ import CategoryTab from "../components/CategoryTab";
 
 
 const API_endpoint = `https://api.opencagedata.com/geocode/v1/json?`;
-const API_key = process.env.OPENCAGE_API_KEY;
+const API_key = "bf4320abed844834a64e30080b0b5cb4";
 
-console.log("envprocess", process.env.REACT_APP_BASE_URL);
+// console.log("envprocess", process.env.REACT_APP_BASE_URL);
 
 function LandingPage() {
   const [latitude, setLatitude] = useState("");
