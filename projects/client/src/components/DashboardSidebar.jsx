@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import BanguninLogo from "./navbar/logoFull.png";
+import BanguninLogo from "../assets/logoFull.png";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

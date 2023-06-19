@@ -194,7 +194,10 @@ module.exports = {
       });
 
       delete userExist.dataValues.password;
-      res.send({ message: "login Succes", result: { user: userExist, token } });
+      res.send({
+        message: "Login Success",
+        result: { user: userExist, token },
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);
@@ -210,6 +213,8 @@ module.exports = {
       const userToken = await Token.findOne({
         where: {
           token,
+          valid: true,
+          expired: { [Op.gt]: moment() },
         },
       });
       console.log(userToken);

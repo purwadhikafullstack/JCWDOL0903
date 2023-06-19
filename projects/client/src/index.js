@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import HOC from "./HOC/hoc";
 import store from "./store";
+import Footer from "../src/components/Footer"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,6 +16,7 @@ root.render(
       <HOC>
         <BrowserRouter>
           <App />
+          <Footer />
         </BrowserRouter>
       </HOC>
     </Provider>

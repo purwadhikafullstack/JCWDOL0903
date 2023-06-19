@@ -38,7 +38,6 @@ function App() {
           .get("/auth/v1/" + token)
           .then((res) => res.data.user);
         dispatch(login(user));
-        // console.log(user);
       } catch (err) {
         console.log(err);
       }

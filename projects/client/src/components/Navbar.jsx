@@ -2,17 +2,22 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../reducers/userSlice";
+
+// import assets
 import {
   Bars3Icon,
   BellIcon,
   XMarkIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
-
 import LogoWhite from "../assets/logoFullWhite.png";
-import LogoIcon from "../assets/logo.png";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../reducers/userSlice";
+import LogoIcon from "../assets/logoPutih.png";
+
+// Import Components
+import ListBox from "./subcomponents/ListBox";
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -56,7 +61,7 @@ export default function Navbar() {
     }
   }
   return (
-    <Disclosure as="nav" className="bg-red-500">
+    <Disclosure as="nav" className="bg-red-500 sticky top-0 z-10">
       {({ open }) => (
         <>
           <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">
@@ -75,6 +80,9 @@ export default function Navbar() {
                   />
                 </div>
               </Link>
+              <div className="flex justify-center items-center">
+                <ListBox />
+              </div>
 
               <div className="flex  flex-1 px-7">
                 <div className="w-full max-w-xl lg:max-w-2xl">
@@ -309,7 +317,7 @@ export default function Navbar() {
                   </Disclosure.Button>
                   <Disclosure.Button
                     as="a"
-                    href="#"
+                    href="user/settings"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     Settings

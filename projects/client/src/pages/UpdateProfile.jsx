@@ -1,27 +1,36 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import iconLogo from "../assets/logo.png";
+import api from "../api/api";
+import pattern from "../assets/pattern.jpg"
+import Address from "../components/Address";
 
 const initialTabs = [
-  { name: "My Account", href: "#", current: true },
-  { name: "Address", href: "#", current: false },
-  { name: "Payment", href: "#", current: false },
-  { name: "Voucher", href: "#", current: false },
+  { name: "My Account", current: true },
+  { name: "My Address", current: false },
+  { name: "Payment", current: false },
+  { name: "Voucher", current: false },
 ];
-
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function UpdateProfile() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [tabs, setTabs] = useState(initialTabs);
-  const [name, setName] = useState("")
+  const user = useSelector((state) => state.user);
+  const [page, setPage] = useState(true);
+  // const date = new Date(user.birthdate);
+  // const formattedDate = date.toISOString().split("T")[0];
+  // console.log("ini date di updatea", formattedDate);
 
-  // useEffect(() => {
-  //   const newName = await axios.get("http://localhost:2000/user")
-  // })
+  const changePage = () => {
+    setPage(!page);
+  };
 
   const handleTabClick = (name) => {
     const updatedTabs = tabs.map((tab) => ({
@@ -29,6 +38,41 @@ export default function UpdateProfile() {
       current: tab.name === name,
     }));
     setTabs(updatedTabs);
+  };
+
+  const onUpdate = async () => {
+    const data = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      gender: document.getElementById("gender").value,
+      birthdate: document.getElementById("birthdate").value,
+      profile_picture: document.getElementById("profile_picture").files[0],
+    };
+
+    const userEdit = new FormData()
+    userEdit.append("name", data.name)
+    userEdit.append("email", data.email)
+    userEdit.append("gender", data.gender)
+    userEdit.append("birthdate", data.birthdate)
+    userEdit.append("profile_picture", data.profile_picture)
+
+    try {
+      const result = await api.post("/profile/update/" + user.id, userEdit);
+      await Swal.fire({
+        icon: "success",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error); //nanti dihapus
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
 
   return (
@@ -50,7 +94,7 @@ export default function UpdateProfile() {
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav className="-mb-px flex space-x-8 container-screen"  aria-label="Tabs">
             {tabs.map((tab) => (
               <Link
                 key={tab.name}
@@ -71,87 +115,121 @@ export default function UpdateProfile() {
         </div>
       </div>
       {tabs.find((tab) => tab.current && tab.name === "My Account") && (
-        <div className="mt-4 p-4 border border-gray-300 flex flex-col items-center ">
+        <div className="flex flex-col items-center" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem' }}>
           {/* Your login box component */}
           <div className="flex-row">
-            <h2 className="text-left font-black text-xl text-red-800">
-              Update Profile
+            <h2 className="text-left font-black text-xl my-3 text-red-800">
+              Users Profile
             </h2>
           </div>
 
-          <div className="mt-4 p-4 border bg-white  flex flex-row items-center w-3/4 rounded-lg drop-shadow-md">
-            <div className="w-1/2 border-r-4">
-              <div className="space-y-4">
-                <div className="aspect-w-3 aspect-h-2">
-                  <img
-                    className="rounded-lg object-cover shadow-lg w-3/4"
-                    src="https://images.pexels.com/photos/341013/pexels-photo-341013.jpeg"
-                    alt="gambar"
-                  />
-                </div>
-                <div>
-                  <button className="rounded-lg w-3/4 h-12 bg-red-500 text-white hover:bg-red-600 active:bg-red-900">
-                    Change Profile
-                  </button>
-                  <h1 className="w-3/4 mt-4 text-gray-600">
-                    Besar file: maksimum 10.000.000 bytes (10 Megabytes).
-                    Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
-                  </h1>
+          {page ? (
+            <div className="mt-4 p-4 border bg-white  flex flex-row items-center w-3/4 rounded-lg drop-shadow-md">
+              <div className="w-1/2 border-r-4">
+                <div className="space-y-4">
+                  <div className="aspect-w-3 aspect-h-2">
+                    <img
+                      className="rounded-lg object-cover shadow-lg w-3/4"
+                      src={"http://localhost:2000/static/avatar/"+ user.profile_picture}
+                      alt="gambar"
+                    />
+                  </div>
+                  <div>
+                    <button
+                      className="rounded-lg w-3/4 h-12 bg-red-500 text-white hover:bg-red-600 active:bg-red-900"
+                      onClick={changePage}
+                    >
+                      Change Profile
+                    </button>
+                    <h1 className="w-3/4 mt-4 text-gray-600">
+                    Maximum file size: 10,000,000 bytes (10 Megabytes). Allowed file extensions: .JPG, .JPEG, .PNG.
+                    </h1>
+                  </div>
                 </div>
               </div>
+              <div className="ml-3">
+                <h1 className="text-gray-500 font-medium text-xl underline">
+                  Update Biodata
+                </h1>
+                <p className="my-3 ml-3">
+                  Name<span className="ml-20">{user.name}</span>{" "}
+                </p>
+
+                <p className="my-3 ml-3">
+                  Birthdate<span className="ml-14">{user.birthdate}</span>{" "}
+                </p>
+
+                <p className="my-3 ml-3">
+                  Gender<span className="ml-16 pl-2">{user.gender}</span>{" "}
+                </p>
+
+                <h2 className="mt-10 text-gray-500 font-medium text-xl underline">
+                  Update Contact
+                </h2>
+
+                <p className="my-3 ml-3">
+                  Email<span className="ml-20 pl-2">{user.email}</span>{" "}
+                </p>
+
+                <p className="my-3 ml-3">
+                  Phone<span className="ml-20">{user.phone_num}</span>{" "}
+                </p>
+              </div>
             </div>
-            <div className="ml-3">
-              <h1 className="text-gray-500 font-medium text-xl underline">
-                Update Biodata
-              </h1>
-              <p className="my-3 ml-3">
-                Name<span className="ml-20">Christian Tanaka</span>{" "}
-                <span className="ml-3">
-                  <button className="text-blue-300">Change</button>
-                </span>
-              </p>
+          ) : (
+            <div className="flex flex-col min-h-full bg-white mb-8 justify-center py-12 sm:px-6 lg:px-8 w-1/2 border-2 rounded-lg shadow">
+              <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
+                <img
+                  className="mx-auto h-12 w-auto"
+                  src={iconLogo}
+                  alt="Your Company"
+                />
+                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+                  Update your profile
+                </h2>
+              </div>
 
-              <p className="my-3 ml-3">
-                Birthdate<span className="ml-14">1999-12-25</span>{" "}
-                <span className="ml-3">
-                  <button className="text-blue-300">Change</button>
-                </span>
-              </p>
-
-              <p className="my-3 ml-3">
-                Gender<span className="ml-16 pl-2">Pria</span>{" "}
-                <span className="ml-3">
-                  <button className="text-blue-300">Change</button>
-                </span>
-              </p>
-
-              <h2 className="mt-10 text-gray-500 font-medium text-xl underline">
-                Update Contact
-              </h2>
-
-              <p className="my-3 ml-3">
-                Email<span className="ml-20 pl-2">tanakaalden@gmail.com</span>{" "}
-                <span className="ml-3">
-                  <button className="text-blue-300">Change</button>
-                </span>
-              </p>
-
-              <p className="my-3 ml-3">
-                Phone<span className="ml-20">085778080063</span>{" "}
-                <span className="ml-3">
-                  <button className="text-blue-300">Change</button>
-                </span>
-              </p>
+              <form method="post" encType="multipart/form-data" className="flex flex-col"> 
+                <label for="name">Name:</label>
+                <input id="name" name="name" type="text" placeholder="name" className="rounded-lg my-3" />
+                <label for="email">Email:</label>
+                <input id="email" name="email" type="email" placeholder="email" className="rounded-lg my-3" />
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" className="rounded-lg my-3">
+                    <option value="" disabled selected hidden>Choose your gender</option>
+                    <option value="Pria">Pria</option>
+                    <option value="Wanita">Wanita</option>
+                </select>
+                <label for="birthdate">Birthdate:</label>
+                <input id="birthdate" name="birthdate" type="text" placeholder="birthdate" className="rounded-lg my-3" />
+                <label for="profile_picture" className="mb-3">Profile Picture:</label>
+                <input id="profile_picture" name="profile_picture"type="file" />
+                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">            
+                  <div>
+                    <button
+                      type="submit"
+                      className="flex w-full justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onUpdate();
+                        changePage();
+                      }}
+                    >
+                      Update Profile
+                    </button>
+                  </div>
+              </div>
+              </form>
+             
             </div>
-          </div>
-          <form>{/* Form fields */}</form>
+          )}
         </div>
       )}
-      {tabs.find((tab) => tab.current && tab.name === "Address") && (
+      {tabs.find((tab) => tab.current && tab.name === "My Address") && (
         <div className="mt-4 p-4 border border-gray-300">
           {/* Your address box component */}
-          <h2>Address Box</h2>
-          <form>{/* Form fields */}</form>
+          <Address />
+          
         </div>
       )}
     </div>

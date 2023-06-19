@@ -1,10 +1,12 @@
 const db = require('../models')
 const User = db.User
+const Address =db.Address
+
 
 module.exports = {
     testing: async (req, res) => {
         try {
-          const data = await user.findAll();
+          const data = await User.findAll();
           res.status(200).send({
             message: "Successfully get all users data",
             data,
@@ -17,14 +19,18 @@ module.exports = {
 
       update: async (req, res) => {
         try {
-          const { name, gender, email, birthdate } = req.body;
-      
-          if (!name && !gender && !email && !birthdate) {
+          const { name, gender, email, birthdate} = req.body;
+          const profile_picture = req.file
+          console.log("ini gambar", profile_picture)
+        
+          if (!name && !gender && !email && !birthdate && ! profile_picture) {
             throw {
               message: "There's nothing to update",
             };
           }
-      
+          //link > frontend lebih gampang 
+          //nama file  > linknya bisa berubah2 
+     
           const user = await User.findOne({
             where: { id: req.params.id }
           }); 
@@ -47,6 +53,9 @@ module.exports = {
           if (birthdate) {
             user.birthdate = birthdate;
           }
+          if (profile_picture) {
+            user.profile_picture = profile_picture.filename;
+          }
       
           await user.save(); 
       
@@ -58,6 +67,35 @@ module.exports = {
           console.error(err);
           res.status(400).send(err);
         }
-      }      
+      },
+
+      signAddress: async (req, res) =>{
+        try{
+          const {kota, provinsi, kecamatan, kode_pos} = req.body
+          const user_id = req.params.id
+
+          const addressResult = await Address.create({
+            user_id,
+            kota,
+            provinsi,
+            kecamatan,
+            kode_pos,
+            is_main: true
+
+          })
+
+          res.status(200).send({
+            message: "Address added succesfully",
+            data: addressResult
+          })
+
+        }
+        catch (err) {
+          console.error(err);
+          res.status(400).send(err);
+        }
+      }
+      
+      
 }
 
