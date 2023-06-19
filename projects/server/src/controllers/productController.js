@@ -6,11 +6,10 @@ async function getProducts(req, res) {
   try {
     const itemsPerPage = 12;
 
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page);
     const productName = req.query.q;
     const categoryId = parseInt(req.query.categoryId);
     const branchId = parseInt(req.query.branchId);
-    const isDeleted = parseInt(req.query.deleted);
     const sortType = req.query.sort;
 
     const sortMap = {
@@ -20,19 +19,23 @@ async function getProducts(req, res) {
       price_desc: [["price", "DESC"]],
     };
 
+    const offsetLimit = {};
+    if (page) {
+      offsetLimit.limit = itemsPerPage;
+      offsetLimit.offset = (page - 1) * itemsPerPage;
+    }
+
     const categoryClause = categoryId ? { category_id: categoryId } : {};
     const branchClause = branchId ? { branch_id: branchId } : {};
     const productClause = productName
       ? { name: { [Op.like]: "%" + productName + "%" } }
       : {};
-    const deletedClause = isDeleted ? { is_deleted: isDeleted } : {};
 
     const products = await Products.findAndCountAll({
       attributes: ["id", "name", "price", "image_url", "desc"],
       where: {
         ...categoryClause,
         ...productClause,
-        ...deletedClause,
       },
       include: [
         {
@@ -51,8 +54,7 @@ async function getProducts(req, res) {
           },
         },
       ],
-      limit: itemsPerPage,
-      offset: (page - 1) * itemsPerPage,
+      ...offsetLimit,
       order: sortMap[sortType] || null,
     });
 

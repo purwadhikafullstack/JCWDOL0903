@@ -14,7 +14,8 @@ import api from "./api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
-import CategoryTable from "./components/CategoryTable";
+import Category from "./pages/Category";
+import Discount from "./pages/Discount";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -94,7 +95,11 @@ function App() {
         <Route path="/dashboard" element={<Dashboard element={null} />} />
         <Route
           path="/dashboard/products"
-          element={<Dashboard element={<CategoryTable />} />}
+          element={<Dashboard element={null} />}
+        />
+        <Route
+          path="/dashboard/category"
+          element={<Dashboard element={<Category />} />}
         />
         <Route
           path="/dashboard/transactions"
@@ -102,7 +107,7 @@ function App() {
         />
         <Route
           path="/dashboard/discounts"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Discount />} />}
         />
         <Route
           path="/dashboard/reports"

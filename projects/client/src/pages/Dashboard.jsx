@@ -1,5 +1,6 @@
 import {
-  BuildingStorefrontIcon,
+  InboxIcon,
+  SquaresPlusIcon,
   DocumentTextIcon,
   ReceiptPercentIcon,
   ChartBarIcon,
@@ -10,9 +11,14 @@ import DashboardSidebar from "../components/DashboardSidebar";
 const navigation = [
   { name: "Dashboard", path: "/dashboard", icon: HomeIcon },
   {
-    name: "Products & Inventory",
+    name: "Products",
     path: "/dashboard/products",
-    icon: BuildingStorefrontIcon,
+    icon: InboxIcon,
+  },
+  {
+    name: "Categories",
+    path: "/dashboard/category",
+    icon: SquaresPlusIcon,
   },
   {
     name: "Transactions",

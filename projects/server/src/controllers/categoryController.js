@@ -1,11 +1,39 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 const Category = db.Category;
 
 async function getCategories(req, res) {
   try {
-    const categories = await Category.findAll({
+    const itemsPerPage = 12;
+
+    const page = parseInt(req.query.page);
+    const categoryName = req.query.q;
+    const sortType = req.query.sort;
+
+    const sortMap = {
+      name_asc: [["name", "ASC"]],
+      name_desc: [["name", "DESC"]],
+    };
+
+    const offsetLimit = {};
+    if (page) {
+      offsetLimit.limit = itemsPerPage;
+      offsetLimit.offset = (page - 1) * itemsPerPage;
+    }
+
+    const categoryNameClause = categoryName
+      ? { name: { [Op.like]: "%" + categoryName + "%" } }
+      : {};
+
+    const categories = await Category.findAndCountAll({
       attributes: ["id", "name"],
+      where: {
+        ...categoryNameClause,
+      },
+      ...offsetLimit,
+      order: sortMap[sortType] || null,
     });
+
     return res.status(200).json({
       categories,
     });
@@ -18,6 +46,7 @@ async function getCategories(req, res) {
 async function createCategory(req, res) {
   try {
     const { name } = req.body;
+    if (!name) throw new Error("Name cannot be empty");
     const newCategory = await Category.create({
       name,
     });
@@ -31,15 +60,25 @@ async function createCategory(req, res) {
 }
 
 async function updateCategory(req, res) {
-  const categoryId = req.params.id;
-  const [isUpdated] = await Category.update(req.body, {
-    where: {
-      id: categoryId,
-    },
-  });
+  try {
+    const categoryId = req.params.id;
+    const { name } = req.body;
+    if (!name) throw new Error("Name cannot be empty");
+    const [isUpdated] = await Category.update(
+      { name },
+      {
+        where: {
+          id: categoryId,
+        },
+      }
+    );
 
-  if (!isUpdated) return res.status(404).end();
-  return res.status(200).end();
+    if (!isUpdated) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
 }
 
 async function deleteCategory(req, res) {

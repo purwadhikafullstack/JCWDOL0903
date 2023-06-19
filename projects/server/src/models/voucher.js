@@ -18,13 +18,16 @@ module.exports = (sequelize, DataTypes) => {
     {
       voucher_type: DataTypes.ENUM(
         "Produk",
-        "Total Produk",
+        "Total Belanja",
         "Gratis Ongkir",
-        "Kode Referral"
+        "Kode Referral",
+        "Buy One Get One"
       ),
       product_id: DataTypes.INTEGER,
       amount: DataTypes.INTEGER,
       percentage: DataTypes.INTEGER,
+      limit: DataTypes.INTEGER,
+      min_purchase: DataTypes.INTEGER,
     },
     {
       sequelize,

@@ -8,6 +8,7 @@ const {
   authRouter,
   categoryRouter,
   profillingRouter,
+  voucherRouter,
   branchRouter
 } = require("./routers");
 
@@ -48,6 +49,7 @@ app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
 app.use("/branch", branchRouter)
+app.use("/vouchers", voucherRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
 
