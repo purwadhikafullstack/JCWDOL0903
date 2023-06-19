@@ -6,9 +6,9 @@ import voucherReducer from "./reducers/voucherSlice";
 
 const store = configureStore({
   reducer: {
+    user: userReducer,
     product: productReducer,
     category: categoryReducer,
-    user: userReducer,
     voucher: voucherReducer,
   },
 });

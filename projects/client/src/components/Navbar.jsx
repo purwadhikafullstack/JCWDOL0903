@@ -17,6 +17,8 @@ import LogoIcon from "../assets/logoPutih.png";
 
 // Import Components
 import ListBox from "./subcomponents/ListBox";
+import axios from "axios";
+import api from "../api/api";
 
 
 function classNames(...classes) {
@@ -66,7 +68,10 @@ export default function Navbar() {
         <>
           <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">
             <div className="relative flex h-16 items-center justify-between">
-              <Link to="/" className="flex items-center px-2 lg:px-0">
+              <Link
+                to="/"
+                className="flex items-center px-2 lg:px-0"
+              >
                 <div className="flex-shrink-0">
                   <img
                     className="block h-8 w-auto lg:hidden"
@@ -86,7 +91,10 @@ export default function Navbar() {
 
               <div className="flex  flex-1 px-7">
                 <div className="w-full max-w-xl lg:max-w-2xl">
-                  <label htmlFor="search" className="sr-only">
+                  <label
+                    htmlFor="search"
+                    className="sr-only"
+                  >
                     Search
                   </label>
                   <div className="relative">
@@ -103,7 +111,6 @@ export default function Navbar() {
                         className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 focus:border-white focus:bg-white focus:text-gray-900 focus:outline-none focus:ring-white sm:text-sm"
                         placeholder="Search"
                         type="search"
-                        required
                       />
                       <input type="submit" hidden />
                     </form>
@@ -116,9 +123,15 @@ export default function Navbar() {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon
+                      className="block h-6 w-6"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <Bars3Icon
+                      className="block h-6 w-6"
+                      aria-hidden="true"
+                    />
                   )}
                 </Disclosure.Button>
               </div>
@@ -138,7 +151,10 @@ export default function Navbar() {
                   </button>
                   {token ? (
                     <>
-                      <Menu as="div" className="relative ml-4 flex-shrink-0">
+                      <Menu
+                        as="div"
+                        className="relative ml-4 flex-shrink-0"
+                      >
                         <div className="flex flex-row items-center text-white">
                           <div>{user.name}</div>
                           <div className="ml-3">
@@ -249,6 +265,27 @@ export default function Navbar() {
                 </a>
               ))}
             </nav>
+            {user.id && !user.isVerified ? (
+              <div
+                style={{
+                  backgroundColor: "yellow",
+                  width: "100vw",
+                  height: "30px",
+                }}
+              >
+                <button
+                  style={{
+                    backgroundColor: "black",
+                    color: "white",
+                  }}
+                  onClick={async () =>
+                    await api.post("/auth/verification/" + user.id)
+                  }
+                >
+                  resend verify
+                </button>
+              </div>
+            ) : null}
           </div>
           {token ? (
             <Disclosure.Panel className="lg:hidden">
@@ -305,7 +342,10 @@ export default function Navbar() {
                     className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                    <BellIcon
+                      className="h-6 w-6"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
                 <div className="mt-3 space-y-1 px-2">

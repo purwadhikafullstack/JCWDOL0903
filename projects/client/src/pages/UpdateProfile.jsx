@@ -78,7 +78,10 @@ export default function UpdateProfile() {
   return (
     <div>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+        <label
+          htmlFor="tabs"
+          className="sr-only"
+        >
           Select a tab
         </label>
         <select

@@ -3,9 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("./models");
+const { authorize } = require("../src/middleware/validator");
 const {
   productRouter,
   authRouter,
+  changePassRouter,
   categoryRouter,
   profillingRouter,
   voucherRouter,
@@ -27,6 +29,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);
@@ -45,6 +48,7 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 app.use("/auth", authRouter);
+app.use(changePassRouter);
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
@@ -84,6 +88,11 @@ app.use((err, req, res, next) => {
 // // Serve the HTML page
 // app.get("*", (req, res) => {
 //   res.sendFile(join(__dirname, clientPath, "index.html"));
+// });
+
+// db.connect((err) => {
+//   if (err) return console.log(err);
+//   console.log("Success connect to mysql");
 // });
 
 // db.connect((err) => {

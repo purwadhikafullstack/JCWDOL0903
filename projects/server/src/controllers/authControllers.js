@@ -19,9 +19,9 @@ module.exports = {
         password,
         password_confirmation,
         phone_num,
+        gender,
+        birthdate,
       } = req.body;
-
-      console.log(req.body);
 
       if (
         !name ||
@@ -29,17 +29,21 @@ module.exports = {
         !email ||
         !password ||
         !password_confirmation ||
-        !phone_num
+        !phone_num ||
+        !gender ||
+        !birthdate ||
+        gender === ". . ."
       )
-        throw "Please complete your data";
+        return res.status(400).send({
+          message: "Please complete your data",
+        });
 
-      if (password !== password_confirmation) throw "Password does not match";
+      if (password !== password_confirmation)
+        return res.status(400).send({
+          message: "Password does not match",
+        });
 
-      const userExist = await user.findOne({
-        where: {
-          email,
-        },
-      });
+      const userExist = await user.findOne({ where: { email } });
 
       if (userExist)
         throw {
@@ -48,23 +52,24 @@ module.exports = {
         };
 
       const salt = await bcrypt.genSalt(10);
-      // console.log(salt);
-      const hashPash = await bcrypt.hash(password, salt);
-      // console.log(hashPash);
+      const hashPassword = await bcrypt.hash(password, salt);
 
       const result = await user.create({
         name,
         username,
         email,
-        password: hashPash,
+        password: hashPassword,
         phone_num,
+        gender,
+        birthdate,
       });
+
       const generateToken = nanoid(50);
 
-      const token = await db.Token.create({
+      await db.Token.create({
         user_id: result.dataValues.id,
         token: generateToken,
-        expired: moment().add(1, "days"), //2023-06-08
+        expired: moment().add(1, "days"),
         valid: true,
         status: "VERIFICATION",
       });
@@ -76,9 +81,8 @@ module.exports = {
         html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here </a> to verify your account </p>`,
       };
 
-      let response = await nodemailer.sendMail(mail);
+      await nodemailer.sendMail(mail);
 
-      console.log(`${response}`);
       return res.status(200).send({
         data: result,
         message: "register Succesfully",
@@ -91,7 +95,7 @@ module.exports = {
 
   verify: async (req, res) => {
     try {
-      const { token } = req.body;
+      const { token } = req.headers;
 
       const data = await Token.findOne({
         where: {
@@ -138,13 +142,47 @@ module.exports = {
     }
   },
 
+  resendVerification: async (req, res) => {
+    try {
+      const userId = req.params.id;
+
+      const user = await db.User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      const generateToken = nanoid(50);
+
+      await db.Token.create({
+        user_id: userId,
+        token: generateToken,
+        expired: moment().add(1, "days"),
+        valid: true,
+        status: "VERIFICATION",
+      });
+
+      let mail = {
+        from: `Admin <banguninbang@gmail.com>`,
+        to: `${user.dataValues.email}`,
+        subject: `Account Registration`,
+        html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here </a> to verify your account </p>`,
+      };
+
+      await nodemailer.sendMail(mail);
+
+      return res.status(200).send({ message: "success" });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  },
+
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
 
       if (!email || !password) throw "Please your complete data";
 
-      // select from where
       const userExist = await user.findOne({
         where: {
           email,
@@ -158,21 +196,12 @@ module.exports = {
           message: "User not found",
         };
 
-      //mengcompare password yang diinput dengan password yang ada di database
       const isvalid = await bcrypt.compare(password, userExist.password);
       if (!isvalid)
         throw {
           status: false,
           message: "Wrong password",
         };
-
-      // const payload = {
-      //   id: userExist.id,
-      //   isadmin: userExist.isadmin,
-      //   is_branch: userExist,
-      // };
-
-      // console.log("payload", payload);
 
       const generateToken = nanoid(50);
 
@@ -188,7 +217,7 @@ module.exports = {
       const token = await db.Token.create({
         user_id: userExist.dataValues.id,
         token: generateToken,
-        expired: moment().add(1, "days"), //2023-06-08
+        expired: moment().add(1, "days"),
         valid: true,
         status: "LOGIN",
       });
@@ -207,9 +236,6 @@ module.exports = {
     try {
       const { token } = req.params;
 
-      //const token = select userId from tokens where token = token
-      // select * from users where id = userId
-
       const userToken = await Token.findOne({
         where: {
           token,
@@ -217,21 +243,136 @@ module.exports = {
           expired: { [Op.gt]: moment() },
         },
       });
-      console.log(userToken);
-
       const findUser = await user.findOne({
         where: {
           id: userToken.dataValues.user_id,
         },
       });
 
-      console.log(findUser);
       delete findUser.dataValues.password;
       return res
         .status(200)
         .send({ message: "Success get User", user: findUser });
     } catch (error) {
-      console.log(error.message);
+      return res.status(400).json({ error: error.message });
+    }
+  },
+
+  forgotPass: async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      console.log("req.body-reset", req.body);
+
+      const user = await db.User.findOne({
+        where: {
+          email,
+        },
+      });
+
+      // console.log("ini user", user);
+      if (!user)
+        throw {
+          status: false,
+          message: "Sorry, we could not find your account.",
+        };
+
+      // console.log("ini id ya", user.dataValues.id);
+
+      //  menjadi false dan forgotpassword
+
+      const generateToken = nanoid();
+      console.log("genarateToke", generateToken);
+      const token = await db.Token.create({
+        user_id: user.dataValues.id,
+        token: generateToken,
+        expired: moment().add(2, "day"),
+        status: "FORGOT-PASSWORD",
+      });
+
+      console.log("ini toke after reset pass", token);
+
+      let mail = {
+        from: `Admin <banguninbang@gmail.com>`,
+        to: `${user.dataValues.email}`,
+        subject: `Reset Password`,
+        html: `<p> Click <a href="http://localhost:3000/forgot-password/${token.dataValues.token}">here </a> to verify your account </p>`,
+      };
+      await nodemailer.sendMail(mail);
+
+      return res.send({ message: "Please check your email" });
+    } catch (error) {
+      return res.status(400).json({ error: error });
+    }
+  },
+
+  requestReset: async (req, res) => {
+    const { password, confirmPassword } = req.body;
+
+    const { token } = req.headers.authorize;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).send({
+        message: "Please complete your data",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).send({
+        message: "Passwords does not match",
+      });
+    }
+    await db.User.update(
+      {
+        password,
+      },
+      {
+        where: {
+          id: user_id,
+        },
+      }
+    );
+
+    await db.Token.update(
+      {
+        valid: false,
+      },
+      {
+        where: {
+          user_id: user_id,
+          status: "FORGOT-PASSWORD",
+        },
+      }
+    );
+
+    return res.send({ message: "updated password" });
+    // let token = req.headers.authorization;
+  },
+  getByTokenForgotPass: async (req, res) => {
+    try {
+      const token = req.headers;
+      console.log("getByTokenForgotPass", token);
+
+      const dataToken = await db.Token.findOne({
+        where: {
+          token,
+          expired: {
+            [db.Sequelize.Op.gte]: moment().format,
+          },
+          valid: true,
+        },
+      });
+
+      if (!dataToken) {
+        throw new Error("Token has expired");
+      }
+
+      console.log("dataToke:", dataToken.dataValues);
+
+      const user_id = dataToken.dataValues.user_id;
+      const tokenId = dataToken.dataValues.id;
+
+      // ...
+    } catch (error) {
       return res.status(400).json({ error: error.message });
     }
   },

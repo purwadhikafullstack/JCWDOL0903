@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       phone_num: DataTypes.STRING,
-      gender: DataTypes.ENUM("Pria", "Wanita"),
+      gender: DataTypes.ENUM("Man", "Woman"),
       birthdate: DataTypes.DATE,
       profile_picture: DataTypes.STRING,
       referal_code: DataTypes.STRING,
@@ -44,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "User",
+      timestamps: false,
+      paranoid: true,
     }
   );
   return User;

@@ -32,14 +32,10 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.phone_num = action.payload.phone_num;
       state.role = action.payload.role;
+      state.isVerified = action.payload.isVerified;
     },
     logout: (state) => {
       return initialState;
-      // state.value.id = 0;
-      // state.value.username = "";
-      // state.value.email = "";
-      // state.value.phone_number = "";
-      // state.value.merchant_status = false;
     },
   },
 });
