@@ -16,6 +16,7 @@ import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
+import ProductDetail from "./components/ProductDetail";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -81,6 +82,15 @@ function App() {
             <>
               <Navbar />
               <ProductList />
+            </>
+          }
+        />
+        <Route
+          path="/products/:id"
+          element={
+            <>
+              <Navbar />
+              <ProductDetail />
             </>
           }
         />

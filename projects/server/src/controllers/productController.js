@@ -8,6 +8,7 @@ async function getProducts(req, res) {
 
     const page = parseInt(req.query.page);
     const productName = req.query.q;
+    const productId = parseInt(req.query.id);
     const categoryId = parseInt(req.query.categoryId);
     const branchId = parseInt(req.query.branchId);
     const sortType = req.query.sort;
@@ -30,12 +31,14 @@ async function getProducts(req, res) {
     const productClause = productName
       ? { name: { [Op.like]: "%" + productName + "%" } }
       : {};
+    const productIdClause = productId ? { id: productId } : {};
 
     const products = await Products.findAndCountAll({
       attributes: ["id", "name", "price", "image_url", "desc"],
       where: {
         ...categoryClause,
         ...productClause,
+        ...productIdClause,
       },
       include: [
         {

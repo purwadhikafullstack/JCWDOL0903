@@ -15,10 +15,14 @@ export default function DiscountFormControl({ voucher = {} }) {
     voucher.percentage ? "percentage" : "nominal"
   );
   const [productName, setProductName] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState({
-    id: voucher.product_id || "",
-    name: voucher.Product?.name || "",
-  });
+  const [selectedProduct, setSelectedProduct] = useState(
+    voucher.product_id
+      ? {
+          id: voucher.product_id || "",
+          name: voucher.Product?.name || "",
+        }
+      : ""
+  );
 
   return (
     <div>
@@ -50,7 +54,7 @@ export default function DiscountFormControl({ voucher = {} }) {
               max={unit === "percentage" ? 100 : null}
               id="amountPercentage"
               defaultValue={voucher.amount || voucher.percentage || ""}
-              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+              className="spin-hidden block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
               placeholder="0.00"
             />
             <div className="absolute inset-y-0 right-0 flex items-center">
@@ -86,7 +90,7 @@ export default function DiscountFormControl({ voucher = {} }) {
             min="0"
             id="limit"
             defaultValue={voucher.limit || ""}
-            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+            className="spin-hidden block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
             placeholder="0.00"
           />
         </>
@@ -106,7 +110,7 @@ export default function DiscountFormControl({ voucher = {} }) {
             min="0"
             id="min_purchase"
             defaultValue={voucher.min_purchase || ""}
-            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
+            className="spin-hidden block w-full rounded-md border-0 py-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
             placeholder="0.00"
           />
         </>
