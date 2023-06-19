@@ -3,9 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("./models");
+const { authorize } = require("../src/middleware/validator");
 const {
   productRouter,
   authRouter,
+  changePassRouter,
   categoryRouter,
   profillingRouter,
 } = require("./routers");
@@ -25,6 +27,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);
@@ -43,6 +46,7 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 app.use("/auth", authRouter);
+app.use(changePassRouter);
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);

@@ -7,10 +7,26 @@ const Verification = () => {
   const [isVerified, setIsVerified] = useState(false);
   const token = useParams().token;
   useEffect(() => {
-    axios.post("http://localhost:2000/auth/verify", { token }).then((res) => {
-      if (res.data.message === "Verified") setIsVerified(true);
-    });
+    // console.log(token);
+    async function verify() {
+      await axios
+        .post(
+          "http://localhost:2000/auth/verify",
+          {},
+          {
+            headers: {
+              token,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data.message === "Verified") setIsVerified(true);
+        });
+    }
+
+    verify();
   }, []);
+
   return (
     <div>
       <div className=" flex flex-col text-center text-4xl h-28 mt-11 ">

@@ -15,9 +15,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
 import CategoryTable from "./components/CategoryTable";
+import ChangePassword from "./pages/ChangePassword";
+import ResetPassword from "./pages/ReqForgotPass";
+import Error from "./pages/Error";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const [message, setMessage] = useState("");
+  const id = useSelector((state) => state.user.id);
   //global state variable state yg bisa digunakan disemua component
   //state,setState = state variable
   //store = reducer, dispatch = setState
@@ -38,6 +43,7 @@ function App() {
           .get("/auth/v1/" + token)
           .then((res) => res.data.user);
         dispatch(login(user));
+        console.log(user);
         // console.log(user);
       } catch (err) {
         console.log(err);
@@ -75,6 +81,10 @@ function App() {
           }
         />
         <Route
+          path="/*"
+          element={<Error />}
+        />
+        <Route
           path="/products"
           element={
             <>
@@ -95,6 +105,20 @@ function App() {
           path="/verification/:token"
           element={<Verification />}
         />
+        <Route
+          path={"/changePass/:id"}
+          element={<ChangePassword />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path={"/forgot-password/:token"}
+          element={<ResetPassword />}
+        />
+
         <Route
           path="/dashboard"
           element={<Dashboard element={null} />}

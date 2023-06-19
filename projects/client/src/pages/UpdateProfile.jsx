@@ -9,15 +9,13 @@ const initialTabs = [
   { name: "Voucher", href: "#", current: false },
 ];
 
-
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function UpdateProfile() {
   const [tabs, setTabs] = useState(initialTabs);
-  const [name, setName] = useState("")
+  const [name, setName] = useState("");
 
   // useEffect(() => {
   //   const newName = await axios.get("http://localhost:2000/user")
@@ -34,7 +32,10 @@ export default function UpdateProfile() {
   return (
     <div>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+        <label
+          htmlFor="tabs"
+          className="sr-only"
+        >
           Select a tab
         </label>
         <select
@@ -50,7 +51,10 @@ export default function UpdateProfile() {
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav
+            className="-mb-px flex space-x-8"
+            aria-label="Tabs"
+          >
             {tabs.map((tab) => (
               <Link
                 key={tab.name}
@@ -97,6 +101,14 @@ export default function UpdateProfile() {
                     Besar file: maksimum 10.000.000 bytes (10 Megabytes).
                     Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
                   </h1>
+
+                  <div>
+                    <Link to={"/changePass/:id"}>
+                      <button className="rounded-lg w-3/4 h-12 bg-slate-400 text-white hover:bg-slate-600 active:bg-slate-900">
+                        Change Password
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
