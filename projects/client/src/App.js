@@ -17,7 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
 import ChangePassword from "./pages/ChangePassword";
-import ResetPassword from "./pages/ReqForgotPass";
+import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
 import ForgotPassword from "./pages/ForgotPassword";
 
@@ -115,7 +115,7 @@ function App() {
         />
 
         <Route
-          path={"/forgot-password/:token"}
+          path={"/reset-password/:token"}
           element={<ResetPassword />}
         />
 

@@ -1,14 +1,45 @@
 import React from "react";
 import logo from "../assets/logo.png";
+import Swal from "sweetalert2";
+import { Axios } from "axios";
+import { useNavigate } from "react-router-dom";
 
-const ReqForgotPass = () => {
-  const onResetPass = (e) => {
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const onResetPass = async (e) => {
     e.preventDefault();
 
-    const data = {
-      email: document.getElementById("email").value,
-      confirm_pass: document.getElementById("confirm_password").value,
-    };
+    try {
+      // const data = {
+      //   email: document.getElementById("email").value,
+      //   confirm_pass: document.getElementById("confirm_password").value,
+      // };
+
+      const url = "http://localhost:2000/auth/reset-password";
+      const headers = {
+        authorization: `Bearer ${token}`,
+      };
+
+      const result = await Axios.post(url, data, { headers });
+
+      await Swal.fire({
+        icon: "success",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (error) {
+      console.log("ini err reset pass", error);
+      // Swal.fire({
+      //   icon: "error",
+      //   title: error.response.data.message,
+      //   showConfirmButton: true,
+      //   timer: 1500,
+      // });
+    }
   };
 
   return (
@@ -85,4 +116,4 @@ const ReqForgotPass = () => {
   );
 };
 
-export default ReqForgotPass;
+export default ResetPassword;
