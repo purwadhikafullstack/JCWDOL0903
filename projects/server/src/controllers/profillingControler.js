@@ -69,6 +69,7 @@ module.exports = {
         }
       },
 
+      // Address Controller
       signAddress: async (req, res) =>{
         try{
           const {kota, provinsi, kecamatan, kode_pos} = req.body
@@ -89,6 +90,50 @@ module.exports = {
             data: addressResult
           })
 
+        }
+        catch (err) {
+          console.error(err);
+          res.status(400).send(err);
+        }
+      },
+
+      getAddress : async (req, res) => {
+        try{
+          const userId = req.params.id
+          const userAddress = await Address.findAll({
+            where:{
+              user_id: userId
+            }
+          })
+          res.status(200).send({
+            message: `successfully retrieve user: ${userId} addressess`,
+            data: userAddress
+          })
+        }
+        catch (err) {
+          console.error(err);
+          res.status(400).send(err);
+        }
+      },
+
+      setAddress : async (req, res) => {
+        try{
+          const {id, user_id,  is_main} = req.body
+          console.log(req.body)
+          const reset = await Address.update({is_main: false},{
+            where:{
+              user_id
+            }
+          })
+          const newStatus = await Address.update({is_main: true}, {
+            where:{
+              id
+            }
+          })
+          res.status(200).send({
+            message: `successfully update user addressess`,
+            data: newStatus
+          })         
         }
         catch (err) {
           console.error(err);

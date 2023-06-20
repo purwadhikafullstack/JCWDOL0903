@@ -7,7 +7,8 @@ import CategoryTab from "../components/CategoryTab";
 
 
 const API_endpoint = `https://api.opencagedata.com/geocode/v1/json?`;
-const API_key = "bf4320abed844834a64e30080b0b5cb4";
+const API_key = process.env.REACT_APP_OPENCAGE_API_KEY
+// "bf4320abed844834a64e30080b0b5cb4";
 
 // console.log("envprocess", process.env.REACT_APP_BASE_URL);
 
@@ -21,6 +22,7 @@ function LandingPage() {
   const productsGlobal = useSelector((state) => state.product)
 
   useEffect(() => {
+    console.log("ini API KEY", API_key)
     navigator.geolocation.getCurrentPosition((position) => {
       setLatitude(position.coords.latitude);
       setLongitude(position.coords.longitude);

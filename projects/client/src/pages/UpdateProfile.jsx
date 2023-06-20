@@ -229,10 +229,10 @@ export default function UpdateProfile() {
         </div>
       )}
       {tabs.find((tab) => tab.current && tab.name === "My Address") && (
-        <div className="mt-4 p-4 border border-gray-300">
+        <div className="container-screen flex flex-col justify-center items-center" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
           {/* Your address box component */}
           <Address />
-          
+          <button className="bg-red-500 h-1/4 rounded-lg my-5 px-4 py-2 font-semibold text-white focus:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Add New Address</button>
         </div>
       )}
     </div>

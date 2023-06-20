@@ -250,9 +250,9 @@ export default function Navbar() {
               aria-label="Global"
             >
               {navigation.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className={classNames(
                     item.current
                       ? "bg-gray-900 text-white"
@@ -262,7 +262,7 @@ export default function Navbar() {
                   aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </nav>
             {user.id && !user.isVerified ? (
