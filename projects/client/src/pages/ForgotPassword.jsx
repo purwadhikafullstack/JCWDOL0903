@@ -1,12 +1,35 @@
+import Axios from "axios";
 import React from "react";
+import Swal from "sweetalert2";
 
 const ForgotPassword = () => {
-  const onResetPass = (e) => {
+  const onForgotPass = async (e) => {
     e.preventDefault();
 
-    const data = {
-      email: document.getElementById("email".value).value,
-    };
+    try {
+      const data = {
+        email: document.getElementById("email").value,
+      };
+      const url = "http://localhost:2000/auth/forgot-password";
+      const result = await Axios.patch(url, data);
+
+      // Reset Form
+      document.getElementById("email").value = "";
+
+      await Swal.fire({
+        icon: "success",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
   };
 
   return (
@@ -14,7 +37,7 @@ const ForgotPassword = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Reset password
+            Forgot password
           </h3>
           <div className="mt-2 max-w-xl text-sm text-gray-500">
             <p>
@@ -22,7 +45,10 @@ const ForgotPassword = () => {
               account.
             </p>
           </div>
-          <form className="mt-5 sm:flex sm:items-center">
+          <form
+            className="mt-5 sm:flex sm:items-center"
+            onSubmit={onForgotPass}
+          >
             <div className="w-full sm:max-w-xs">
               <label
                 htmlFor="email"

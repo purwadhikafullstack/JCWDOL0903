@@ -295,9 +295,10 @@ module.exports = {
         from: `Admin <banguninbang@gmail.com>`,
         to: `${user.dataValues.email}`,
         subject: `Reset Password`,
-        html: `<p> Click <a href="http://localhost:3000/forgot-password/${token.dataValues.token}">here </a> to verify your account </p>`,
+        html: `<p> Click <a href="http://localhost:3000/reset-password/${token.dataValues.token}">here </a> to verify your account </p>`,
       };
       await nodemailer.sendMail(mail);
+      console.log("ini token", token);
 
       return res.send({ message: "Please check your email" });
     } catch (error) {
@@ -306,46 +307,55 @@ module.exports = {
   },
 
   requestReset: async (req, res) => {
-    const { password, confirmPassword } = req.body;
+    try {
+      let token = req.headers.authorization;
+      const { user_id, password, confirmPassword } = req.body;
 
-    const { token } = req.headers.authorize;
+      console.log("ini token request reset", user_id);
 
-    if (!password || !confirmPassword) {
-      return res.status(400).send({
-        message: "Please complete your data",
-      });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).send({
-        message: "Passwords does not match",
-      });
-    }
-    await db.User.update(
-      {
-        password,
-      },
-      {
-        where: {
-          id: user_id,
-        },
+      if (!password || !confirmPassword) {
+        return res.status(400).send({
+          message: "Please complete your data",
+        });
       }
-    );
 
-    await db.Token.update(
-      {
-        valid: false,
-      },
-      {
-        where: {
-          user_id: user_id,
-          status: "FORGOT-PASSWORD",
-        },
+      if (password !== confirmPassword) {
+        return res.status(400).send({
+          message: "Passwords does not match",
+        });
       }
-    );
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
 
-    return res.send({ message: "updated password" });
-    // let token = req.headers.authorization;
+      await db.User.update(
+        {
+          password,
+        },
+        {
+          where: {
+            id: user_id,
+          },
+        }
+      );
+
+      await db.Token.update(
+        {
+          valid: false,
+        },
+        {
+          where: {
+            user_id: user_id,
+            status: "FORGOT-PASSWORD",
+          },
+        }
+      );
+
+      return res.send({ message: "updated password" });
+      // let token = req.headers.authorization;
+    } catch (error) {
+      // return res.status(400).json({ error: error.message });
+      console.log(error);
+    }
   },
   getByTokenForgotPass: async (req, res) => {
     try {
