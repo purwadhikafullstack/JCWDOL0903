@@ -27,6 +27,7 @@ function ProductList() {
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
+  const branchesGlobal = useSelector((state) => state.branch);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortFilter, setSortFilter] = useState(sortOptions[0]);
   const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
@@ -49,7 +50,7 @@ function ProductList() {
   }, [categoriesGlobal.categories]);
 
   useEffect(() => {
-    let query = `page=${currentPage}`;
+    let query = `page=${currentPage}&branchId=${branchesGlobal.selectedBranch.id}`;
     if (searchQuery) query += `&q=${searchQuery}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
     if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;
@@ -60,6 +61,7 @@ function ProductList() {
     categoryFilter.value,
     currentPage,
     searchQuery,
+    branchesGlobal.selectedBranch.id,
   ]);
 
   return (

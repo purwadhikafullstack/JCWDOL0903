@@ -2,17 +2,19 @@ import { useState, useEffect } from "react";
 import api from "../api/api";
 import { numToIDRCurrency } from "../helper/currency";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   CheckIcon,
   XMarkIcon,
   StarIcon,
   MapPinIcon,
 } from "@heroicons/react/20/solid";
-import ProductDetailSkeleton from "./ProductDetailSkeleton";
-import ProductNotFound from "./ProductNotFound";
-import InputNumber from "./InputNumber";
+import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
+import ProductNotFound from "../components/ProductNotFound";
+import InputNumber from "../components/InputNumber";
 
 export default function ProductDetail() {
+  const branchesGlobal = useSelector((state) => state.branch);
   const [product, setProduct] = useState({});
   const productStock = product?.Stocks?.[0]?.stock || 0;
   const productBranch = product?.Stocks?.[0]?.Branch || {};
@@ -22,11 +24,15 @@ export default function ProductDetail() {
 
   useEffect(() => {
     setIsLoading(true);
-    api.get(`/products?id=${productId}`).then((res) => {
-      setProduct(res.data.products?.rows[0]);
-      setIsLoading(false);
-    });
-  }, [productId]);
+    api
+      .get(
+        `/products?id=${productId}&&branchId=${branchesGlobal.selectedBranch.id}`
+      )
+      .then((res) => {
+        setProduct(res.data.products?.rows[0]);
+        setIsLoading(false);
+      });
+  }, [productId, branchesGlobal.selectedBranch.id]);
 
   function handleChange(e) {
     const input = e.target.value;

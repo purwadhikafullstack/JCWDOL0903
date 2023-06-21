@@ -323,11 +323,11 @@ module.exports = {
         });
       }
       const tokenData = await db.Token.findOne({
-        where:{
-          token
-        }
-      })
-      const userId = tokenData.dataValues.user_id
+        where: {
+          token,
+        },
+      });
+      const userId = tokenData.dataValues.user_id;
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
 
