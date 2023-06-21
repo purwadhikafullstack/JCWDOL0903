@@ -1,27 +1,27 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import Swal from "sweetalert2";
-import { Axios } from "axios";
-import { useNavigate } from "react-router-dom";
+import api from "../api/api";
+import { useNavigate, useParams } from "react-router-dom";
+
 
 const ResetPassword = () => {
+  const { token } = useParams()
   const navigate = useNavigate();
   const onResetPass = async (e) => {
     e.preventDefault();
 
     try {
-      // const data = {
-      //   email: document.getElementById("email").value,
-      //   confirm_pass: document.getElementById("confirm_password").value,
-      // };
-
-      const url = "http://localhost:2000/auth/reset-password";
+      const data = {
+        password: document.getElementById("new_pass").value,
+        confirmPassword: document.getElementById("confirm_password").value,
+      };
+      const url = "/auth/reset-password";
       const headers = {
-        authorization: `Bearer ${token}`,
+        authorization: token,
       };
 
-      const result = await Axios.post(url, data, { headers });
-
+      const result = await api.post(url, data, { headers });
       await Swal.fire({
         icon: "success",
         title: result.data.message,

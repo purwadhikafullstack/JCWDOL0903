@@ -309,9 +309,7 @@ module.exports = {
   requestReset: async (req, res) => {
     try {
       let token = req.headers.authorization;
-      const { user_id, password, confirmPassword } = req.body;
-
-      console.log("ini token request reset", user_id);
+      const { password, confirmPassword } = req.body;
 
       if (!password || !confirmPassword) {
         return res.status(400).send({
@@ -324,16 +322,22 @@ module.exports = {
           message: "Passwords does not match",
         });
       }
+      const tokenData = await db.Token.findOne({
+        where:{
+          token
+        }
+      })
+      const userId = tokenData.dataValues.user_id
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
 
       await db.User.update(
         {
-          password,
+          password: hashPassword,
         },
         {
           where: {
-            id: user_id,
+            id: userId,
           },
         }
       );
@@ -344,7 +348,7 @@ module.exports = {
         },
         {
           where: {
-            user_id: user_id,
+            user_id: userId,
             status: "FORGOT-PASSWORD",
           },
         }

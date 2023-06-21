@@ -6,6 +6,7 @@ import UpdateProfile from "./ProductList"
 import CategoryTab from "../components/CategoryTab";
 
 
+
 const API_endpoint = `https://api.opencagedata.com/geocode/v1/json?`;
 const API_key = process.env.REACT_APP_OPENCAGE_API_KEY
 // "bf4320abed844834a64e30080b0b5cb4";
