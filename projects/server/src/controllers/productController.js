@@ -43,11 +43,11 @@ async function getProducts(req, res) {
       include: [
         {
           model: db.Category,
-          attributes: ["name"],
+          attributes: ["id", "name"],
         },
         {
           model: db.Stocks,
-          attributes: ["stock"],
+          attributes: ["id", "stock"],
           where: {
             ...branchClause,
           },

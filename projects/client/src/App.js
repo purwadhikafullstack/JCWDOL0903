@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
 import ProductDetail from "./components/ProductDetail";
+import Product from "./pages/Product";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -106,7 +107,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard element={null} />} />
         <Route
           path="/dashboard/products"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Product />} />}
         />
         <Route
           path="/dashboard/category"

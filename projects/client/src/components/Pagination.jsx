@@ -25,9 +25,9 @@ export default function Pagination({
     <>
       <div className="flex gap-4 items-center border-t border-gray-200 justify-between">
         <p className=" text-gray-700">
-          Showing <span className="font-medium">{startItem}</span> to{" "}
-          <span className="font-medium">{endItem}</span> of{" "}
-          <span className="font-medium">{totalItems}</span> results
+          Showing <span className="font-bold">{startItem}</span> to{" "}
+          <span className="font-bold">{endItem}</span> of{" "}
+          <span className="font-bold">{totalItems}</span> results
         </p>
         <ReactPaginate
           breakLabel="..."
