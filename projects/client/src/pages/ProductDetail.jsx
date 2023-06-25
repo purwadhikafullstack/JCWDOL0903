@@ -12,6 +12,7 @@ import {
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import ProductNotFound from "../components/ProductNotFound";
 import InputNumber from "../components/InputNumber";
+import BrokenImg from "../assets/broken-img.png";
 
 export default function ProductDetail() {
   const branchesGlobal = useSelector((state) => state.branch);
@@ -80,7 +81,7 @@ export default function ProductDetail() {
         <div className="mt-10 lg:mt-0">
           <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
             <img
-              src={product.image_url}
+              src={product.image_url || BrokenImg}
               alt={product.name}
               className="h-full w-full object-cover object-center"
             />

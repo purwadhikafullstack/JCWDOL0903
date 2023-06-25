@@ -3,8 +3,9 @@ const categoryRouter = require("./categoryRouter");
 const authRouter = require("./authRouters");
 const profillingRouter = require("./profilingRouter");
 const voucherRouter = require("./voucherRouter");
-const branchRouter = require("./branchRouters")
+const branchRouter = require("./branchRouters");
 const changePassRouter = require("./changePassRouter");
+const stockRouter = require("./stockRouter");
 
 module.exports = {
   productRouter,
@@ -13,5 +14,6 @@ module.exports = {
   authRouter,
   voucherRouter,
   branchRouter,
-  changePassRouter
+  changePassRouter,
+  stockRouter,
 };

@@ -23,6 +23,7 @@ export default function InputNumber({
       <input
         type="number"
         name="quantity"
+        min="1"
         className="border-none focus:border-none spin-hidden focus:ring-0 max-w-[60px] text-center"
         value={inputValue}
         onChange={onInputChange}

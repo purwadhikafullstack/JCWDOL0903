@@ -47,6 +47,13 @@ async function createCategory(req, res) {
   try {
     const { name } = req.body;
     if (!name) throw new Error("Name cannot be empty");
+    const categoryExists = await Category.findOne({
+      where: {
+        name,
+      },
+    });
+    if (categoryExists?.dataValues) throw new Error("Category already exists");
+
     const newCategory = await Category.create({
       name,
     });
@@ -61,9 +68,16 @@ async function createCategory(req, res) {
 
 async function updateCategory(req, res) {
   try {
-    const categoryId = req.params.id;
+    const categoryId = parseInt(req.params.id);
     const { name } = req.body;
     if (!name) throw new Error("Name cannot be empty");
+    const categoryExists = await Category.findOne({
+      where: {
+        name,
+      },
+    });
+    if (categoryExists?.dataValues) throw new Error("Category already exists");
+
     const [isUpdated] = await Category.update(
       { name },
       {
@@ -83,7 +97,7 @@ async function updateCategory(req, res) {
 
 async function deleteCategory(req, res) {
   try {
-    const categoryId = req.params.id;
+    const categoryId = parseInt(req.params.id);
     const isDeleted = await Category.destroy({
       where: {
         id: categoryId,

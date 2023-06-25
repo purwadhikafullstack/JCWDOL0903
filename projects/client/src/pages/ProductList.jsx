@@ -9,6 +9,7 @@ import Dropdown from "../components/Dropdown";
 
 import { fetchProducts } from "../reducers/productSlice";
 import { fetchCategories } from "../reducers/categorySlice";
+import { countProducts } from "../helper/products";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -84,7 +85,7 @@ function ProductList() {
       </Filter>
       <ProductCard products={productsGlobal.products} />
       <Pagination
-        itemsInPage={productsGlobal.products.length}
+        itemsInPage={countProducts(productsGlobal.products)}
         totalItems={productsGlobal.totalItems}
         totalPages={productsGlobal.totalPages}
         currentPage={currentPage}

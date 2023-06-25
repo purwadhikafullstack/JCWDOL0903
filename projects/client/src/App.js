@@ -22,6 +22,7 @@ import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
 import ForgotPassword from "./pages/ForgotPassword";
+import Footer from "./components/Footer";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -137,6 +138,7 @@ function App() {
           element={<Dashboard element={null} />}
         />
       </Routes>
+      {/* <Footer /> */}
     </div>
   );
 }
