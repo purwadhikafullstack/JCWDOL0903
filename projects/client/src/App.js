@@ -14,16 +14,19 @@ import api from "./api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
+import Cart from "./pages/Cart";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
 import ForgotPassword from "./pages/ForgotPassword";
+import Footer from "./components/Footer";
 
 function App() {
   const [message, setMessage] = useState("");
   const id = useSelector((state) => state.user.id);
+  const [isLoading, setIsLoading]= useState(true)
   //global state variable state yg bisa digunakan disemua component
   //state,setState = state variable
   //store = reducer, dispatch = setState
@@ -34,7 +37,6 @@ function App() {
   //dispatch = setState
 
   // const user = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
   useEffect(() => {
     async function fetchUser() {
@@ -50,16 +52,17 @@ function App() {
       }
     }
     fetchUser();
+
+    setTimeout(() => setIsLoading(false), 500)
+
   }, []);
 
 
 
-  return (
-    <div className="App">
+  return  isLoading? null : 
+      <div className="App">
       <Routes>
-        <Route
-          path="/"
-          element={
+        <Route path="/" element={
             <>
               <Navbar /> <LandingPage />
             </>
@@ -70,6 +73,16 @@ function App() {
           element={
             <>
               <Register />
+            </>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <>
+            <Navbar />
+              <Cart />
             </>
           }
         />
@@ -146,8 +159,12 @@ function App() {
           element={<Dashboard element={null} />}
         />
       </Routes>
+      <Footer />
+
     </div>
-  );
-}
+    }
+    
+  
+
 
 export default App;

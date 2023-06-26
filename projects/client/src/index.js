@@ -16,7 +16,6 @@ root.render(
       <HOC>
         <BrowserRouter>
           <App />
-          <Footer />
         </BrowserRouter>
       </HOC>
     </Provider>

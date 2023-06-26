@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Footer() {
     return(
-        <footer className="bg-yellow-300 h-12 flex">
+        <footer className="bg-yellow-300 h-12 flex w-full">
             <div className="container-screen flex justify-center items-center">
                  Copyright ©️ 2023 All Rights Reversed by BANGUNIN
             </div>

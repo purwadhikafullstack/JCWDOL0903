@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
-const Address = () => {
-  const [address, setAddress] = useState([])
+const Address = ({fetchAddress, setAddress, address}) => {
+ 
   const user = useSelector((state) => state.user);
 
   const mainAddress = async (value) => {
@@ -15,15 +15,10 @@ const Address = () => {
     fetchAddress()
   }
 
-  async function fetchAddress(){
-    try{
-      const address = await api.get("/profile/address/" + user.id)
-      console.log(address)
-      setAddress(address.data.data)
-    }
-    catch (err) {
-      console.log(err);
-    }
+  const deleteAddress = async (value) => {
+    const id =  value.id
+    await api.delete("/profile/address/", { data: { id } })
+    fetchAddress()
   }
 
   useEffect(() => {  
@@ -65,9 +60,22 @@ const Address = () => {
               <p><span className="font-medium mr-3 text-slate-600">Kecamatan:</span>{value.kecamatan}</p>
               <p><span className="font-medium mr-3 text-slate-600">Kode Pos:</span>{value.kode_pos}</p>
             </div>
-            <div className="flex justify-end items-center flex-grow">
-            <button onClick={() => mainAddress(value)} className="bg-gray-400 h-1/4 rounded-lg mr-3 px-4 font-semibold text-white hover:bg-red-500 focus:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Set as Main Address</button>
+            <div className="flex justify-end items-center">
+            <div className="flex flex-col">
+              <button
+                onClick={() => mainAddress(value)}
+                className="bg-gray-400 h-1/4 rounded-lg mr-3 px-4 font-semibold text-white hover:bg-red-500 focus:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+              >
+                Set as Main Address
+              </button>
+              <button
+                onClick={() => deleteAddress(value)}
+                className="bg-red-400 h-1/4 rounded-lg mr-3 mt-5 px-4 font-semibold text-white hover:bg-red-500 focus:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+              >
+                Delete Address
+              </button>
             </div>
+          </div>
           </div>
         </div>
               

@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       provinsi: DataTypes.STRING,
       kecamatan: DataTypes.STRING,
       kode_pos: DataTypes.STRING,
+      lat: DataTypes.STRING,
+      lng: DataTypes.STRING,
       is_main: DataTypes.BOOLEAN,
     },
     {

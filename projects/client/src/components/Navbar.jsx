@@ -3,7 +3,9 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { logout } from "../reducers/userSlice";
+import { clearUserCart } from "../reducers/cartSlice"
 
 // import assets
 import {
@@ -17,8 +19,8 @@ import LogoIcon from "../assets/logoPutih.png";
 
 // Import Components
 import ListBox from "./subcomponents/ListBox";
-import axios from "axios";
 import api from "../api/api";
+import { fetchUserCart } from "../reducers/cartSlice";
 
 
 function classNames(...classes) {
@@ -28,18 +30,27 @@ function classNames(...classes) {
 export default function Navbar() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch();
   let token = false;
-
   if (user.id) {
     token = true;
   }
 
-  function handleLogout() {
+
+  function handleLogout() {   
     dispatch(logout());
+    dispatch(clearUserCart())
     localStorage.removeItem("token");
     navigate("/");
   }
+
+  useEffect(() => {
+    if(user.id){
+      dispatch(fetchUserCart(user.id))
+    } 
+  }, [user.id])
+
 
   const navigation = [
     { name: "Home", href: "http://localhost:3000/", current: false },
@@ -138,10 +149,12 @@ export default function Navbar() {
 
               {/* Navbar */}
               <div className="hidden lg:ml-4 lg:block">
-                <div className="flex flex-auto items-center">
+                <div className="flex flex-auto items-center relative">
+                  <div className="absolute top-0 left-0 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800"> {cart.userCart} </div>
+                  <Link to="/cart">
                   <button
                     type="button"
-                    className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none "
                   >
                     <span className="sr-only">View notifications</span>
                     <ShoppingCartIcon
@@ -149,6 +162,8 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                   </button>
+                  </Link>
+                  
                   {token ? (
                     <>
                       <Menu

@@ -8,6 +8,7 @@ router.post("/update/:id", fileUploader({destinationFolder:"avatar"}).single("pr
 router.post("/address/:id", profillingControllers.signAddress)
 router.get("/address/:id", profillingControllers.getAddress)
 router.patch("/address", profillingControllers.setAddress)
+router.delete("/address", profillingControllers.deleteAddress)
 
 
 module.exports = router

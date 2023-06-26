@@ -12,6 +12,7 @@ const {
   profillingRouter,
   voucherRouter,
   branchRouter,
+  cartRouter,
 } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
@@ -50,6 +51,7 @@ app.get("/api/greetings", (req, res, next) => {
 app.use("/auth", authRouter);
 app.use(changePassRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter)
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
 app.use("/branch", branchRouter);

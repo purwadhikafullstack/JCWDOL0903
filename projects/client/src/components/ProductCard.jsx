@@ -1,8 +1,35 @@
 import ProductNotFound from "../components/ProductNotFound";
 import { numToIDRCurrency } from "../helper/currency";
+import api from "../api/api";
+import { useSelector, useDispatch } from 'react-redux'
+import Swal from "sweetalert2";
+import { fetchUserCart } from "../reducers/cartSlice";
 
 export default function ProductCard({ products = [] }) {
+  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch()
   if (!products.length) return <ProductNotFound />;
+  
+  const addOne = async(productId, userId) => {
+    try{
+      const result = await api.post("/cart/", { product_id: productId, user_id: userId} )
+      await Swal.fire({
+        icon: "success",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      dispatch(fetchUserCart(user.id)); 
+    }
+    catch (error) {
+      Swal.fire({
+          icon: "error",
+          title: error.response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+  }   
+  }
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
@@ -26,7 +53,7 @@ export default function ProductCard({ products = [] }) {
             </p>
           </div>
           <div className="my-6">
-            <button className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200">
+            <button onClick={() => addOne(product.id, user.id)} className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200">
               Add to cart<span className="sr-only">, {product.name}</span>
             </button>
           </div>

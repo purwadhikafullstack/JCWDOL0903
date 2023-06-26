@@ -6,6 +6,8 @@ import iconLogo from "../assets/logo.png";
 import api from "../api/api";
 import pattern from "../assets/pattern.jpg"
 import Address from "../components/Address";
+import PopModel from "../components/subcomponents/PopModel";
+
 
 const initialTabs = [
   { name: "My Account", current: true },
@@ -18,12 +20,24 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
 export default function UpdateProfile() {
+  const [address, setAddress] = useState([])
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tabs, setTabs] = useState(initialTabs);
   const user = useSelector((state) => state.user);
   const [page, setPage] = useState(true);
+  async function fetchAddress(){
+    try{
+      const address = await api.get("/profile/address/" + user.id)
+      console.log(address)
+      setAddress(address.data.data)
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
   // const date = new Date(user.birthdate);
   // const formattedDate = date.toISOString().split("T")[0];
   // console.log("ini date di updatea", formattedDate);
@@ -65,7 +79,7 @@ export default function UpdateProfile() {
         timer: 1500,
       });
     } catch (error) {
-      console.log(error); //nanti dihapus
+      console.log(error); 
       Swal.fire({
         icon: "error",
         title: error.response.data.message,
@@ -231,8 +245,8 @@ export default function UpdateProfile() {
       {tabs.find((tab) => tab.current && tab.name === "My Address") && (
         <div className="container-screen flex flex-col justify-center items-center" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
           {/* Your address box component */}
-          <Address />
-          <button className="bg-red-500 h-1/4 rounded-lg my-5 px-4 py-2 font-semibold text-white focus:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Add New Address</button>
+          <Address {...{fetchAddress, setAddress, address}} />       
+          <PopModel {...{fetchAddress, setAddress, address}}/>
         </div>
       )}
     </div>
