@@ -6,7 +6,6 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import HOC from "./HOC/hoc";
 import store from "./store";
-import Footer from "../src/components/Footer"
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -73,11 +73,7 @@ const Register = () => {
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          className="mx-auto h-12 w-auto"
-          src={logo}
-          alt="Your Company"
-        />
+        <img className="mx-auto h-12 w-auto" src={logo} alt="Your Company" />
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
           Join Bangunin
         </h2>
@@ -92,10 +88,7 @@ const Register = () => {
         </p>
       </div>
 
-      <form
-        className="space-y-6"
-        onSubmit={onRegister}
-      >
+      <form className="space-y-6" onSubmit={onRegister}>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
             <div>
@@ -138,10 +131,7 @@ const Register = () => {
 
             <div className="flex w-full gap-2">
               <div className="grow">
-                <label
-                  htmlFor="date"
-                  className="block text-sm font-medium"
-                >
+                <label htmlFor="date" className="block text-sm font-medium">
                   Birthdate
                 </label>
                 <div className="mt-1 ">
@@ -156,10 +146,7 @@ const Register = () => {
               </div>
 
               <div className="grow">
-                <label
-                  htmlFor="gender"
-                  className="block text-sm font-medium"
-                >
+                <label htmlFor="gender" className="block text-sm font-medium">
                   Gender
                 </label>
                 <div className="mt-1 ">
@@ -171,8 +158,8 @@ const Register = () => {
                     className="block w-full  rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:max-w-md sm:text-sm"
                   >
                     <option>. . .</option>
-                    <option>Man</option>
-                    <option>Woman</option>
+                    <option>Pria</option>
+                    <option>Wanita</option>
                   </select>
                 </div>
               </div>

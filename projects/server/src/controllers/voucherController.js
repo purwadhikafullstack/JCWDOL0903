@@ -78,7 +78,7 @@ async function createVoucher(req, res) {
 
 async function updateVoucher(req, res) {
   try {
-    const voucherId = req.params.id;
+    const voucherId = parseInt(req.params.id);
     req.body.voucherId = voucherId;
 
     const updateVoucher = Voucher.update.bind(Voucher);
@@ -94,7 +94,7 @@ async function updateVoucher(req, res) {
 
 async function deleteVoucher(req, res) {
   try {
-    const voucherId = req.params.id;
+    const voucherId = parseInt(req.params.id);
     const isDeleted = await Voucher.destroy({
       where: {
         id: voucherId,

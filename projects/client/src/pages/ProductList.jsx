@@ -9,6 +9,7 @@ import Dropdown from "../components/Dropdown";
 
 import { fetchProducts } from "../reducers/productSlice";
 import { fetchCategories } from "../reducers/categorySlice";
+import { countProducts } from "../helper/products";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -27,6 +28,7 @@ function ProductList() {
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
+  const branchesGlobal = useSelector((state) => state.branch);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortFilter, setSortFilter] = useState(sortOptions[0]);
   const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
@@ -49,7 +51,7 @@ function ProductList() {
   }, [categoriesGlobal.categories]);
 
   useEffect(() => {
-    let query = `page=${currentPage}`;
+    let query = `page=${currentPage}&showEmptyStock=false&branchId=${branchesGlobal.selectedBranch.id}`;
     if (searchQuery) query += `&q=${searchQuery}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
     if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;
@@ -60,6 +62,7 @@ function ProductList() {
     categoryFilter.value,
     currentPage,
     searchQuery,
+    branchesGlobal.selectedBranch.id,
   ]);
 
   return (
@@ -82,7 +85,7 @@ function ProductList() {
       </Filter>
       <ProductCard products={productsGlobal.products} />
       <Pagination
-        itemsInPage={productsGlobal.products.length}
+        itemsInPage={countProducts(productsGlobal.products)}
         totalItems={productsGlobal.totalItems}
         totalPages={productsGlobal.totalPages}
         currentPage={currentPage}

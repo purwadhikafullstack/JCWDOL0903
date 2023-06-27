@@ -3,7 +3,7 @@ const { categoryController } = require("../controllers");
 
 categoryRouter.get("/", categoryController.getCategories);
 categoryRouter.post("/", categoryController.createCategory);
-categoryRouter.put("/:id", categoryController.updateCategory);
+categoryRouter.patch("/:id", categoryController.updateCategory);
 categoryRouter.delete("/:id", categoryController.deleteCategory);
 
 module.exports = categoryRouter;

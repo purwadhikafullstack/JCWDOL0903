@@ -13,7 +13,8 @@ const {
   voucherRouter,
   branchRouter,
   cartRouter,
-  rajaOngkirRouter
+  rajaOngkirRouter,
+  stockRouter,
 } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
@@ -58,6 +59,7 @@ app.use("/profile", profillingRouter);
 app.use("/branch", branchRouter);
 app.use(rajaOngkirRouter)
 app.use("/vouchers", voucherRouter);
+app.use("/stocks", stockRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
 

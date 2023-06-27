@@ -17,6 +17,8 @@ import Dashboard from "./pages/Dashboard";
 import Cart from "./pages/Cart";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
+import ProductDetail from "./pages/ProductDetail";
+import Product from "./pages/Product";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
@@ -95,16 +97,22 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/*"
-          element={<Error />}
-        />
+        <Route path="/*" element={<Error />} />
         <Route
           path="/products"
           element={
             <>
               <Navbar />
               <ProductList />
+            </>
+          }
+        />
+        <Route
+          path="/products/:id"
+          element={
+            <>
+              <Navbar />
+              <ProductDetail />
             </>
           }
         />
@@ -116,31 +124,16 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/verification/:token"
-          element={<Verification />}
-        />
-        <Route
-          path={"/changePass/:id"}
-          element={<ChangePassword />}
-        />
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
+        <Route path="/verification/:token" element={<Verification />} />
+        <Route path={"/changePass/:id"} element={<ChangePassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route
-          path={"/reset-password/:token"}
-          element={<ResetPassword />}
-        />
+        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard element={null} />}
-        />
+        <Route path="/dashboard" element={<Dashboard element={null} />} />
         <Route
           path="/dashboard/products"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Product />} />}
         />
         <Route
           path="/dashboard/category"

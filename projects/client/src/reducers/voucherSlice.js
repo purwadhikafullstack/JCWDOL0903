@@ -61,7 +61,7 @@ export function createVoucher(data, currPage = 1) {
 export function updateVoucher(id, data, currPage = 1) {
   return async (dispatch) => {
     try {
-      await api.put(`${BASE_URL}/${id}`, data);
+      await api.patch(`${BASE_URL}/${id}`, data);
       dispatch(fetchVouchers(`page=${currPage}`));
       successAlert("Updated!");
     } catch (err) {

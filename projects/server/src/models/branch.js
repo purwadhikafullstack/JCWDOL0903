@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Branch.init(
     {
       name: DataTypes.STRING,
+      address: DataTypes.STRING,
       kota: DataTypes.STRING,
       kecamatan: DataTypes.STRING,
       provinsi: DataTypes.STRING,

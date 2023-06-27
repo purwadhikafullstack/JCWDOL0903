@@ -29,6 +29,7 @@ const voucherOptions = [{ value: "", label: "None" }, ...voucherTypes];
 export default function Discount() {
   const dispatch = useDispatch();
   const vouchersGlobal = useSelector((state) => state.voucher);
+  const userGlobal = useSelector((state) => state.user);
 
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -40,12 +41,21 @@ export default function Discount() {
   const [editedVoucher, setEditedVoucher] = useState({});
 
   useEffect(() => {
+    if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
+      return;
     let query = `page=${currentPage}`;
     if (typeFilter.value) query += `&q=${typeFilter.value}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
     if (productId) query += `&productId=${productId}`;
     dispatch(fetchVouchers(query));
-  }, [dispatch, currentPage, sortFilter.value, typeFilter.value, productId]);
+  }, [
+    dispatch,
+    userGlobal.role,
+    currentPage,
+    sortFilter.value,
+    typeFilter.value,
+    productId,
+  ]);
 
   function getVoucherData(data) {
     const {
