@@ -35,3 +35,7 @@
     @apply mx-auto w-[80%] max-w-screen-xl;
   }
 }
+
+button[disabled] {
+  cursor: not-allowed;
+}

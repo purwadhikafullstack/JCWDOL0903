@@ -12,6 +12,7 @@ const {
   profillingRouter,
   voucherRouter,
   branchRouter,
+  adminRouter,
 } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
@@ -48,11 +49,11 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 app.use(changePassRouter);
 app.use("/products", productRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
-app.use("/branch", branchRouter);
 app.use("/vouchers", voucherRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
