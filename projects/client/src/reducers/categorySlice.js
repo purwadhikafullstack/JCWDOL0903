@@ -19,6 +19,8 @@ const categorySlice = createSlice({
   initialState: initCategory,
   reducers: {
     setCategory(state, action) {
+      console.log("iniaction", action);
+      console.log("inistate", state);
       return action.payload;
     },
   },

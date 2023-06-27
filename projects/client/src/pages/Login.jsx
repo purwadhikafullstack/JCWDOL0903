@@ -23,6 +23,7 @@ const Login = () => {
       password: document.getElementById("password").value,
     };
 
+    console.log("data login", data);
     try {
       const result = await axios.post(url, data);
 
@@ -31,21 +32,7 @@ const Login = () => {
       //akan menerima token saat login
       console.log("resultData", result.data.result.user.name);
       const user = result.data.result.user;
-      dispatch(
-        login(
-          user
-          // id: result.data.result.user.id,
-          // branch_id: result.data.result.user.branch_id,
-          // username: result.data.result.user.username,
-          // name: result.data.result.user.name,
-          // email: result.data.result.user.email,
-          // phone_num: result.data.result.user.phone_num,
-          // gender: result.data.result.user.gender,
-          // birthdate: result.data.result.user.birthdate,
-          // profile_picture: result.data.result.user.profile_picture,
-          // role: result.data.result.user.role,
-        )
-      );
+      dispatch(login(user));
 
       //untuk mereset form
       document.getElementById("email").value = "";
@@ -61,7 +48,11 @@ const Login = () => {
 
       //setelah menerima token akan di navigate ke home
       setTimeout(() => {
-        navigate("/");
+        if (user.role === "superadmin" || user.role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
       }, 1500);
     } catch (error) {
       console.log("error", error);

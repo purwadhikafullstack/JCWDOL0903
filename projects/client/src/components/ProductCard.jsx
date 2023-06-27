@@ -9,27 +9,6 @@ export default function ProductCard({ products = [] }) {
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
   if (!products.length) return <ProductNotFound />;
-  
-  // const addOne = async(productId, userId) => {
-  //   try{
-  //     const result = await api.post("/cart/", { product_id: productId, user_id: userId} )
-  //     await Swal.fire({
-  //       icon: "success",
-  //       title: result.data.message,
-  //       showConfirmButton: false,
-  //       timer: 1500,
-  //     });
-  //     dispatch(fetchUserCart(user.id)); 
-  //   }
-  //   catch (error) {
-  //     Swal.fire({
-  //         icon: "error",
-  //         title: error.response.data.message,
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  // }   
-  // }
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">

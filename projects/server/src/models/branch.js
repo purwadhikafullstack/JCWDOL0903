@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Branch.hasMany(models.User, {
+        foreignKey: "branch_id",
+      });
     }
   }
   Branch.init(

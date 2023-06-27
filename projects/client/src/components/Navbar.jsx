@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { logout } from "../reducers/userSlice";
-import { clearUserCart } from "../reducers/cartSlice"
+import { clearUserCart, fetchUserCart } from "../reducers/cartSlice"
 
 // import assets
 import {
@@ -20,8 +20,6 @@ import LogoIcon from "../assets/logoPutih.png";
 // Import Components
 import ListBox from "./subcomponents/ListBox";
 import api from "../api/api";
-import { fetchUserCart } from "../reducers/cartSlice";
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -74,7 +72,10 @@ export default function Navbar() {
     }
   }
   return (
-    <Disclosure as="nav" className="bg-red-500 sticky top-0 z-10">
+    <Disclosure
+      as="nav"
+      className="bg-red-500 sticky top-0 z-10"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">
@@ -123,7 +124,10 @@ export default function Navbar() {
                         placeholder="Search"
                         type="search"
                       />
-                      <input type="submit" hidden />
+                      <input
+                        type="submit"
+                        hidden
+                      />
                     </form>
                   </div>
                 </div>
@@ -155,7 +159,8 @@ export default function Navbar() {
                   <Link to="/cart">
                   <button
                     type="button"
-                    className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none "
+                    className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
+                    disabled={!user.id}
                   >
                     <span className="sr-only">View notifications</span>
                     <ShoppingCartIcon
@@ -172,13 +177,24 @@ export default function Navbar() {
                         className="relative ml-4 flex-shrink-0"
                       >
                         <div className="flex flex-row items-center text-white">
-                          <div>{user.name}</div>
+                          <div className="relative">
+                            <h3 className="text-xs font-medium lg:text-sm">
+                              {user.name}
+                            </h3>
+
+                            {(user.role === "admin" ||
+                              user.role === "superadmin") && (
+                              <p className="text-sm font-semibold leading-6 text-yellow-300 absolute right-0">
+                                {user.role}
+                              </p>
+                            )}
+                          </div>
                           <div className="ml-3">
                             <Menu.Button className="flex rounded-full bg-gray-800 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                src="{user.profile_picture}"
                                 alt=""
                               />
                             </Menu.Button>
@@ -208,6 +224,22 @@ export default function Navbar() {
                                 </a>
                               )}
                             </Menu.Item>
+                            {user.role !== "user" && (
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <a
+                                    href="/dashboard"
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    Dashboard
+                                  </a>
+                                )}
+                              </Menu.Item>
+                            )}
+
                             <Menu.Item>
                               {({ active }) => (
                                 <a
@@ -281,28 +313,8 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-            {user.id && !user.isVerified ? (
-              <div
-                style={{
-                  backgroundColor: "yellow",
-                  width: "100vw",
-                  height: "30px",
-                }}
-              >
-                <button
-                  style={{
-                    backgroundColor: "black",
-                    color: "white",
-                  }}
-                  onClick={async () =>
-                    await api.post("/auth/verification/" + user.id)
-                  }
-                >
-                  resend verify
-                </button>
-              </div>
-            ) : null}
           </div>
+
           {token ? (
             <Disclosure.Panel className="lg:hidden">
               <div className="space-y-1 px-2 pt-2 pb-3">

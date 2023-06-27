@@ -15,6 +15,7 @@ const {
   cartRouter,
   rajaOngkirRouter,
   stockRouter,
+  adminRouter,
 } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
@@ -51,6 +52,7 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 app.use(changePassRouter);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter)

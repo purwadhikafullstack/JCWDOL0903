@@ -3,11 +3,12 @@ const categoryRouter = require("./categoryRouter");
 const authRouter = require("./authRouters");
 const profillingRouter = require("./profilingRouter");
 const voucherRouter = require("./voucherRouter");
-const branchRouter = require("./branchRouters");
+const branchRouter = require("./branchRouter");
 const changePassRouter = require("./changePassRouter");
 const cartRouter = require("./cartRouters")
 const rajaOngkirRouter = require("./rajaOngkirRouters")
 const stockRouter = require("./stockRouter");
+const adminRouter = require("./adminRouter");
 
 module.exports = {
   productRouter,
@@ -20,4 +21,6 @@ module.exports = {
   cartRouter,
   rajaOngkirRouter,
   stockRouter,
+  branchRouter,
+  adminRouter,
 };

@@ -10,6 +10,7 @@ const initialState = {
   gender: "",
   birthdate: "",
   profile_picture: "",
+  role: "",
   isVerified: "",
 
   // role: "",
@@ -27,7 +28,7 @@ export const userSlice = createSlice({
       state.phone_num = action.payload.phone_num;
       state.birthdate = action.payload.birthdate;
       state.username = action.payload.username;
-      state.profile_picture = action.payload.profile_picture
+      state.profile_picture = action.payload.profile_picture;
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.phone_num = action.payload.phone_num;
