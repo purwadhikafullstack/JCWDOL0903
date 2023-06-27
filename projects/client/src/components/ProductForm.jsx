@@ -17,9 +17,11 @@ export default function ProductForm({
     product.image_url ? { preview: product.image_url } : {}
   );
   const [selectedCategory, setSelectedCategory] = useState(
-    { value: product.Category?.id, label: product.Category?.name } ||
-      categoryOptions[0]
+    product.Category
+      ? { value: product.Category?.id, label: product.Category?.name }
+      : categoryOptions[0]
   );
+
   const userGlobal = useSelector((state) => state.user);
 
   const title = action[0].toUpperCase() + action.substring(1);
@@ -29,17 +31,17 @@ export default function ProductForm({
     const { productName, desc, price, stock } = e.target;
     const categoryId = selectedCategory.value;
     const newProduct = new FormData();
-    newProduct.append("name", productName.value);
+    newProduct.append("name", productName?.value);
     newProduct.append("category_id", categoryId);
-    newProduct.append("price", price.value || 0);
+    newProduct.append("price", price?.value || 0);
     if (action === "edit") {
       /* Check if the user remove the img, since if the img isn't removed
          the object will have `preview` property */
       if (!Object.keys(image).length) newProduct.append("isImgDeleted", true);
     }
     newProduct.append("product_image", image);
-    newProduct.append("desc", desc.value);
-    newProduct.append("stock", stock.value || 0);
+    newProduct.append("desc", desc?.value);
+    newProduct.append("stock", stock?.value || 0);
     newProduct.append("stock_id", product.Stocks?.[product.stockIdx].id || 0);
     newProduct.append(
       "branch_id",
@@ -141,22 +143,24 @@ export default function ProductForm({
               />
             </div>
 
-            <div className="sm:col-span-2 sm:col-start-1">
-              <label
-                htmlFor="stock"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Stock
-              </label>
-              <input
-                type="number"
-                min="0"
-                name="stock"
-                id="stock"
-                className="spin-hidden block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
-                defaultValue={product.Stocks?.[product.stockIdx]?.stock}
-              />
-            </div>
+            {(userGlobal.role !== "superadmin" || action === "edit") && (
+              <div className="sm:col-span-2 sm:col-start-1">
+                <label
+                  htmlFor="stock"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Stock
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  name="stock"
+                  id="stock"
+                  className="spin-hidden block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                  defaultValue={product.Stocks?.[product.stockIdx]?.stock}
+                />
+              </div>
+            )}
 
             <div className="sm:col-span-6">
               <label className="block text-sm font-medium text-gray-700">

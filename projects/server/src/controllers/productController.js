@@ -1,6 +1,7 @@
 const db = require("../models");
 const { Op } = require("sequelize");
 const Products = db.Products;
+const productHelper = require("../helpers/product");
 
 async function getProducts(req, res) {
   try {
@@ -12,6 +13,7 @@ async function getProducts(req, res) {
     const categoryId = parseInt(req.query.categoryId);
     const branchId = parseInt(req.query.branchId);
     const sortType = req.query.sort;
+    const showEmptyStock = req.query.showEmptyStock;
 
     const sortMap = {
       name_asc: [["name", "ASC"]],
@@ -32,6 +34,8 @@ async function getProducts(req, res) {
       ? { name: { [Op.like]: "%" + productName + "%" } }
       : {};
     const productIdClause = productId ? { id: productId } : {};
+    const stockClause =
+      showEmptyStock === "false" ? { stock: { [Op.gt]: 0 } } : {};
 
     const products = await Products.findAndCountAll({
       subQuery: false,
@@ -53,6 +57,7 @@ async function getProducts(req, res) {
           attributes: ["id", "stock"],
           where: {
             ...branchClause,
+            ...stockClause,
           },
           include: {
             model: db.Branch,
@@ -82,50 +87,41 @@ async function getProducts(req, res) {
 }
 
 async function createProduct(req, res) {
-  const transaction = await db.sequelize.transaction();
   try {
     let { name, category_id, price, desc, stock, branch_id } = req.body;
+
     if (!name) throw new Error("Name cannot be empty");
     category_id = parseInt(category_id) || null;
     price = parseInt(price) || 0;
     stock = parseInt(stock) || 0;
+    if (stock < 0 || price < 0)
+      throw new Error("Stock / Price cannot be negative");
     branch_id = parseInt(branch_id) || null;
 
-    const newProduct = await Products.create(
-      {
-        name,
-        category_id,
-        price,
-        image_url: req.file?.filename
-          ? `${process.env.BASE_URL}/static/products/${req.file.filename}`
-          : null,
-        desc,
-      },
-      { transaction }
-    );
-    const branches = await db.Branch.findAll();
-    const stocks = branches.map((branch) => ({
-      product_id: newProduct.id,
-      stock: stock ? (branch.id === branch_id ? stock : 0) : 0,
-      branch_id: branch.id,
-    }));
-    await db.Stocks.bulkCreate(stocks, { transaction });
-    // TODO: Add stock history
+    const productImageURL = req.file?.filename
+      ? `${process.env.BASE_URL}/static/products/${req.file.filename}`
+      : null;
 
-    await transaction.commit();
+    const newProduct = await productHelper.createProduct(
+      name,
+      category_id,
+      price,
+      productImageURL,
+      desc,
+      stock,
+      branch_id
+    );
 
     return res.status(201).json({
       product: newProduct,
     });
   } catch (err) {
-    await transaction.rollback();
     console.log(err.message);
     return res.status(400).json({ error: err.message });
   }
 }
 
 async function updateProduct(req, res) {
-  const transaction = await db.sequelize.transaction();
   try {
     const productId = parseInt(req.params.id);
     let { name, category_id, price, desc, stock, stock_id, isImgDeleted } =
@@ -136,6 +132,8 @@ async function updateProduct(req, res) {
     category_id = parseInt(category_id) || null;
     price = parseInt(price) || 0;
     stock = parseInt(stock) || 0;
+    if (stock < 0 || price < 0)
+      throw new Error("Stock / Price cannot be negative");
     stock_id = parseInt(stock_id) || null;
 
     const updateImage = req.file?.filename
@@ -146,95 +144,34 @@ async function updateProduct(req, res) {
       ? { image_url: null }
       : {};
 
-    const [isUpdated] = await Products.update(
-      {
-        name,
-        category_id,
-        price,
-        ...updateImage,
-        desc,
-      },
-      {
-        where: {
-          id: productId,
-        },
-        transaction,
-      }
+    const isUpdated = await productHelper.updateProduct(
+      productId,
+      name,
+      category_id,
+      price,
+      updateImage,
+      desc,
+      stock_id,
+      stock
     );
-
-    const existingStock = await db.Stocks.findOne({
-      where: {
-        id: stock_id,
-      },
-    });
-    const deltaStock = stock - existingStock.stock;
-    const status =
-      deltaStock > 0
-        ? "Penambahan Stok"
-        : deltaStock < 0
-        ? "Pengurangan Stok"
-        : null;
-    if (status) {
-      await db.Stocks.update(
-        {
-          stock: stock || 0,
-        },
-        {
-          where: {
-            id: stock_id,
-          },
-          transaction,
-        }
-      );
-      await db.Stock_History.create(
-        {
-          product_id: productId,
-          status,
-          qty: deltaStock,
-          reference: "Admin Update",
-        },
-        { transaction }
-      );
-    }
-
-    await transaction.commit();
 
     if (!isUpdated) return res.status(404).end();
     return res.status(200).end();
   } catch (err) {
-    await transaction.rollback();
     console.log(err.message);
     return res.status(400).json({ error: err.message });
   }
 }
 
 async function deleteProduct(req, res) {
-  const transaction = await db.sequelize.transaction();
   try {
     const productId = parseInt(req.params.id);
 
-    await db.Stocks.destroy(
-      {
-        where: {
-          product_id: productId,
-        },
-      },
-      { transaction }
-    );
-    const isDeleted = await Products.destroy(
-      {
-        where: {
-          id: productId,
-        },
-      },
-      { transaction }
-    );
-    await transaction.commit();
+    const isDeleted = await productHelper.deleteProduct(productId);
 
     if (!isDeleted) return res.status(404).end();
     return res.status(200).end();
   } catch (err) {
-    await transaction.rollback();
     console.log(err.message);
     return res.status(400).json({ error: err.message });
   }

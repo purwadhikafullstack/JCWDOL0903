@@ -29,7 +29,7 @@ export default function ProductTableBody({ products = [], onEdit, onDelete }) {
               </div>
             </td>
             <td className="px-3 py-4 text-sm text-gray-500">
-              <div className="text-gray-900">
+              <div className="text-gray-900 truncate max-w-[90px]">
                 {numToIDRCurrency(product.price)}
               </div>
             </td>

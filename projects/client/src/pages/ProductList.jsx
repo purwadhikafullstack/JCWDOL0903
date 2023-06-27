@@ -51,7 +51,7 @@ function ProductList() {
   }, [categoriesGlobal.categories]);
 
   useEffect(() => {
-    let query = `page=${currentPage}&branchId=${branchesGlobal.selectedBranch.id}`;
+    let query = `page=${currentPage}&showEmptyStock=false&branchId=${branchesGlobal.selectedBranch.id}`;
     if (searchQuery) query += `&q=${searchQuery}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
     if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;

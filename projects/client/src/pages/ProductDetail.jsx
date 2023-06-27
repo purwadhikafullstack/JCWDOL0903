@@ -77,7 +77,6 @@ export default function ProductDetail() {
   return (
     <div className="bg-white container-screen">
       <div className="py-16 sm:py-24 lg:grid lg:grid-cols-[2fr,2fr,1fr] lg:gap-x-12">
-        {/* Product image */}
         <div className="mt-10 lg:mt-0">
           <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
             <img
@@ -88,24 +87,27 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Product details */}
         <div>
           <div className="mt-4 lg:mt-0">
+            {product.Vouchers.find(
+              (v) => v.voucher_type === "Buy One Get One"
+            ) && (
+              <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700 mb-2">
+                Buy One Get One
+              </span>
+            )}
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {product.name}
             </h1>
           </div>
-
           <section aria-labelledby="information-heading" className="mt-4">
             <h2 id="information-heading" className="sr-only">
               Product information
             </h2>
-
             <div className="flex items-center">
               <p className="text-lg text-gray-900 sm:text-xl">
                 {numToIDRCurrency(product.price)}
               </p>
-
               <div className="ml-4 border-l border-gray-300 pl-4">
                 <div className="flex items-center">
                   {[0, 1, 2, 3, 4].map((rating) => (
@@ -118,11 +120,9 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-
             <div className="mt-4 space-y-6">
               <p className="text-base text-gray-500">{product.desc}</p>
             </div>
-
             {productStock ? (
               <div className="mt-6 flex items-center">
                 <CheckIcon
@@ -150,7 +150,6 @@ export default function ProductDetail() {
           </section>
         </div>
 
-        {/* Product form */}
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
             <h2 id="options-heading" className="sr-only">
@@ -172,7 +171,6 @@ export default function ProductDetail() {
                 />
                 <p>Stock: {productStock}</p>
               </div>
-
               <div className="flex justify-between items-center mt-4 max-w-[200px]">
                 <p>Subtotal</p>
                 <p className="font-bold text-lg">
@@ -181,7 +179,6 @@ export default function ProductDetail() {
                     : numToIDRCurrency(product.price)}
                 </p>
               </div>
-
               <div className="mt-10">
                 <button
                   type="submit"

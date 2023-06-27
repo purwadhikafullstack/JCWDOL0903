@@ -74,6 +74,7 @@ async function updateCategory(req, res) {
     const categoryExists = await Category.findOne({
       where: {
         name,
+        id: { [Op.not]: categoryId },
       },
     });
     if (categoryExists?.dataValues) throw new Error("Category already exists");

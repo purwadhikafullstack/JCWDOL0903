@@ -9,17 +9,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Stock_History.belongsTo(models.Products, {
-        foreignKey: "product_id",
+      Stock_History.belongsTo(models.Stocks, {
+        foreignKey: "stock_id",
+      });
+      Stock_History.belongsTo(models.Transaction_Header, {
+        foreignKey: "transaction_header_id",
       });
     }
   }
   Stock_History.init(
     {
-      product_id: DataTypes.INTEGER,
-      status: DataTypes.ENUM("Penambahan Stok", "Pengurangan Stok"),
-      qty: DataTypes.INTEGER,
-      reference: DataTypes.STRING,
+      stock_id: DataTypes.INTEGER,
+      status: DataTypes.ENUM("IN", "OUT"),
+      qty: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      transaction_header_id: DataTypes.INTEGER,
     },
     {
       sequelize,

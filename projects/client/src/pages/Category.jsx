@@ -25,6 +25,7 @@ const sortOptions = [
 export default function Category() {
   const dispatch = useDispatch();
   const categoriesGlobal = useSelector((state) => state.category);
+  const userGlobal = useSelector((state) => state.user);
 
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -34,11 +35,13 @@ export default function Category() {
   const [sortFilter, setSortFilter] = useState(sortOptions[0]);
 
   useEffect(() => {
+    if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
+      return;
     let query = `page=${currentPage}`;
     if (categoryName) query += `&q=${categoryName}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
     dispatch(fetchCategories(query));
-  }, [dispatch, currentPage, categoryName, sortFilter.value]);
+  }, [dispatch, userGlobal.role, currentPage, categoryName, sortFilter.value]);
 
   function handleCreateCategory(e) {
     e.preventDefault();
