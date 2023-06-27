@@ -17,8 +17,8 @@ export default function Cart() {
 
   const generateCart = async () => {
     const cart = await api.get("/cart/" + user.id)
-    console.log(cart)
     setCart(cart.data.cart)
+    dispatch(fetchUserCart(user.id)); 
   }
 
   const addOne = async(productId, userId) => {

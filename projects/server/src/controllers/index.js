@@ -5,6 +5,7 @@ const profillingControllers = require("./profillingControler");
 const voucherController = require("./voucherController");
 const branchControllers = require("./branchController")
 const cartControllers = require("./cartControllers")
+const rajaOngkirControllers = require("./rajaOngkirController")
 
 
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
   profillingControllers,
   voucherController,
   branchControllers,
-  cartControllers
+  cartControllers,
+  rajaOngkirControllers
 };

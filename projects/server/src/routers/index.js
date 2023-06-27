@@ -6,6 +6,7 @@ const voucherRouter = require("./voucherRouter");
 const branchRouter = require("./branchRouters")
 const changePassRouter = require("./changePassRouter");
 const cartRouter = require("./cartRouters")
+const rajaOngkirRouter = require("./rajaOngkirRouters")
 
 module.exports = {
   productRouter,
@@ -15,5 +16,6 @@ module.exports = {
   voucherRouter,
   branchRouter,
   changePassRouter,
-  cartRouter
+  cartRouter,
+  rajaOngkirRouter
 };

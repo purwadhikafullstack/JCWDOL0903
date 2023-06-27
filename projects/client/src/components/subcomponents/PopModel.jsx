@@ -1,18 +1,23 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Modal from './Modal'
 import api from '../../api/api'
+import axios from 'axios';
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom'
 
 const PopModel = ({fetchAddress, setAddress, address}) => {
     const [showModal, setShowModal] = useState(false)
-    const user = useSelector((state) => state.user);  
+    const [provinceData, setProvinceData] = useState([])
+    const [cityData, setCityData] = useState([])
+    const [selectedProvince, setSelectedProvince] = useState("")
+    const user = useSelector((state) => state.user);
+    const key = process.env.RAJA_ONGKIR_API_KEY  
     const onSubmit = async (e) => {
         e.preventDefault()     
         const data = {
             kota: document.getElementById("kota").value,
-            provinsi: document.getElementById("provinsi").value,
+            provinsi: provinceData.find((val) => val.province_id ==  cityData[0].province_id ).province,
             kecamatan: document.getElementById("kecamatan").value,
             kode_pos: document.getElementById("kode_pos").value,
         };
@@ -39,6 +44,34 @@ const PopModel = ({fetchAddress, setAddress, address}) => {
               });
     }
 }
+useEffect(() => {
+  const fetchProvinceData = async () => {
+    try {
+      const response = await api.get("/province");
+      setProvinceData(response.data.data.rajaongkir.results);
+    } catch (error) {
+      console.log("Error fetching province data:", error);
+    }
+  };
+
+  fetchProvinceData();
+}, []);
+
+
+
+useEffect(() => {
+  const fetchCityData = async () => {
+    try {
+      const response = await api.post("/city", { province: selectedProvince });
+      setCityData(response.data.data.rajaongkir.results);
+    } catch (error) {
+      console.log("Error fetching city data:", error);
+    }
+  };
+
+  fetchCityData();
+}, [selectedProvince]);
+
 
   return (
     <Fragment>
@@ -55,42 +88,37 @@ const PopModel = ({fetchAddress, setAddress, address}) => {
       >
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
+        
             <div>
               <label
                 htmlFor="text"
                 className="block text-sm font-medium text-gray-700"
               >
-                Kota
+                Provinsi
               </label>
               <div className="mt-1">
-                <input
-                  id="kota"
-                  name="kota"
-                  type="text"
-                  autoComplete="kota"
-                  required
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                />
+              <select id="province" name="province" value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)} className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
+                {provinceData.map((value) => (
+                  <option key={value.province_id} value={value.province_id}>
+                     {value.province}
+                  </option>
+                ))}
+              </select>
               </div>
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium text-gray-700"
-              >
-                Provinsi
+              <label className="block text-sm font-medium text-gray-700">
+                Kota
               </label>
               <div className="mt-1">
-                <input
-                  id="provinsi"
-                  name="provinsi"
-                  type="provinsi"
-                  autoComplete="provinsi"
-                  required
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                />
+                <select id="kota" name="kota" className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
+                  {cityData.map((value) => (
+                    <option value={value.city_name} >{value.city_name}</option>
+                  ))}
+                </select>
               </div>
-            </div>
+            </div>         
 
             <div>
               <label

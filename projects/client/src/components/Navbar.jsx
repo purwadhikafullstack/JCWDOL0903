@@ -150,7 +150,8 @@ export default function Navbar() {
               {/* Navbar */}
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex flex-auto items-center relative">
-                  <div className="absolute top-0 left-0 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800"> {cart.userCart} </div>
+                  {cart.userCart > 0 ? (<div className="absolute top-0 left-0 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800"> {cart.userCart} </div>) 
+                  : null}                
                   <Link to="/cart">
                   <button
                     type="button"
