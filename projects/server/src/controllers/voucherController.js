@@ -64,6 +64,9 @@ async function getVouchers(req, res) {
 
 async function createVoucher(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const createVoucher = Voucher.create.bind(Voucher);
     const newVoucher = await getValidVoucher(req.body, createVoucher);
 
@@ -78,6 +81,9 @@ async function createVoucher(req, res) {
 
 async function updateVoucher(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const voucherId = parseInt(req.params.id);
     req.body.voucherId = voucherId;
 
@@ -94,6 +100,9 @@ async function updateVoucher(req, res) {
 
 async function deleteVoucher(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const voucherId = parseInt(req.params.id);
     const isDeleted = await Voucher.destroy({
       where: {

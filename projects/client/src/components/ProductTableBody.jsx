@@ -13,6 +13,10 @@ export default function ProductTableBody({ products = [], onEdit, onDelete }) {
                   <img
                     className="h-10 w-10"
                     src={product.image_url || BrokenImg}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null;
+                      currentTarget.src = BrokenImg;
+                    }}
                     alt={product.name}
                   />
                 </div>

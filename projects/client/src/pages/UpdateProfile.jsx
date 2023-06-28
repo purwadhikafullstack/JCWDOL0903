@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import iconLogo from "../assets/logo.png";
 import api from "../api/api";
-import pattern from "../assets/pattern.jpg"
+import pattern from "../assets/pattern.jpg";
 import Address from "../components/Address";
 import PopModel from "../components/subcomponents/PopModel";
-
+import DefaultAvatar from "../assets/default-avatar.jpg";
 
 const initialTabs = [
   { name: "My Account", current: true },
@@ -20,21 +20,19 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-
 export default function UpdateProfile() {
-  const [address, setAddress] = useState([])
+  const [address, setAddress] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tabs, setTabs] = useState(initialTabs);
   const user = useSelector((state) => state.user);
   const [page, setPage] = useState(true);
-  async function fetchAddress(){
-    try{
-      const address = await api.get("/profile/address/" + user.id)
-      console.log(address)
-      setAddress(address.data.data)
-    }
-    catch (err) {
+  async function fetchAddress() {
+    try {
+      const address = await api.get("/profile/address/" + user.id);
+      console.log(address);
+      setAddress(address.data.data);
+    } catch (err) {
       console.log(err);
     }
   }
@@ -63,12 +61,12 @@ export default function UpdateProfile() {
       profile_picture: document.getElementById("profile_picture").files[0],
     };
 
-    const userEdit = new FormData()
-    userEdit.append("name", data.name)
-    userEdit.append("email", data.email)
-    userEdit.append("gender", data.gender)
-    userEdit.append("birthdate", data.birthdate)
-    userEdit.append("profile_picture", data.profile_picture)
+    const userEdit = new FormData();
+    userEdit.append("name", data.name);
+    userEdit.append("email", data.email);
+    userEdit.append("gender", data.gender);
+    userEdit.append("birthdate", data.birthdate);
+    userEdit.append("profile_picture", data.profile_picture);
 
     try {
       const result = await api.post("/profile/update/" + user.id, userEdit);
@@ -79,7 +77,7 @@ export default function UpdateProfile() {
         timer: 1500,
       });
     } catch (error) {
-      console.log(error); 
+      console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,
@@ -92,10 +90,7 @@ export default function UpdateProfile() {
   return (
     <div>
       <div className="sm:hidden">
-        <label
-          htmlFor="tabs"
-          className="sr-only"
-        >
+        <label htmlFor="tabs" className="sr-only">
           Select a tab
         </label>
         <select
@@ -111,7 +106,10 @@ export default function UpdateProfile() {
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8 container-screen"  aria-label="Tabs">
+          <nav
+            className="-mb-px flex space-x-8 container-screen"
+            aria-label="Tabs"
+          >
             {tabs.map((tab) => (
               <Link
                 key={tab.name}
@@ -132,7 +130,14 @@ export default function UpdateProfile() {
         </div>
       </div>
       {tabs.find((tab) => tab.current && tab.name === "My Account") && (
-        <div className="flex flex-col items-center" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem' }}>
+        <div
+          className="flex flex-col items-center"
+          style={{
+            backgroundImage: `url(${pattern})`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "20rem 20rem",
+          }}
+        >
           {/* Your login box component */}
           <div className="flex-row">
             <h2 className="text-left font-black text-xl my-3 text-red-800">
@@ -147,7 +152,14 @@ export default function UpdateProfile() {
                   <div className="aspect-w-3 aspect-h-2">
                     <img
                       className="rounded-lg object-cover shadow-lg w-3/4"
-                      src={"http://localhost:2000/static/avatar/"+ user.profile_picture}
+                      src={
+                        `http://localhost:2000/static/avatar/${user.profile_picture}` ||
+                        DefaultAvatar
+                      }
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null;
+                        currentTarget.src = DefaultAvatar;
+                      }}
                       alt="gambar"
                     />
                   </div>
@@ -159,7 +171,8 @@ export default function UpdateProfile() {
                       Change Profile
                     </button>
                     <h1 className="w-3/4 mt-4 text-gray-600">
-                    Maximum file size: 10,000,000 bytes (10 Megabytes). Allowed file extensions: .JPG, .JPEG, .PNG.
+                      Maximum file size: 10,000,000 bytes (10 Megabytes).
+                      Allowed file extensions: .JPG, .JPEG, .PNG.
                     </h1>
                   </div>
                 </div>
@@ -206,28 +219,58 @@ export default function UpdateProfile() {
                 </h2>
               </div>
 
-              <form method="post" encType="multipart/form-data" className="flex flex-col"> 
+              <form
+                method="post"
+                encType="multipart/form-data"
+                className="flex flex-col"
+              >
                 <label for="name">Name:</label>
-                <input id="name" name="name" type="text" placeholder="name" className="rounded-lg my-3" />
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="name"
+                  className="rounded-lg my-3"
+                />
                 <label for="email">Email:</label>
-                <input id="email" name="email" type="email" placeholder="email" className="rounded-lg my-3" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email"
+                  className="rounded-lg my-3"
+                />
                 <label for="gender">Gender:</label>
                 <select id="gender" name="gender" className="rounded-lg my-3">
-                    <option value="" disabled selected hidden>Choose your gender</option>
-                    <option value="Pria">Pria</option>
-                    <option value="Wanita">Wanita</option>
+                  <option value="" disabled selected hidden>
+                    Choose your gender
+                  </option>
+                  <option value="Pria">Pria</option>
+                  <option value="Wanita">Wanita</option>
                 </select>
                 <label for="birthdate">Birthdate:</label>
-                <input id="birthdate" name="birthdate" type="text" placeholder="birthdate" className="rounded-lg my-3" />
-                <label for="profile_picture" className="mb-3">Profile Picture:</label>
-                <input id="profile_picture" name="profile_picture"type="file" />
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">            
+                <input
+                  id="birthdate"
+                  name="birthdate"
+                  type="text"
+                  placeholder="birthdate"
+                  className="rounded-lg my-3"
+                />
+                <label for="profile_picture" className="mb-3">
+                  Profile Picture:
+                </label>
+                <input
+                  id="profile_picture"
+                  name="profile_picture"
+                  type="file"
+                />
+                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                   <div>
                     <button
                       type="submit"
                       className="flex w-full justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         onUpdate();
                         changePage();
                       }}
@@ -235,18 +278,24 @@ export default function UpdateProfile() {
                       Update Profile
                     </button>
                   </div>
-              </div>
+                </div>
               </form>
-             
             </div>
           )}
         </div>
       )}
       {tabs.find((tab) => tab.current && tab.name === "My Address") && (
-        <div className="container-screen flex flex-col justify-center items-center" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
+        <div
+          className="container-screen flex flex-col justify-center items-center"
+          style={{
+            backgroundImage: `url(${pattern})`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "20rem 20rem",
+          }}
+        >
           {/* Your address box component */}
-          <Address {...{fetchAddress, setAddress, address}} />       
-          <PopModel {...{fetchAddress, setAddress, address}}/>
+          <Address {...{ fetchAddress, setAddress, address }} />
+          <PopModel {...{ fetchAddress, setAddress, address }} />
         </div>
       )}
     </div>

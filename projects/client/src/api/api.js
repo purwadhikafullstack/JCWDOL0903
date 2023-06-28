@@ -4,6 +4,7 @@ const api = axios.create({
   baseURL: `${process.env.REACT_APP_BASE_URL}`,
   headers: {
     key: "Bangunin_ini_3_orang",
+    authorization: localStorage.getItem("token"),
   },
 });
 
@@ -13,4 +14,3 @@ console.log("envprocess", process.env.REACT_APP_BASE_URL);
 //kita sama dengan menggunakan axios dengan base url localhost:2000
 
 export default api;
-

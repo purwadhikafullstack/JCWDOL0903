@@ -59,10 +59,7 @@ export default function Dashboard({ element }) {
 
   return (
     <div>
-      <DashboardSidebar
-        navigation={navigation}
-        children={element}
-      />
+      <DashboardSidebar navigation={navigation} children={element} />
     </div>
   );
 }

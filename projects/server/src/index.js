@@ -55,11 +55,11 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use(changePassRouter);
 app.use("/products", productRouter);
-app.use("/cart", cartRouter)
+app.use("/cart", cartRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
 app.use("/branch", branchRouter);
-app.use(rajaOngkirRouter)
+app.use(rajaOngkirRouter);
 app.use("/vouchers", voucherRouter);
 app.use("/stocks", stockRouter);
 

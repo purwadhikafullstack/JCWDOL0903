@@ -90,6 +90,13 @@ async function createProduct(req, res) {
   try {
     let { name, category_id, price, desc, stock, branch_id } = req.body;
 
+    const userRole = req.user.role;
+    if (
+      !(userRole === "admin" || userRole === "superadmin") ||
+      (userRole === "admin" && req.user.branch_id !== parseInt(branch_id))
+    )
+      throw new Error("Unauthorized");
+
     if (!name) throw new Error("Name cannot be empty");
     category_id = parseInt(category_id) || null;
     price = parseInt(price) || 0;
@@ -123,9 +130,13 @@ async function createProduct(req, res) {
 
 async function updateProduct(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const productId = parseInt(req.params.id);
     let { name, category_id, price, desc, stock, stock_id, isImgDeleted } =
       req.body;
+
     if (!name) throw new Error("Name cannot be empty");
     if (!stock_id) throw new Error("Stock ID cannot be empty");
 
@@ -152,7 +163,8 @@ async function updateProduct(req, res) {
       updateImage,
       desc,
       stock_id,
-      stock
+      stock,
+      req.user
     );
 
     if (!isUpdated) return res.status(404).end();
@@ -165,8 +177,10 @@ async function updateProduct(req, res) {
 
 async function deleteProduct(req, res) {
   try {
-    const productId = parseInt(req.params.id);
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
 
+    const productId = parseInt(req.params.id);
     const isDeleted = await productHelper.deleteProduct(productId);
 
     if (!isDeleted) return res.status(404).end();

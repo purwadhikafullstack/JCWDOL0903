@@ -3,11 +3,11 @@ import { MapPinIcon } from "@heroicons/react/20/solid";
 import ProductNotFound from "../components/ProductNotFound";
 import { numToIDRCurrency } from "../helper/currency";
 import BrokenImg from "../assets/broken-img.png";
-import {useSelector, useDispatch} from "react-redux"
+import { useSelector, useDispatch } from "react-redux";
 
 export default function ProductCard({ products = [] }) {
-  const user = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   if (!products.length) return <ProductNotFound />;
 
   return (
@@ -19,6 +19,10 @@ export default function ProductCard({ products = [] }) {
               <div className="relative h-64 w-full overflow-hidden rounded-lg">
                 <img
                   src={product.image_url || BrokenImg}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = BrokenImg;
+                  }}
                   alt="product"
                   className="h-full w-full object-cover object-center"
                 />

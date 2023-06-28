@@ -31,7 +31,7 @@ import Spinner from "./components/Spinner";
 function App() {
   const [message, setMessage] = useState("");
   // const id = useSelector((state) => state.user.id);
-  const [isLoading, setIsLoading]= useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
   // console.log("role", user.role);
   //global state variable state yg bisa digunakan disemua component
@@ -63,9 +63,6 @@ function App() {
       }
     }
     fetchUser();
-
-    setTimeout(() => setIsLoading(false), 500)
-
   }, []);
 
   if (isLoading) return <Spinner />;
@@ -74,7 +71,9 @@ function App() {
     <div className="App">
       <ResendVerify />
       <Routes>
-        <Route path="/" element={
+        <Route
+          path="/"
+          element={
             <>
               <Navbar /> <LandingPage />
             </>
@@ -93,7 +92,7 @@ function App() {
           path="/cart"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <Cart />
             </>
           }
@@ -134,22 +133,10 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/verification/:token"
-          element={<Verification />}
-        />
-        <Route
-          path={"/changePass/:id"}
-          element={<ChangePassword />}
-        />
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
-        <Route
-          path={"/reset-password/:token"}
-          element={<ResetPassword />}
-        />
+        <Route path="/verification/:token" element={<Verification />} />
+        <Route path={"/changePass/:id"} element={<ChangePassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
         {/* <Route
           path="/dashboard"
           element={
@@ -161,10 +148,7 @@ function App() {
           }
         /> */}
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard element={null} />}
-        />
+        <Route path="/dashboard" element={<Dashboard element={null} />} />
         <Route
           path="/dashboard/management-setting"
           element={<Dashboard element={<Management />} />}
@@ -190,13 +174,9 @@ function App() {
           element={<Dashboard element={null} />}
         />
       </Routes>
-      <Footer />
-
+      {/* <Footer /> */}
     </div>
-  )
-      }
-    
-  
-
+  );
+}
 
 export default App;
