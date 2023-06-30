@@ -6,8 +6,8 @@ const voucherController = require("./voucherController");
 const branchControllers = require("./branchController");
 const cartControllers = require("./cartControllers");
 const stockController = require("./stockController");
-const rajaOngkirControllers = require("./rajaOngkirController")
-
+const rajaOngkirControllers = require("./rajaOngkirController");
+const userVoucherController = require("./userVoucherController");
 
 module.exports = {
   productController,
@@ -19,4 +19,5 @@ module.exports = {
   cartControllers,
   rajaOngkirControllers,
   stockController,
+  userVoucherController,
 };

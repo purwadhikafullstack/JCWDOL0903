@@ -3,14 +3,21 @@ import axios from "axios";
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_BASE_URL}`,
   headers: {
-    key: "Bangunin_ini_3_orang",
-    authorization: localStorage.getItem("token"),
+    key: process.env.ACCESS_KEY,
   },
 });
 
-console.log("envprocess", process.env.REACT_APP_BASE_URL);
-// membuat instance untuk axios
-// pada saat kita memanggil variable api maka
-//kita sama dengan menggunakan axios dengan base url localhost:2000
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = token;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default api;

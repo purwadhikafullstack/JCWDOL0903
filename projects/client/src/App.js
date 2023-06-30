@@ -27,6 +27,7 @@ import Footer from "./components/Footer";
 import ResendVerify from "./components/ResendVerify";
 import Management from "./pages/Management";
 import Spinner from "./components/Spinner";
+import ReferralCode from "./pages/ReferralCode";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -137,6 +138,15 @@ function App() {
         <Route path={"/changePass/:id"} element={<ChangePassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path={"/reset-password/:token"} element={<ResetPassword />} />
+        <Route
+          path={"/referral-code"}
+          element={
+            <>
+              <Navbar />
+              <ReferralCode />
+            </>
+          }
+        />
         {/* <Route
           path="/dashboard"
           element={

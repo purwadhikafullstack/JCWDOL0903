@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { logout } from "../reducers/userSlice";
 import { clearUserCart, fetchUserCart } from "../reducers/cartSlice";
 import DefaultAvatar from "../assets/default-avatar.jpg";
@@ -21,6 +21,7 @@ import LogoIcon from "../assets/logoPutih.png";
 // Import Components
 import ListBox from "./subcomponents/ListBox";
 import api from "../api/api";
+import { checkUserReferralVoucher } from "../helper/voucher";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -30,6 +31,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const cart = useSelector((state) => state.cart);
+  const [userHasReferralVoucher, setUserHasReferralVoucher] = useState(false);
   const dispatch = useDispatch();
   let token = false;
   if (user.id) {
@@ -48,6 +50,14 @@ export default function Navbar() {
       dispatch(fetchUserCart(user.id));
     }
   }, [user.id]);
+
+  useEffect(() => {
+    checkUserReferralVoucher(user.id)
+      .then((hasUserReferralVoucher) => {
+        setUserHasReferralVoucher(hasUserReferralVoucher);
+      })
+      .catch(() => null);
+  }, [navigate, user.id]);
 
   const navigation = [
     { name: "Home", href: "http://localhost:3000/", current: false },
@@ -242,6 +252,25 @@ export default function Navbar() {
                                 </a>
                               )}
                             </Menu.Item>
+                            {!(
+                              userHasReferralVoucher ||
+                              user.role === "superadmin" ||
+                              user.role === "admin"
+                            ) && (
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <Link
+                                    to="/referral-code"
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    Referral Code
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                            )}
                             <Menu.Item>
                               {({ active }) => (
                                 <button

@@ -204,6 +204,18 @@ export default function UpdateProfile() {
                 <p className="my-3 ml-3">
                   Phone<span className="ml-20">{user.phone_num}</span>{" "}
                 </p>
+
+                {user.role === "user" && (
+                  <>
+                    <h2 className="mt-10 text-gray-500 font-medium text-xl underline">
+                      Referral Code
+                    </h2>
+                    <p className="my-3 ml-3">
+                      Referral code
+                      <span className="ml-8">{user.referral_code}</span>{" "}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           ) : (

@@ -81,6 +81,10 @@ export default function ProductDetail() {
           <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
             <img
               src={product.image_url || BrokenImg}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = BrokenImg;
+              }}
               alt={product.name}
               className="h-full w-full object-cover object-center"
             />

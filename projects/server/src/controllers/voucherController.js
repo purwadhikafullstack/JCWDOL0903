@@ -25,9 +25,7 @@ async function getVouchers(req, res) {
     }
 
     const productClause = productId ? { product_id: productId } : {};
-    const voucherClause = voucherType
-      ? { voucher_type: { [Op.like]: "%" + voucherType + "%" } }
-      : {};
+    const voucherClause = voucherType ? { voucher_type: voucherType } : {};
 
     const vouchers = await Voucher.findAndCountAll({
       attributes: [

@@ -45,7 +45,7 @@ export default function ProductTableBody({ products = [], onEdit, onDelete }) {
             <td className="px-3 py-4 text-sm text-gray-500 text-center">
               <div
                 className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                  product.Stocks?.[0].stock > 20
+                  stock.stock > 20
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
                 }`}

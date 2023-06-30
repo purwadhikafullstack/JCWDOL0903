@@ -55,7 +55,7 @@ export default function Dashboard({ element }) {
     // if (!isLoading) {
     // }
     if (!user.id || user.role === "user") navigate("/");
-  }, []);
+  }, [navigate, user.id, user.role]);
 
   return (
     <div>
