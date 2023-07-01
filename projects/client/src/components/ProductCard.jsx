@@ -38,13 +38,30 @@ export default function ProductCard({ products = [] }) {
               <p className="relative text-lg font-semibold text-red-400 truncate">
                 {numToIDRCurrency(product.price)}
               </p>
-              {product.Vouchers.find(
-                (v) => v.voucher_type === "Buy One Get One"
-              ) && (
-                <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700">
-                  Buy One Get One
-                </span>
-              )}
+              <div className="flex gap-2 flex-wrap">
+                {product.Vouchers.map((v) => {
+                  return v.voucher_type === "Buy One Get One" ? (
+                    <span
+                      key={v.id}
+                      className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
+                    >
+                      Buy One Get One
+                    </span>
+                  ) : v.voucher_type === "Produk" ? (
+                    (v.amount || v.percentage) && (
+                      <span
+                        key={v.id}
+                        className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
+                      >
+                        Discount{" "}
+                        {v.amount
+                          ? numToIDRCurrency(v.amount)
+                          : `${v.percentage}%`}
+                      </span>
+                    )
+                  ) : null;
+                })}
+              </div>
               <div className="flex gap-1 items-center mt-2">
                 <MapPinIcon className="w-3 h-3 text-gray-400" />
                 <p className="text-sm text-gray-900">
