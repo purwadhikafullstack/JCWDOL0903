@@ -105,9 +105,7 @@ async function createProduct(req, res) {
       throw new Error("Stock / Price cannot be negative");
     branch_id = parseInt(branch_id) || null;
 
-    const productImageURL = req.file?.filename
-      ? `${process.env.BASE_URL}/static/products/${req.file.filename}`
-      : null;
+    const productImageURL = req.file?.filename ? req.file.filename : null;
 
     const newProduct = await productHelper.createProduct(
       name,
@@ -149,7 +147,7 @@ async function updateProduct(req, res) {
 
     const updateImage = req.file?.filename
       ? {
-          image_url: `${process.env.BASE_URL}/static/products/${req.file.filename}`,
+          image_url: req.file.filename,
         }
       : isImgDeleted
       ? { image_url: null }

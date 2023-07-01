@@ -18,7 +18,10 @@ export default function ProductCard({ products = [] }) {
             <div>
               <div className="relative h-64 w-full overflow-hidden rounded-lg">
                 <img
-                  src={product.image_url || BrokenImg}
+                  src={
+                    `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${product.image_url}` ||
+                    BrokenImg
+                  }
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null;
                     currentTarget.src = BrokenImg;

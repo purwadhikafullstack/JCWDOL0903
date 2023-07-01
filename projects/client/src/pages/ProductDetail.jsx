@@ -80,7 +80,10 @@ export default function ProductDetail() {
         <div className="mt-10 lg:mt-0">
           <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
             <img
-              src={product.image_url || BrokenImg}
+              src={
+                `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${product.image_url}` ||
+                BrokenImg
+              }
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null;
                 currentTarget.src = BrokenImg;

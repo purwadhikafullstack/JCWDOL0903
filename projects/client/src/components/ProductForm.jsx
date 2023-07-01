@@ -14,7 +14,11 @@ export default function ProductForm({
 }) {
   const dispatch = useDispatch();
   const [image, setImage] = useState(
-    product.image_url ? { preview: product.image_url } : {}
+    product.image_url
+      ? {
+          preview: `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${product.image_url}`,
+        }
+      : {}
   );
   const [selectedCategory, setSelectedCategory] = useState(
     product.Category
@@ -170,7 +174,6 @@ export default function ProductForm({
                 className="mt-1"
                 image={image}
                 setImage={setImage}
-                productImg={product.image_url}
               />
             </div>
           </div>
