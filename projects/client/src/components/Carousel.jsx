@@ -42,12 +42,10 @@ export default function Carousel() {
         style={{ backgroundImage: `url(${slides[currentIndex].src})` }}
         className="w-full h-full rounded-2xl bg-center bg-cover duration-500"
       >
-        {/* Left Arrow */}
         <div className="h-10 w-10 absolute top-[50%] -translate-x-0 translate-y[-50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
           <ChevronLeftIcon onClick={prevSlide} />
         </div>
 
-        {/* Right Arrow */}
         <div className="h-10 w-10 absolute top-[50%] -translate-x-0 translate-y[-50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
           <ChevronRightIcon onClick={nextSlide} />
         </div>

@@ -14,7 +14,7 @@ export default function ProductCard({ products = [] }) {
     <div className="mb-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
       {products.map((product) => (
         <Link key={product.id} to={`/products/${product.id}`}>
-          <div className="shadow-md rounded-md border p-4 min-h-[430px]">
+          <div className="shadow-md rounded-md border p-4 min-h-[430px] bg-white">
             <div>
               <div className="relative h-64 w-full overflow-hidden rounded-lg">
                 <img

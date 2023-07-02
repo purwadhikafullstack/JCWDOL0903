@@ -23,7 +23,7 @@ import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
 import ForgotPassword from "./pages/ForgotPassword";
-import Footer from "./components/Footer";
+import Footer from "./components/Footer2";
 import ResendVerify from "./components/ResendVerify";
 import Management from "./pages/Management";
 import Spinner from "./components/Spinner";
@@ -69,7 +69,7 @@ function App() {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="App">
+    <div className="min-h-full flex flex-col">
       <ResendVerify />
       <Routes>
         <Route
@@ -184,7 +184,7 @@ function App() {
           element={<Dashboard element={null} />}
         />
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
