@@ -12,6 +12,7 @@ import pattern from "../assets/pattern.jpg";
 import { numToIDRCurrency } from "../helper/currency";
 import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
+import { Link } from "react-router-dom";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);

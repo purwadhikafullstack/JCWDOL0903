@@ -28,7 +28,6 @@ module.exports = {
           LEFT JOIN products P ON P.id = td.product_id
           ) trans ON trans.category_id = c.id AND trans.branch_id = ${branchId}
           GROUP BY C.name`,
-
           { type: Sequelize.QueryTypes.SELECT }
         );
 
