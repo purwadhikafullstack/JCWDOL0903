@@ -16,6 +16,7 @@ const {
   rajaOngkirRouter,
   stockRouter,
   adminRouter,
+  transactionHeaderRouter,
   transactionRouter
 } = require("./routers");
 
@@ -56,13 +57,14 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use(changePassRouter);
 app.use("/products", productRouter);
-app.use("/cart", cartRouter)
+app.use("/cart", cartRouter);
 app.use("/category", categoryRouter);
 app.use("/profile", profillingRouter);
 app.use("/branch", branchRouter);
-app.use(rajaOngkirRouter)
+app.use(rajaOngkirRouter);
 app.use("/vouchers", voucherRouter);
 app.use("/stocks", stockRouter);
+app.use("/transaction-header", transactionHeaderRouter);
 app.use("/transaction", transactionRouter)
 
 app.use("/static", express.static(join(__dirname, "..", "public")));

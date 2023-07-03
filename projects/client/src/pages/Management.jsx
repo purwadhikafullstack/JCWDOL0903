@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchCategories,
   createCategory,
@@ -15,21 +16,23 @@ import {
   fetchBranch,
   fetchAllAdminBranch,
 } from "../reducers/branchSlice";
-// import TableBranchAdmin from "../components/TableBranchAdmin";
+import TableBranchAdmin from "../components/TableBranchAdmin";
 
 const Management = () => {
+  const user = useSelector((state) => state.user);
+  const branchAdmin = useSelector((state) => state.branch.adminAllBranchList);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [openAddModal, setOpenAddModal] = useState(false);
-
-  const renderBranchList = () => {
-    return;
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAllAdminBranch());
+    if (user.role === "admin") navigate("/dashboard");
+    //
   }, []);
 
+  console.log("adminini semua branches", branchAdmin);
   function handleAddAdmin(e) {
     e.preventDefault();
     const email = e.target.email.value;
@@ -58,13 +61,14 @@ const Management = () => {
       <div>
         <AddDataHeader
           title="Admin Management"
+          desc={"A list of all admin branch"}
           addButtonText="Add Admin"
           onAddClick={() => setOpenAddModal(true)}
         />
       </div>
-      {/* <div>
-        <TableBranchAdmin />
-      </div> */}
+      <div>
+        <TableBranchAdmin data={branchAdmin} />
+      </div>
     </div>
   );
 };

@@ -29,11 +29,14 @@ import Footer from "./components/Footer";
 import ResendVerify from "./components/ResendVerify";
 import Management from "./pages/Management";
 import Spinner from "./components/Spinner";
+import Reports from "./pages/Reports";
+import StockHistory from "./pages/StockHistory";
+import DashboardCharts from "./pages/DashboardCharts";
 
 function App() {
   const [message, setMessage] = useState("");
   // const id = useSelector((state) => state.user.id);
-  const [isLoading, setIsLoading]= useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector((state) => state.user);
   // console.log("role", user.role);
   //global state variable state yg bisa digunakan disemua component
@@ -66,8 +69,7 @@ function App() {
     }
     fetchUser();
 
-    setTimeout(() => setIsLoading(false), 500)
-
+    setTimeout(() => setIsLoading(false), 500);
   }, []);
 
   if (isLoading) return <Spinner />;
@@ -76,7 +78,9 @@ function App() {
     <div className="App">
       <ResendVerify />
       <Routes>
-        <Route path="/" element={
+        <Route
+          path="/"
+          element={
             <>
               <Navbar /> <LandingPage />
             </>
@@ -95,7 +99,7 @@ function App() {
           path="/cart"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <Cart />
             </>
           }
@@ -128,7 +132,10 @@ function App() {
             </>
           }
         />
-        <Route path="/*" element={<Error />} />
+        <Route
+          path="/*"
+          element={<Error />}
+        />
         <Route
           path="/products"
           element={
@@ -184,7 +191,7 @@ function App() {
 
         <Route
           path="/dashboard"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<DashboardCharts />} />}
         />
         <Route
           path="/dashboard/management-setting"
@@ -208,16 +215,18 @@ function App() {
         />
         <Route
           path="/dashboard/reports"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Reports />} />}
+        />
+        <Route
+          path="/dashboard/reports/stock-history"
+          element={
+            <Dashboard element={<Reports element={<StockHistory />} />} />
+          }
         />
       </Routes>
       <Footer />
-
     </div>
-  )
-      }
-    
-  
-
+  );
+}
 
 export default App;

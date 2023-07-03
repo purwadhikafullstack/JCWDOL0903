@@ -1,37 +1,40 @@
-import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline"
-import { useEffect, useState } from 'react'
-import api from '../api/api'
-import { useSelector, useDispatch } from 'react-redux'
-import pattern from "../assets/pattern.jpg"
-import { numToIDRCurrency } from '../helper/currency'
-import WarningModal from '../components/subcomponents/WarningModal'
+import {
+  CheckIcon,
+  ClockIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import api from "../api/api";
+import { useSelector, useDispatch } from "react-redux";
+import pattern from "../assets/pattern.jpg";
+import { numToIDRCurrency } from "../helper/currency";
+import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
-import { Link } from 'react-router-dom'
-
-
 
 export default function Cart() {
-  const [cart, setCart] = useState([])
-  const user = useSelector((state) => state.user)
+  const [cart, setCart] = useState([]);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const generateCart = async () => {
-    const cart = await api.get("/cart/" + user.id)
-    setCart(cart.data.cart)
-    dispatch(fetchUserCart(user.id)); 
-  }
+    const cart = await api.get("/cart/" + user.id);
+    console.log("inicarfrontend", cart);
+    setCart(cart.data.cart);
+    dispatch(fetchUserCart(user.id));
+  };
 
-  const addOne = async(productId, userId) => {
-    await api.post("/cart/", { product_id: productId, user_id: userId} )
-    generateCart()
-    dispatch(fetchUserCart(user.id)); 
-  }
-  const deleteOne = async(productId) => {
-    await api.delete( "/cart/" + user.id, { data:{product_id: productId}} )
-    generateCart()
-    dispatch(fetchUserCart(user.id)); 
-  }
+  const addOne = async (productId, userId) => {
+    await api.post("/cart/", { product_id: productId, user_id: userId });
+    generateCart();
+    dispatch(fetchUserCart(user.id));
+  };
+  const deleteOne = async (productId) => {
+    await api.delete("/cart/" + user.id, { data: { product_id: productId } });
+    generateCart();
+    dispatch(fetchUserCart(user.id));
+  };
   useEffect(() => {
     generateCart()
   },[])
@@ -46,18 +49,42 @@ export default function Cart() {
 
 
   return (
-    <div className="bg-white" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
+    <div
+      className="bg-white"
+      style={{
+        backgroundImage: `url(${pattern})`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "20rem 20rem",
+      }}
+    >
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-red-500 sm:text-4xl">Shopping Cart</h1>
-        <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16" onSubmit={event => event.preventDefault()}>
-          <section aria-labelledby="cart-heading" className="lg:col-span-7">
-            <h2 id="cart-heading" className="sr-only">
+        <h1 className="text-3xl font-bold tracking-tight text-red-500 sm:text-4xl">
+          Shopping Cart
+        </h1>
+        <form
+          className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <section
+            aria-labelledby="cart-heading"
+            className="lg:col-span-7"
+          >
+            <h2
+              id="cart-heading"
+              className="sr-only"
+            >
               Items in your shopping cart
             </h2>
 
-            <ul role="list" className="divide-y divide-gray-200 border-t border-b border-gray-200">
+            <ul
+              role="list"
+              className="divide-y divide-gray-200 border-t border-b border-gray-200"
+            >
               {cart.map((value) => (
-                <li key={value.id} className="flex py-6 bg-white sm:py-10">
+                <li
+                  key={value.id}
+                  className="flex py-6 bg-white sm:py-10"
+                >
                   <div className="flex-shrink-0">
                     <img
                       src={value.Product.image_url}
@@ -71,34 +98,56 @@ export default function Cart() {
                       <div>
                         <div className="flex justify-between">
                           <h3 className="text-sm">
-                            <a href={null} className="font-medium text-gray-700 hover:text-gray-800">
+                            <a
+                              href={null}
+                              className="font-medium text-gray-700 hover:text-gray-800"
+                            >
                               {null}
                             </a>
                           </h3>
                         </div>
-                        <p className="mt-1 text-sm font-medium text-gray-900">{value.Product.name}</p>
-                        <p className="mt-1 text-sm font-medium text-gray-900">{numToIDRCurrency(value.Product.price)}</p>
+                        <p className="mt-1 text-sm font-medium text-gray-900">
+                          {value.Product.name}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-gray-900">
+                          {numToIDRCurrency(value.Product.price)}
+                        </p>
                       </div>
 
                       <div className="flex flex-row mt-4 sm:mt-0 sm:pr-9">
                         <div>
-                          <button className='mx-3' type='button' onClick={() => deleteOne(value.product_id)}>
-                            <MinusCircleIcon className='h-6 w-6 text-red-500 hover:text-red-700'/>
+                          <button
+                            className="mx-3"
+                            type="button"
+                            onClick={() => deleteOne(value.product_id)}
+                          >
+                            <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
                           </button>
                         </div>
-                       <div className='mx-3'>
-                          {value.qty}
-                       </div>
-                       <div>
-                          <button type='button' className='mx-3' onClick={() => addOne(value.product_id, value.user_id)}>
-                            <PlusCircleIcon className='h-6 w-6 text-green-500 hover:text-green-600'/>
+                        <div className="mx-3">{value.qty}</div>
+                        <div>
+                          <button
+                            type="button"
+                            className="mx-3"
+                            onClick={() =>
+                              addOne(value.product_id, value.user_id)
+                            }
+                          >
+                            <PlusCircleIcon className="h-6 w-6 text-green-500 hover:text-green-600" />
                           </button>
                         </div>
 
                         <div className="absolute top-0 right-0">
-                          <button type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                          <button
+                            type="button"
+                            className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
+                          >
                             <span className="sr-only">Remove</span>
-                            <WarningModal user={user.id} productId={value.product_id} generateCart={generateCart}/>
+                            <WarningModal
+                              user={user.id}
+                              productId={value.product_id}
+                              generateCart={generateCart}
+                            />
                           </button>
                         </div>
                       </div>
@@ -114,7 +163,10 @@ export default function Cart() {
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
           >
-            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
+            <h2
+              id="summary-heading"
+              className="text-lg font-medium text-gray-900"
+            >
               Order summary
             </h2>
 
@@ -141,5 +193,5 @@ export default function Cart() {
         </form>
       </div>
     </div>
-  )
+  );
 }

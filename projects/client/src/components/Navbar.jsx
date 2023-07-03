@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { logout } from "../reducers/userSlice";
-import { clearUserCart, fetchUserCart } from "../reducers/cartSlice"
+import { clearUserCart, fetchUserCart } from "../reducers/cartSlice";
 
 // import assets
 import {
@@ -28,27 +28,25 @@ function classNames(...classes) {
 export default function Navbar() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const cart = useSelector((state) => state.cart)
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   let token = false;
   if (user.id) {
     token = true;
   }
 
-
-  function handleLogout() {   
+  function handleLogout() {
     dispatch(logout());
-    dispatch(clearUserCart())
+    dispatch(clearUserCart());
     localStorage.removeItem("token");
     navigate("/");
   }
 
   useEffect(() => {
-    if(user.id){
-      dispatch(fetchUserCart(user.id))
-    } 
-  }, [user.id])
-
+    if (user.id) {
+      dispatch(fetchUserCart(user.id));
+    }
+  }, [user.id]);
 
   const navigation = [
     { name: "Home", href: "http://localhost:3000/", current: false },
@@ -60,6 +58,11 @@ export default function Navbar() {
     { name: "Categories", href: "https://www.youtube.com/", current: false },
     { name: "Calendar", href: "#", current: false },
   ];
+
+  function handleAddToCart() {
+    console.log("test");
+    if (!user.id) return navigate("/login");
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -154,13 +157,18 @@ export default function Navbar() {
               {/* Navbar */}
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex flex-auto items-center relative">
-                  {cart.userCart > 0 ? (<div className="absolute top-0 left-0 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800"> {cart.userCart} </div>) 
-                  : null}                
-                  <Link to="/cart">
+                  {cart.userCart > 0 ? (
+                    <div className="absolute top-0 left-0 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800">
+                      {" "}
+                      {cart.userCart}{" "}
+                    </div>
+                  ) : null}
+                  {/* <Link to={user.id === 0 ? "/login" : "/cart"}> */}
                   <button
-                    type="button"
+                    // type="button"
                     className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
                     disabled={!user.id}
+                    onClick={handleAddToCart}
                   >
                     <span className="sr-only">View notifications</span>
                     <ShoppingCartIcon
@@ -168,8 +176,8 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                   </button>
-                  </Link>
-                  
+                  {/* </Link> */}
+
                   {token ? (
                     <>
                       <Menu
