@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      // many transaction details to one transaction header
-      Transaction_Details.hasMany(models.Transaction_Header, {
+      Transaction_Details.belongsTo(models.Transaction_Header, {
         foreignKey: "transaction_header_id"
       })
 
@@ -22,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Transaction_Details.init({
-    transaction_headers_id: DataTypes.INTEGER,
+    transaction_header_id: DataTypes.INTEGER,
     qty: DataTypes.INTEGER,
     product_name: DataTypes.STRING,
     product_price: DataTypes.INTEGER

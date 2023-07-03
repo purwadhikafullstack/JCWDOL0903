@@ -15,8 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
+import OrderList from "./pages/OrderList";
 import ProductDetail from "./pages/ProductDetail";
 import Product from "./pages/Product";
 import ChangePassword from "./pages/ChangePassword";
@@ -95,6 +97,25 @@ function App() {
             <>
             <Navbar />
               <Cart />
+            </>
+          }
+        />
+
+        <Route
+          path="/order_list"
+          element={
+            <>
+            <Navbar />
+              <OrderList />
+            </>
+          }
+        />
+         <Route
+          path="/cart/checkout"
+          element={
+            <>
+            <Navbar />
+              <Checkout />
             </>
           }
         />

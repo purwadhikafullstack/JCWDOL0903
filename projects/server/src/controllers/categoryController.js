@@ -26,7 +26,7 @@ async function getCategories(req, res) {
       : {};
 
     const categories = await Category.findAndCountAll({
-      attributes: ["id", "name"],
+      attributes: ["id", "name"], 
       where: {
         ...categoryNameClause,
       },

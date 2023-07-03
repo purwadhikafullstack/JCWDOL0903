@@ -17,7 +17,7 @@ module.exports = {
                 attributes: ["stock"],
                 include:{
                     model: db.Branch,
-                    attributes: ["id"]
+                    attributes: ["id", "kota"]
                 }
             }
         }
