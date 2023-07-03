@@ -163,7 +163,7 @@ export default function Navbar() {
                       {cart.userCart}{" "}
                     </div>
                   ) : null}
-                  {/* <Link to={user.id === 0 ? "/login" : "/cart"}> */}
+                  <Link to={user.id === 0 ? "/login" : "/cart"}>
                   <button
                     // type="button"
                     className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
@@ -176,7 +176,7 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                   </button>
-                  {/* </Link> */}
+                  </Link>
 
                   {token ? (
                     <>
