@@ -73,18 +73,14 @@ module.exports = {
       const data = await db.Branch.findAll({
         attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         // join
-        include: [
-          {
-            model: db.User,
-            where: { role: "admin" },
-            attributes: {
-              exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-            },
+        include: {
+          model: db.User,
+          where: { role: "admin" },
+          attributes: {
+            exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
           },
-        ],
+        },
       });
-
-      console.log("fetchAllDataAdmin", data);
 
       res.status(200).send({
         status: true,

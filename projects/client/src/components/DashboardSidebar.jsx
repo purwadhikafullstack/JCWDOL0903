@@ -9,6 +9,7 @@ function classNames(...classes) {
 }
 
 export default function DashboardSidebar({ navigation = [], children }) {
+  console.log("childrenmAdlando", children);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const currentPath = window.location.pathname;
 

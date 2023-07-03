@@ -3,8 +3,9 @@ import productReducer from "./reducers/productSlice";
 import categoryReducer from "./reducers/categorySlice";
 import userReducer from "./reducers/userSlice";
 import voucherReducer from "./reducers/voucherSlice";
-import branchReducer from "./reducers/branchSlice"
+import branchReducer from "./reducers/branchSlice";
 import cartReducer from "./reducers/cartSlice";
+import transactionHeaderReducer from "./reducers/transactionHeaderSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     category: categoryReducer,
     voucher: voucherReducer,
     branch: branchReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    transactionHeader: transactionHeaderReducer,
   },
 });
 

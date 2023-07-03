@@ -44,7 +44,8 @@ export const branchSlice = createSlice({
   },
 });
 
-export const { setBranch, setSelectedBranch, setAllAdminBranch } = branchSlice.actions;
+export const { setBranch, setSelectedBranch, setAllAdminBranch } =
+  branchSlice.actions;
 
 export function fetchAllBranches() {
   return async (dispatch) => {
@@ -64,7 +65,7 @@ export function fetchAllAdminBranch() {
       "http://localhost:2000/admin/fetchbranchadmin"
     );
 
-    console.log("rrrr", response.data.data);
+    // console.log("rrrr", response.data.data);
     dispatch(setAllAdminBranch(response.data.data));
   };
 }
@@ -76,6 +77,7 @@ export function addBranchAdmin(data) {
       const response = await api.post("/admin/branchAdmin", data);
       console.log("response", response);
 
+      dispatch(fetchAllAdminBranch());
       successAlert(response.data.message);
     } catch (error) {
       console.log("error", error.response.data.message);
@@ -86,9 +88,6 @@ export function addBranchAdmin(data) {
 
 export default branchSlice.reducer;
 // ===============================================
-
-
-
 
 // export const branchSlice = createSlice({
 //   name: "Branch",

@@ -13,9 +13,13 @@ import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import ProductNotFound from "../components/ProductNotFound";
 import InputNumber from "../components/InputNumber";
 import BrokenImg from "../assets/broken-img.png";
+import { errorAlert, errorAlertWithMessage } from "../helper/alerts";
 
 export default function ProductDetail() {
   const branchesGlobal = useSelector((state) => state.branch);
+  const user = useSelector((state) => state.user);
+
+  // console.log('')
   const [product, setProduct] = useState({});
   const productStock = product?.Stocks?.[0]?.stock || 0;
   const productBranch = product?.Stocks?.[0]?.Branch || {};
@@ -51,6 +55,11 @@ export default function ProductDetail() {
       if (q < productStock) return q + 1;
       else return q;
     });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!user.id) errorAlertWithMessage("User is not register");
   }
 
   function handleSubtract() {
@@ -100,8 +109,14 @@ export default function ProductDetail() {
               {product.name}
             </h1>
           </div>
-          <section aria-labelledby="information-heading" className="mt-4">
-            <h2 id="information-heading" className="sr-only">
+          <section
+            aria-labelledby="information-heading"
+            className="mt-4"
+          >
+            <h2
+              id="information-heading"
+              className="sr-only"
+            >
               Product information
             </h2>
             <div className="flex items-center">
@@ -152,10 +167,13 @@ export default function ProductDetail() {
 
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
-            <h2 id="options-heading" className="sr-only">
+            <h2
+              id="options-heading"
+              className="sr-only"
+            >
               Product options
             </h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <h3 className="font-bold text-xl border-b border-b-gray-200 mb-4 pb-2">
                 Set quantity
               </h3>
@@ -183,7 +201,7 @@ export default function ProductDetail() {
                 <button
                   type="submit"
                   className="flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 py-3 px-8 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  disabled={!productStock}
+                  disabled={!productStock || !user.id}
                 >
                   Add to cart
                 </button>

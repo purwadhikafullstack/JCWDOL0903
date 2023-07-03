@@ -16,8 +16,8 @@ const ChangePassword = () => {
     // cara ruuuning menggunakan enter
     e.preventDefault();
 
-    console.log(user);
-    console.log("onChanges");
+    // console.log(user);
+    // console.log("onChanges");
     try {
       const data = {
         old_pass: document.getElementById("old_pass").value,
