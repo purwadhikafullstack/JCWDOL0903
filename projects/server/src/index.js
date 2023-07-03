@@ -19,6 +19,7 @@ const {
   transactionHeaderRouter,
   transactionRouter
 } = require("./routers");
+const userVoucherRouter = require("./routers/userVoucherRouter");
 
 const PORT = process.env.PORT || 8000;
 
@@ -66,6 +67,8 @@ app.use("/vouchers", voucherRouter);
 app.use("/stocks", stockRouter);
 app.use("/transaction-header", transactionHeaderRouter);
 app.use("/transaction", transactionRouter)
+app.use("/user-vouchers", userVoucherRouter);
+app.use("/transactions", transactionRouter);
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
 

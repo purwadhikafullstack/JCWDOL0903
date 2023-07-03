@@ -1,4 +1,5 @@
 import { numToIDRCurrency } from "../helper/currency";
+import BrokenImg from "../assets/broken-img.png";
 
 export default function DiscountTableBody({ vouchers = [], onEdit, onDelete }) {
   return (
@@ -14,7 +15,14 @@ export default function DiscountTableBody({ vouchers = [], onEdit, onDelete }) {
                 <div className="h-10 w-10 flex-shrink-0">
                   <img
                     className="h-10 w-10"
-                    src={voucher.Product.image_url}
+                    src={
+                      `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${voucher.Product.image_url}` ||
+                      BrokenImg
+                    }
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null;
+                      currentTarget.src = BrokenImg;
+                    }}
                     alt={voucher.Product.name}
                   />
                 </div>

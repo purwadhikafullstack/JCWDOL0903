@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  #root {
+    @apply h-full;
+  }
+
   body {
-    @apply font-mulish;
+    @apply font-mulish h-full;
   }
 
   h1,

@@ -24,6 +24,7 @@ const categoryOptions = [{ value: "", label: "None" }];
 function ProductList() {
   let [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q");
+  const categoryId = searchParams.get("categoryId");
 
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
@@ -54,10 +55,12 @@ function ProductList() {
     let query = `page=${currentPage}&showEmptyStock=false&branchId=${branchesGlobal.selectedBranch.id}`;
     if (searchQuery) query += `&q=${searchQuery}`;
     if (sortFilter.value) query += `&sort=${sortFilter.value}`;
-    if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;
+    if (categoryFilter.value || categoryId)
+      query += `&categoryId=${categoryFilter.value || categoryId}`;
     dispatch(fetchProducts(query));
   }, [
     dispatch,
+    categoryId,
     sortFilter.value,
     categoryFilter.value,
     currentPage,

@@ -73,7 +73,8 @@ const updateProduct = async (
   updateImage,
   desc,
   stock_id,
-  stock
+  stock,
+  user
 ) => {
   const transaction = await db.sequelize.transaction();
 
@@ -109,6 +110,12 @@ const updateProduct = async (
         id: stock_id,
       },
     });
+
+    if (
+      user.role === "admin" &&
+      existingStock?.dataValues?.branch_id !== user.branch_id
+    )
+      throw new Error("Unauthorized");
 
     const deltaStock = stock - existingStock?.dataValues?.stock;
     const status = deltaStock > 0 ? "IN" : deltaStock < 0 ? "OUT" : null;

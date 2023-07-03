@@ -62,6 +62,7 @@ module.exports = {
         phone_num,
         gender,
         birthdate,
+        referral_code: nanoid(),
       });
 
       const generateToken = nanoid(50);

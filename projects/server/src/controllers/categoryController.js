@@ -45,6 +45,9 @@ async function getCategories(req, res) {
 
 async function createCategory(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const { name } = req.body;
     if (!name) throw new Error("Name cannot be empty");
     const categoryExists = await Category.findOne({
@@ -68,6 +71,9 @@ async function createCategory(req, res) {
 
 async function updateCategory(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const categoryId = parseInt(req.params.id);
     const { name } = req.body;
     if (!name) throw new Error("Name cannot be empty");
@@ -98,6 +104,9 @@ async function updateCategory(req, res) {
 
 async function deleteCategory(req, res) {
   try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
     const categoryId = parseInt(req.params.id);
     const isDeleted = await Category.destroy({
       where: {

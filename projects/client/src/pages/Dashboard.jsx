@@ -64,15 +64,11 @@ export default function Dashboard({ element }) {
     // if (!isLoading) {
     // }
     if (!user.id || user.role === "user") navigate("/");
-    // dispatch(fetchTransactionHeaderCategory(user.id));
-  }, []);
+  }, [navigate, user.id, user.role]);
 
   return (
     <div>
-      <DashboardSidebar
-        navigation={navigation}
-        children={element}
-      />
+      <DashboardSidebar navigation={navigation} children={element} />
     </div>
   );
 }

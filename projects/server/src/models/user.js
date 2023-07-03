@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       gender: DataTypes.ENUM("Pria", "Wanita"),
       birthdate: DataTypes.DATE,
       profile_picture: DataTypes.STRING,
-      referal_code: DataTypes.STRING,
+      referral_code: DataTypes.STRING,
       isVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

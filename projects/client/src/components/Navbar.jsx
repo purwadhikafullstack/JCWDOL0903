@@ -3,9 +3,10 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { logout } from "../reducers/userSlice";
 import { clearUserCart, fetchUserCart } from "../reducers/cartSlice";
+import DefaultAvatar from "../assets/default-avatar.jpg";
 
 // import assets
 import {
@@ -20,6 +21,7 @@ import LogoIcon from "../assets/logoPutih.png";
 // Import Components
 import ListBox from "./subcomponents/ListBox";
 import api from "../api/api";
+import { checkUserReferralVoucher } from "../helper/voucher";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -29,6 +31,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const cart = useSelector((state) => state.cart);
+  const [userHasReferralVoucher, setUserHasReferralVoucher] = useState(false);
   const dispatch = useDispatch();
   let token = false;
   if (user.id) {
@@ -47,6 +50,14 @@ export default function Navbar() {
       dispatch(fetchUserCart(user.id));
     }
   }, [user.id]);
+
+  useEffect(() => {
+    checkUserReferralVoucher(user.id)
+      .then((hasUserReferralVoucher) => {
+        setUserHasReferralVoucher(hasUserReferralVoucher);
+      })
+      .catch(() => null);
+  }, [navigate, user.id]);
 
   const navigation = [
     { name: "Home", href: "http://localhost:3000/", current: false },
@@ -74,19 +85,19 @@ export default function Navbar() {
       });
     }
   }
+
+  function handleErrorImg({ currentTarget }) {
+    currentTarget.onerror = null;
+    currentTarget.src = DefaultAvatar;
+  }
+
   return (
-    <Disclosure
-      as="nav"
-      className="bg-red-500 sticky top-0 z-10"
-    >
+    <Disclosure as="nav" className="bg-red-500 sticky top-0 z-10">
       {({ open }) => (
         <>
           <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">
             <div className="relative flex h-16 items-center justify-between">
-              <Link
-                to="/"
-                className="flex items-center px-2 lg:px-0"
-              >
+              <Link to="/" className="flex items-center px-2 lg:px-0">
                 <div className="flex-shrink-0">
                   <img
                     className="block h-8 w-auto lg:hidden"
@@ -106,10 +117,7 @@ export default function Navbar() {
 
               <div className="flex  flex-1 px-7">
                 <div className="w-full max-w-xl lg:max-w-2xl">
-                  <label
-                    htmlFor="search"
-                    className="sr-only"
-                  >
+                  <label htmlFor="search" className="sr-only">
                     Search
                   </label>
                   <div className="relative">
@@ -127,10 +135,7 @@ export default function Navbar() {
                         placeholder="Search"
                         type="search"
                       />
-                      <input
-                        type="submit"
-                        hidden
-                      />
+                      <input type="submit" hidden />
                     </form>
                   </div>
                 </div>
@@ -141,15 +146,9 @@ export default function Navbar() {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon
-                      className="block h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon
-                      className="block h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
               </div>
@@ -163,27 +162,24 @@ export default function Navbar() {
                       {cart.userCart}{" "}
                     </div>
                   ) : null}
-                  <Link to={user.id === 0 ? "/login" : "/cart"}>
-                  <button
-                    // type="button"
-                    className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
-                    disabled={!user.id}
-                    onClick={handleAddToCart}
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <ShoppingCartIcon
-                      className="h-8 w-8 transition-colors duration-200"
-                      aria-hidden="true"
-                    />
-                  </button>
+                  <Link to="/cart">
+                    <button
+                      type="button"
+                      className="mr-5 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
+                      disabled={!user.id}
+                      onClick={handleAddToCart}
+                    >
+                      <span className="sr-only">View notifications</span>
+                      <ShoppingCartIcon
+                        className="h-8 w-8 transition-colors duration-200"
+                        aria-hidden="true"
+                      />
+                    </button>
                   </Link>
 
                   {token ? (
                     <>
-                      <Menu
-                        as="div"
-                        className="relative ml-4 flex-shrink-0"
-                      >
+                      <Menu as="div" className="relative ml-4 flex-shrink-0">
                         <div className="flex flex-row items-center text-white">
                           <div className="relative">
                             <h3 className="text-xs font-medium lg:text-sm">
@@ -198,11 +194,12 @@ export default function Navbar() {
                             )}
                           </div>
                           <div className="ml-3">
-                            <Menu.Button className="flex rounded-full bg-gray-800 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            <Menu.Button className="flex rounded-full bg-white text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-amber-500">
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src="{user.profile_picture}"
+                                src={user.profile_picture || DefaultAvatar}
+                                onError={handleErrorImg}
                                 alt=""
                               />
                             </Menu.Button>
@@ -261,6 +258,25 @@ export default function Navbar() {
                                 </a>
                               )}
                             </Menu.Item>
+                            {!(
+                              userHasReferralVoucher ||
+                              user.role === "superadmin" ||
+                              user.role === "admin"
+                            ) && (
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <Link
+                                    to="/referral-code"
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    Referral Code
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                            )}
                             <Menu.Item>
                               {({ active }) => (
                                 <button
@@ -361,7 +377,8 @@ export default function Navbar() {
                   <div className="flex-shrink-0">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src={user.profile_picture || DefaultAvatar}
+                      onError={handleErrorImg}
                       alt=""
                     />
                   </div>
@@ -378,10 +395,7 @@ export default function Navbar() {
                     className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="sr-only">View notifications</span>
-                    <BellIcon
-                      className="h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <BellIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
                 <div className="mt-3 space-y-1 px-2">

@@ -224,5 +224,5 @@ module.exports = {
       console.log(err);
       res.status(400).send(err);
     }
-  },
+  }  
 };

@@ -20,9 +20,9 @@ export default function Cart() {
   const dispatch = useDispatch();
 
   const generateCart = async () => {
-    const cart = await api.get("/cart/" + user.id);
-    console.log("inicarfrontend", cart);
-    setCart(cart.data.cart);
+    const cartResponse = await api.get("/cart/" + user.id);
+    console.log("inicarfrontend", cartResponse);
+    setCart(cartResponse.data.cart);
     dispatch(fetchUserCart(user.id));
   };
 
@@ -31,14 +31,16 @@ export default function Cart() {
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
+
   const deleteOne = async (productId) => {
     await api.delete("/cart/" + user.id, { data: { product_id: productId } });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
+
   useEffect(() => {
-    generateCart()
-  },[])
+    generateCart();
+  }, []);
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -47,7 +49,6 @@ export default function Cart() {
     });
     return totalPrice;
   };
-
 
   return (
     <div
@@ -66,14 +67,8 @@ export default function Cart() {
           className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
           onSubmit={(event) => event.preventDefault()}
         >
-          <section
-            aria-labelledby="cart-heading"
-            className="lg:col-span-7"
-          >
-            <h2
-              id="cart-heading"
-              className="sr-only"
-            >
+          <section aria-labelledby="cart-heading" className="lg:col-span-7">
+            <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
             </h2>
 
@@ -82,13 +77,10 @@ export default function Cart() {
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
               {cart.map((value) => (
-                <li
-                  key={value.id}
-                  className="flex py-6 bg-white sm:py-10"
-                >
+                <li key={value.id} className="flex py-6 bg-white sm:py-10">
                   <div className="flex-shrink-0">
                     <img
-                      src={value.Product.image_url}
+                      src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Product.image_url}`}
                       alt={`${value.Product.name} image`}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                     />
@@ -103,7 +95,7 @@ export default function Cart() {
                               href={null}
                               className="font-medium text-gray-700 hover:text-gray-800"
                             >
-                              {null}
+                              {value.Product.name}
                             </a>
                           </h3>
                         </div>
@@ -164,21 +156,22 @@ export default function Cart() {
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
           >
-            <h2
-              id="summary-heading"
-              className="text-lg font-medium text-gray-900"
-            >
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
               Order summary
             </h2>
 
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Total Price</dt>
-                <dd className="text-sm font-medium text-gray-900">{numToIDRCurrency(calculateTotalPrice())}</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {numToIDRCurrency(calculateTotalPrice())}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">Order total</dt>
-                <dd className="text-base font-medium text-gray-900">{numToIDRCurrency(calculateTotalPrice())}</dd>
+                <dd className="text-base font-medium text-gray-900">
+                  {numToIDRCurrency(calculateTotalPrice())}
+                </dd>
               </div>
             </dl>
 

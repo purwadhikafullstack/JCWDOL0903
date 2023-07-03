@@ -89,7 +89,14 @@ export default function ProductDetail() {
         <div className="mt-10 lg:mt-0">
           <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg">
             <img
-              src={product.image_url || BrokenImg}
+              src={
+                `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${product.image_url}` ||
+                BrokenImg
+              }
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = BrokenImg;
+              }}
               alt={product.name}
               className="h-full w-full object-cover object-center"
             />
@@ -98,13 +105,30 @@ export default function ProductDetail() {
 
         <div>
           <div className="mt-4 lg:mt-0">
-            {product.Vouchers.find(
-              (v) => v.voucher_type === "Buy One Get One"
-            ) && (
-              <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700 mb-2">
-                Buy One Get One
-              </span>
-            )}
+            <div className="flex gap-2 flex-wrap">
+              {product.Vouchers.map((v) => {
+                return v.voucher_type === "Buy One Get One" ? (
+                  <span
+                    key={v.id}
+                    className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
+                  >
+                    Buy One Get One
+                  </span>
+                ) : v.voucher_type === "Produk" ? (
+                  (v.amount || v.percentage) && (
+                    <span
+                      key={v.id}
+                      className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
+                    >
+                      Discount{" "}
+                      {v.amount
+                        ? numToIDRCurrency(v.amount)
+                        : `${v.percentage}%`}
+                    </span>
+                  )
+                ) : null;
+              })}
+            </div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               {product.name}
             </h1>

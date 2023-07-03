@@ -1,6 +1,13 @@
-const Router = require("express").Router();
-const { transactionControllers } = require("../controllers");
+const transactionRouter = require("express").Router();
+const { transactionController } = require("../controllers");
+const userExtractor = require("../middleware/userExtractor");
 
-Router.post("/create_transaction/:id", transactionControllers.createTransaction)
+transactionRouter.patch(
+  "/:id",
+  userExtractor,
+  transactionController.updateTransaction
+);
 
-module.exports = Router;
+transactionRouter.post("/create_transaction/:id", transactionController.createTransaction)
+
+module.exports = transactionRouter;

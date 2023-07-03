@@ -12,6 +12,7 @@ const initialState = {
   profile_picture: "",
   role: "",
   isVerified: "",
+  referral_code: "",
 
   // role: "",
   // },
@@ -34,6 +35,7 @@ export const userSlice = createSlice({
       state.phone_num = action.payload.phone_num;
       state.role = action.payload.role;
       state.isVerified = action.payload.isVerified;
+      state.referral_code = action.payload.referral_code;
     },
     logout: (state) => {
       return initialState;
