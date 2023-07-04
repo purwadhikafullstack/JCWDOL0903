@@ -13,7 +13,14 @@ export default function ProductTableBody({ products = [], onEdit, onDelete }) {
                 <div className="h-10 w-10 flex-shrink-0">
                   <img
                     className="h-10 w-10"
-                    src={product.image_url || BrokenImg}
+                    src={
+                      `${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${product.image_url}` ||
+                      BrokenImg
+                    }
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null;
+                      currentTarget.src = BrokenImg;
+                    }}
                     alt={product.name}
                   />
                 </div>
@@ -42,7 +49,7 @@ export default function ProductTableBody({ products = [], onEdit, onDelete }) {
             <td className="px-3 py-4 text-sm text-gray-500 text-center">
               <div
                 className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                  product.Stocks?.[0].stock > 20
+                  stock.stock > 20
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
                 }`}

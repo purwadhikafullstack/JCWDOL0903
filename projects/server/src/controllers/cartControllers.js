@@ -12,20 +12,19 @@ module.exports = {
         where: {
           user_id,
         },
-        include: {
-          model: db.Products,
-          attributes: ["name", "price", "image_url"],
-          include: {
-            model: db.Stocks,
-            attributes: ["stock"],
-            include: {
-              model: db.Branch,
-              attributes: ["id"],
-            },
-          },
-        },
-      });
-
+        include:{
+            model: db.Products,
+            attributes: ["name", "price", "image_url"],
+            include:{
+                model: db.Stocks,
+                attributes: ["stock"],
+                include:{
+                    model: db.Branch,
+                    attributes: ["id", "kota"]
+                }
+            }
+        }
+      })
       res.status(200).send({
         message: `successfully retrieve user: ${user_id} cart `,
         cart: cart,
@@ -225,5 +224,5 @@ module.exports = {
       console.log(err);
       res.status(400).send(err);
     }
-  },
+  }  
 };

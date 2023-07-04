@@ -12,6 +12,7 @@ import pattern from "../assets/pattern.jpg";
 import { numToIDRCurrency } from "../helper/currency";
 import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
+import { Link } from "react-router-dom";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -19,9 +20,9 @@ export default function Cart() {
   const dispatch = useDispatch();
 
   const generateCart = async () => {
-    const cart = await api.get("/cart/" + user.id);
-    console.log("inicarfrontend", cart);
-    setCart(cart.data.cart);
+    const cartResponse = await api.get("/cart/" + user.id);
+    console.log("inicarfrontend", cartResponse);
+    setCart(cartResponse.data.cart);
     dispatch(fetchUserCart(user.id));
   };
 
@@ -30,14 +31,24 @@ export default function Cart() {
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
+
   const deleteOne = async (productId) => {
     await api.delete("/cart/" + user.id, { data: { product_id: productId } });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
+
   useEffect(() => {
     generateCart();
   }, []);
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    cart.forEach((value) => {
+      totalPrice += value.Product.price * value.qty;
+    });
+    return totalPrice;
+  };
 
   return (
     <div
@@ -56,14 +67,8 @@ export default function Cart() {
           className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
           onSubmit={(event) => event.preventDefault()}
         >
-          <section
-            aria-labelledby="cart-heading"
-            className="lg:col-span-7"
-          >
-            <h2
-              id="cart-heading"
-              className="sr-only"
-            >
+          <section aria-labelledby="cart-heading" className="lg:col-span-7">
+            <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
             </h2>
 
@@ -72,13 +77,10 @@ export default function Cart() {
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
               {cart.map((value) => (
-                <li
-                  key={value.id}
-                  className="flex py-6 bg-white sm:py-10"
-                >
+                <li key={value.id} className="flex py-6 bg-white sm:py-10">
                   <div className="flex-shrink-0">
                     <img
-                      src={value.Product.image_url}
+                      src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Product.image_url}`}
                       alt={`${value.Product.name} image`}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                     />
@@ -93,7 +95,7 @@ export default function Cart() {
                               href={null}
                               className="font-medium text-gray-700 hover:text-gray-800"
                             >
-                              {null}
+                              {value.Product.name}
                             </a>
                           </h3>
                         </div>
@@ -143,16 +145,6 @@ export default function Cart() {
                         </div>
                       </div>
                     </div>
-
-                    {/* <p className="mt-4 flex space-x-2 text-sm text-gray-700">
-                      {product.inStock ? (
-                        <CheckIcon className="h-5 w-5 flex-shrink-0 text-green-500" aria-hidden="true" />
-                      ) : (
-                        <ClockIcon className="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />
-                      )}
-
-                      <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
-                    </p> */}
                   </div>
                 </li>
               ))}
@@ -164,73 +156,32 @@ export default function Cart() {
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
           >
-            <h2
-              id="summary-heading"
-              className="text-lg font-medium text-gray-900"
-            >
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
               Order summary
             </h2>
 
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
-                <dt className="text-sm text-gray-600">Subtotal</dt>
+                <dt className="text-sm text-gray-600">Total Price</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  Rp 170.500
+                  {numToIDRCurrency(calculateTotalPrice())}
                 </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <dt className="flex items-center text-sm text-gray-600">
-                  <span>Shipping estimate</span>
-                  <a
-                    href="#"
-                    className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">
-                      Learn more about how shipping is calculated
-                    </span>
-                    <QuestionMarkCircleIcon
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </dt>
-                <dd className="text-sm font-medium text-gray-900">Rp 10.000</dd>
-              </div>
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <dt className="flex text-sm text-gray-600">
-                  <span>Tax estimate</span>
-                  <a
-                    href="#"
-                    className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">
-                      Learn more about how tax is calculated
-                    </span>
-                    <QuestionMarkCircleIcon
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </dt>
-                <dd className="text-sm font-medium text-gray-900">Rp 17.050</dd>
-              </div>
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <dt className="text-base font-medium text-gray-900">
-                  Order total
-                </dt>
+                <dt className="text-base font-medium text-gray-900">Order total</dt>
                 <dd className="text-base font-medium text-gray-900">
-                  Rp 197.550
+                  {numToIDRCurrency(calculateTotalPrice())}
                 </dd>
               </div>
             </dl>
 
             <div className="mt-6">
-              <button
-                type="submit"
+              <Link
+                to={"/cart/checkout"}
                 className="w-full rounded-md border border-transparent bg-yellow-400 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
                 Checkout
-              </button>
+              </Link>
             </div>
           </section>
         </form>

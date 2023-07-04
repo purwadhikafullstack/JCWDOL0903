@@ -10,14 +10,15 @@ const PopModel = ({fetchAddress, setAddress, address}) => {
     const [showModal, setShowModal] = useState(false)
     const [provinceData, setProvinceData] = useState([])
     const [cityData, setCityData] = useState([])
+    const [kecamatanData, setKecamatanData] = useState([])
     const [selectedProvince, setSelectedProvince] = useState("")
+    const [selectedCity, setSelectedCity] = useState("")
     const user = useSelector((state) => state.user);
-    const key = process.env.RAJA_ONGKIR_API_KEY  
     const onSubmit = async (e) => {
         e.preventDefault()     
         const data = {
-            kota: document.getElementById("kota").value,
-            provinsi: provinceData.find((val) => val.province_id ==  cityData[0].province_id ).province,
+            kota: cityData.find((val) => val.code == kecamatanData[0].regency).regency,          
+            provinsi: provinceData.find((val) => val.code ==  cityData[0].province).province,
             kecamatan: document.getElementById("kecamatan").value,
             kode_pos: document.getElementById("kode_pos").value,
         };
@@ -48,7 +49,8 @@ useEffect(() => {
   const fetchProvinceData = async () => {
     try {
       const response = await api.get("/province");
-      setProvinceData(response.data.data.rajaongkir.results);
+      setProvinceData(response.data.data.data);
+      console.log("ini province data", provinceData)
     } catch (error) {
       console.log("Error fetching province data:", error);
     }
@@ -62,8 +64,9 @@ useEffect(() => {
 useEffect(() => {
   const fetchCityData = async () => {
     try {
-      const response = await api.post("/city", { province: selectedProvince });
-      setCityData(response.data.data.rajaongkir.results);
+      const response = await api.post("/city", { provinsiCode: selectedProvince });
+      setCityData(response.data.data.data);
+      console.log("ini  city data", cityData)
     } catch (error) {
       console.log("Error fetching city data:", error);
     }
@@ -71,6 +74,20 @@ useEffect(() => {
 
   fetchCityData();
 }, [selectedProvince]);
+
+useEffect(() => {
+  const fetchKecamatanData = async () => {
+    try {
+      const response = await api.post("/kecamatan", { kabkotCode: selectedCity });
+      setKecamatanData(response.data.data.data);
+      console.log("ini response kecamatan", response.data.data.data)
+    } catch (error) {
+      console.log("Error fetching city data:", error);
+    }
+  };
+
+  fetchKecamatanData();
+}, [selectedCity]);
 
 
   return (
@@ -99,7 +116,7 @@ useEffect(() => {
               <div className="mt-1">
               <select id="province" name="province" value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)} className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
                 {provinceData.map((value) => (
-                  <option key={value.province_id} value={value.province_id}>
+                  <option key={value.province_id} value={value.code}>
                      {value.province}
                   </option>
                 ))}
@@ -112,9 +129,9 @@ useEffect(() => {
                 Kota
               </label>
               <div className="mt-1">
-                <select id="kota" name="kota" className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
+                <select id="kota" name="kota" value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
                   {cityData.map((value) => (
-                    <option value={value.city_name} >{value.city_name}</option>
+                    <option value={value.code} >{value.regency}</option>
                   ))}
                 </select>
               </div>
@@ -127,17 +144,13 @@ useEffect(() => {
                 Kecamatan
               </label>
               <div className="mt-1">
-                <input
-                  id="kecamatan"
-                  name="kecamatan"
-                  type="kecamatan"
-                  autoComplete="kecamatan"
-                  required
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                />
+                <select id="kecamatan" name="kecamatan" className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
+                  {kecamatanData.map((value) => (
+                    <option value={value.district} >{value.district}</option>
+                  ))}
+                </select>
               </div>
             </div>
-
             <div>
               <label
                 className="block text-sm font-medium text-gray-700"

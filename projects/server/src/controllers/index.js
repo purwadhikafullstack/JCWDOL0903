@@ -1,4 +1,4 @@
-const productController = require("./ProductController");
+const productController = require("./productController");
 const categoryController = require("./categoryController");
 const authControllers = require("./authControllers");
 const profillingControllers = require("./profillingControler");
@@ -7,6 +7,8 @@ const branchControllers = require("./branchController");
 const cartControllers = require("./cartControllers");
 const stockController = require("./stockController");
 const rajaOngkirControllers = require("./rajaOngkirController");
+const userVoucherController = require("./userVoucherController");
+const transactionController = require("./transactionController");
 
 module.exports = {
   productController,
@@ -18,4 +20,6 @@ module.exports = {
   cartControllers,
   rajaOngkirControllers,
   stockController,
+  userVoucherController,
+  transactionController,
 };

@@ -15,18 +15,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "./reducers/userSlice";
 import Dashboard from "./pages/Dashboard";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import Category from "./pages/Category";
 import Discount from "./pages/Discount";
+import OrderList from "./pages/OrderList";
 import ProductDetail from "./pages/ProductDetail";
 import Product from "./pages/Product";
 import ChangePassword from "./pages/ChangePassword";
 import ResetPassword from "./pages/ResetPassword";
 import Error from "./pages/Error";
 import ForgotPassword from "./pages/ForgotPassword";
-import Footer from "./components/Footer";
+import Footer from "./components/Footer2";
 import ResendVerify from "./components/ResendVerify";
 import Management from "./pages/Management";
 import Spinner from "./components/Spinner";
+import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
@@ -67,14 +70,12 @@ function App() {
       }
     }
     fetchUser();
-
-    setTimeout(() => setIsLoading(false), 500);
   }, []);
 
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="App">
+    <div className="min-h-full flex flex-col">
       <ResendVerify />
       <Routes>
         <Route
@@ -100,6 +101,25 @@ function App() {
             <>
               <Navbar />
               <Cart />
+            </>
+          }
+        />
+
+        <Route
+          path="/order_list"
+          element={
+            <>
+            <Navbar />
+              <OrderList />
+            </>
+          }
+        />
+         <Route
+          path="/cart/checkout"
+          element={
+            <>
+            <Navbar />
+              <Checkout />
             </>
           }
         />
@@ -142,21 +162,18 @@ function App() {
             </>
           }
         />
+        <Route path="/verification/:token" element={<Verification />} />
+        <Route path={"/changePass/:id"} element={<ChangePassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
         <Route
-          path="/verification/:token"
-          element={<Verification />}
-        />
-        <Route
-          path={"/changePass/:id"}
-          element={<ChangePassword />}
-        />
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
-        <Route
-          path={"/reset-password/:token"}
-          element={<ResetPassword />}
+          path={"/referral-code"}
+          element={
+            <>
+              <Navbar />
+              <ReferralCode />
+            </>
+          }
         />
         {/* <Route
           path="/dashboard"

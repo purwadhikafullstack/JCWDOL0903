@@ -124,6 +124,26 @@ module.exports = {
         }
       },
 
+      getMainAddress : async (req, res) => {
+        try{
+          const userId = req.params.id
+          const result = await Address.findOne({
+            where:{
+              user_id: userId,
+              is_main: true
+            }
+          })
+          res.status(200).send({
+            message: `successfully retrieve user: ${userId} main addressess`,
+            data: result
+          })
+        }
+        catch (err) {
+          console.error(err);
+          res.status(400).send(err);
+        }
+      },
+
       setAddress : async (req, res) => {
         try{
           const {id, user_id,  is_main} = req.body
