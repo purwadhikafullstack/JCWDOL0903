@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import Datepicker from "react-tailwindcss-datepicker";
 
 const StockHistory = () => {
-  console.log("stockhistopry");
+  const [sortDate, setSorDate] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+
+  const handleDate = (value) => {
+    setSorDate(value);
+  };
+
   return (
     <div>
       <div>StockHistory nih</div>
-      <p></p>
+      <Datepicker
+        value={sortDate}
+        onChange={handleDate}
+      />
     </div>
   );
 };

@@ -30,6 +30,7 @@ import Spinner from "./components/Spinner";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
+import SalesReport from "./pages/SalesReport";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -194,7 +195,9 @@ function App() {
         />
         <Route
           path="/dashboard/reports"
-          element={<Dashboard element={<Reports />} />}
+          element={
+            <Dashboard element={<Reports element={<SalesReport />} />} />
+          }
         />
         <Route
           path="/dashboard/reports/stock-history"

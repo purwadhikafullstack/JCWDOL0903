@@ -34,19 +34,30 @@ module.exports = {
 
         return res.status(200).send({ data: data });
       } else if (roleUser === "superadmin") {
-        const data = await db.Transaction_Header.findAll({
-          include: [
-            {
-              model: db.Transaction_Details,
-              include: [
-                {
-                  model: db.Products,
-                  include: [db.Category],
-                },
-              ],
-            },
-          ],
-        });
+        const data = await sequelize.query(
+          `SELECT C.name, IFNULL(trans.total,0) As Total  FROM categories c
+          LEFT JOIN (SELECT td.product_id, P.category_id, IFNULL(product_price * TD.qty,0) AS total, TH.branch_id FROM transaction_headers th 
+          JOIN transaction_details td ON td.transaction_header_id = th.id 
+          LEFT JOIN products P ON P.id = td.product_id
+          ) trans ON trans.category_id = c.id AND trans.branch_id 
+          GROUP BY C.name`,
+
+          { type: Sequelize.QueryTypes.SELECT }
+        );
+
+        // const data = await db.Transaction_Header.findAll({
+        //   include: [
+        //     {
+        //       model: db.Transaction_Details,
+        //       include: [
+        //         {
+        //           model: db.Products,
+        //           include: [db.Category],
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // });
 
         console.log("data", data);
 
