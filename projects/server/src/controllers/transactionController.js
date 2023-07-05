@@ -1,6 +1,8 @@
 const db = require("../models");
 const { Op } = require("sequelize");
-const TransactionHeader = db.Transaction_Header;
+const transHead = db.Transaction_Header;
+const transDet = db.Transaction_Details
+const product = db.Products
 
 async function updateTransaction(req, res) {
   try {
@@ -79,7 +81,7 @@ async function updateTransaction(req, res) {
 
 async function createTransaction  (req, res)  {
   try{
-      const { cart, selectedShippingOption } = req.body
+      const { cart, selectedShippingOption, branch_id, invoice } = req.body
       const user_id = req.params.id
       const totalPrice = cart.reduce((total, product) => {
           return total + product.Product.price * product.qty
@@ -87,13 +89,14 @@ async function createTransaction  (req, res)  {
 
       const transactionHeader = await  transHead.create({
           user_id,
-          branch_id: 1 /*cart.Product.Stocks[0].Branch.id*/,
+          branch_id,
           user_voucher_id: null,
           expedition_id: 1,
           total_price: totalPrice,
           date: new Date(),
           status: "Menunggu Pembayaran",
-          expedition_price: parseInt(selectedShippingOption)
+          expedition_price: parseInt(selectedShippingOption),
+          invoice
       })
 
       const newTransaction = await transDet.bulkCreate(
@@ -120,16 +123,74 @@ async function createTransaction  (req, res)  {
   }
 }
 
-async function getTransactionHead (req, res) {
-  try{
-      
-  }catch (err){
-      console.log(err);
-      res.status(400).send(err);
+async function getTransactionHead(req, res) {
+  const page = parseInt(req.query.page);
+  const startDate = req.query.startDate
+  const endDate = req.query.endDate
+  const sortType = req.query.sort
+  const itemsPerPage = 3
+  const status = req.query.status
+  const statusClause = status? {status: status} : {};
+  const invoiceName = req.query.q
+  const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
+  const dateClause = (startDate == "undefined" && endDate == "undefined") ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+
+  const offsetLimit = {};
+    if (page) {
+      offsetLimit.limit = itemsPerPage;
+      offsetLimit.offset = (page - 1) * itemsPerPage;
+    }
+  const user_id = req.params.id;
+  const sortMap = {
+    invoice_asc: [["invoice", "ASC"]],
+    invoice_desc: [["invoice", "DESC"]],
+    date_asc: [["date", "ASC"]],
+    date_desc: [["date", "DESC"]],
+  };
+  try {
+    const result = await transHead.findAndCountAll({   
+      where: {
+        user_id,
+        ...statusClause,
+        ...invoiceClause,
+        ...dateClause   
+      },
+      include: [
+        {
+          model: db.Transaction_Details,
+          attributes: ["product_name", "qty"],
+          include: [
+            {
+              model: db.Products,
+              attributes: ["image_url", "price"],
+            },
+          ],
+        },
+      ],
+      ...offsetLimit,
+      order: sortMap[sortType] || null
+    });
+    const results = await transHead.findAndCountAll({
+      where:{
+        user_id,
+        ...statusClause,
+        ...invoiceClause,
+        ...dateClause
+       
+      }
+    })
+    res.status(200).send({
+      message: "Successfully fetch user transaction headers",
+      data: {
+        Transaction_Header: result,
+        count: results
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
   }
 }
-
-
 
 module.exports = {
   updateTransaction, createTransaction, getTransactionHead

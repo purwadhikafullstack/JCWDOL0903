@@ -9,9 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
       Transaction_Header.hasMany(models.Transaction_Details, {
-        foreignKey: "transaction_header_id",
+        foreignKey: 'transaction_header_id',
       });
 
       Transaction_Header.belongsTo(models.User, {
@@ -39,7 +38,18 @@ module.exports = (sequelize, DataTypes) => {
       expedition_id: DataTypes.INTEGER,
       invoice: DataTypes.STRING,
       total_price: DataTypes.INTEGER,
-      date: DataTypes.DATE,
+      user_payment: DataTypes.STRING,
+      date: {
+        type: DataTypes.DATEONLY,
+        get() {
+          const rawDate = this.getDataValue('date');
+          if (rawDate) {
+            const dateObject = new Date(rawDate);
+            return dateObject.toISOString().slice(0, 10);
+          }
+          return null;
+        },
+      },
       status: DataTypes.ENUM(
         "Menunggu Pembayaran",
         "Menunggu Konfirmasi Pembayaran",

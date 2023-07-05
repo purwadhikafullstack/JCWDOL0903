@@ -4,18 +4,24 @@ import moment from "moment"
 
 const { RangePicker } = DatePicker;
 
-const DateRange = () => {
-  const [dates, setDates] = useState([]);
+const DateRange = ({ dates,setDates}) => {
 
   console.log("inidates",dates);
+  // localStorage.setItem("startDate", dates[0])
+  // localStorage.setItem("endDate", dates[1])
 
   return (
     <div>
       <RangePicker
         onChange={(value) => {
-          setDates(value.map(item => {
-            return moment(item.$d).format("DD-MM-YY")
-          }));
+          if(value){
+            setDates(value.map(item => {
+              return moment(item.$d).format("YYYY-MM-DD")
+            }));
+          }else if(!value){
+            setDates([])
+          }
+         
         }}
       />
     </div>

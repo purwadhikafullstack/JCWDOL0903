@@ -7,6 +7,7 @@ import { numToIDRCurrency } from '../helper/currency'
 import { fetchUserCart } from "../reducers/cartSlice";
 import { fetchVouchers } from '../reducers/voucherSlice'
 import Swal from "sweetalert2";
+import { generateInvoiceNumber } from '../helper/invoice'
 
 export default function Checkout() {
   const navigate = useNavigate()
@@ -28,7 +29,8 @@ export default function Checkout() {
     setCart(cart.data.cart)
     dispatch(fetchUserCart(user.id)); 
   }
-  console.log("ini cart", cart)
+  // console.log("ini cart", cart)
+  // console.log("ini branch id", cart[0].Product.Stocks[0].Branch.id)
 
   const getUserMainAddress = async () => {
     const result = await api.get("/profile/mainaddress/" + user.id)
@@ -100,9 +102,10 @@ export default function Checkout() {
     
           const response = await api.post('/ongkir', payload, {
             headers: {
-              key: process.env.RAJA_ONGKIR_KEY
+              key: process.env.RAJA_ONGKIR_API_KEY
             }
           });
+          console.log("ini response", response.data.rajaongkir.results)
           setOngkir(response.data.rajaongkir.results[0].costs)
           console.log("ini hasil formData", response.data.rajaongkir.results[0].costs);
         }
@@ -139,6 +142,8 @@ export default function Checkout() {
           {
             cart,
             selectedShippingOption,
+            branch_id: cart[0].Product.Stocks[0].Branch.id,
+            invoice: generateInvoiceNumber()
           }
         );
   

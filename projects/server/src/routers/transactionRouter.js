@@ -9,5 +9,6 @@ transactionRouter.patch(
 );
 
 transactionRouter.post("/create_transaction/:id", transactionController.createTransaction)
+transactionRouter.get("/get_transaction/:id", transactionController.getTransactionHead)
 
 module.exports = transactionRouter;
