@@ -17,7 +17,8 @@ const {
   stockRouter,
   adminRouter,
   transactionHeaderRouter,
-  transactionRouter
+  transactionRouter,
+  transactionDetailsRouter
 } = require("./routers");
 const userVoucherRouter = require("./routers/userVoucherRouter");
 
@@ -69,6 +70,7 @@ app.use("/transaction-header", transactionHeaderRouter);
 app.use("/transaction", transactionRouter)
 app.use("/user-vouchers", userVoucherRouter);
 app.use("/transactions", transactionRouter);
+app.use(transactionDetailsRouter)
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
 

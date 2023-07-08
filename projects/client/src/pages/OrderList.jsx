@@ -9,6 +9,7 @@ import { numToIDRCurrency } from '../helper/currency';
 import { convertToDate } from '../helper/date'
 import Pagination from '../components/Pagination';
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import DropImageModal from '../components/subcomponents/DropImageModal';
 
 
 const sortOptions = [
@@ -51,7 +52,7 @@ const OrderList = () => {
   useEffect(() => {
     
     getUsersCart()
-  },[user, currentPage, statusFilter, searchFilter, sortByOption, dates]) 
+  },[user, currentPage, statusFilter, searchFilter, sortByOption, dates, ]) 
 
 
   function handleSubmit(e) {
@@ -147,7 +148,8 @@ const OrderList = () => {
          </div>
  
          <div className='flex items-center relative'>
-           <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button>
+           {/* <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button> */}
+           <DropImageModal id={value.id} getUsersCart={getUsersCart}/>
            <button className='rounded-lg outline outline-2 outline-red-500 m-3 p-2 text-red-500 px-5 text-center hover:bg-slate-200 transition-all duration-300'>Cancle Order</button>
          </div>
          

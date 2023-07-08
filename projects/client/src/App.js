@@ -33,6 +33,8 @@ import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
+import Transaction from "./pages/Transaction";
+import TransactionDetails from "./pages/TransactionDetails";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -90,6 +92,16 @@ function App() {
           element={
             <>
               <Register />
+            </>
+          }
+        />
+
+        <Route
+          path="/dashboard/transactions/transdet/:head"
+          element={
+            <>
+            <Navbar/>
+              <TransactionDetails />
             </>
           }
         />
@@ -203,7 +215,7 @@ function App() {
         />
         <Route
           path="/dashboard/transactions"
-          element={<Dashboard element={null} />}
+          element={<Dashboard element={<Transaction />} />}
         />
         <Route
           path="/dashboard/discounts"

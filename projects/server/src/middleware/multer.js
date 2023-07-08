@@ -12,8 +12,9 @@ const fileUploader = ({
      },
    
      filename: (req, file, cb) => {
+      console.log("cek",file)
       const fileExtension = file.mimetype.split('/')[1];
-        console.log(file)
+        // console.log("ini file",file)
       const filename = `${prefix}_${nanoid()}.${fileExtension}`;
       cb(null, filename);
      }
@@ -24,6 +25,7 @@ const fileUploader = ({
      limits: {fileSize: 1048576},
       
      fileFilter: (req, file, cb) => {
+      console.log(file.mimetype);
       if (file.mimetype.split('/')[0] != fileType) {
        return cb(null, false);
       }

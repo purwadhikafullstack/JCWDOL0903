@@ -2,7 +2,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 const transHead = db.Transaction_Header;
 const transDet = db.Transaction_Details
-const product = db.Products
+
 
 async function updateTransaction(req, res) {
   try {
@@ -133,7 +133,7 @@ async function getTransactionHead(req, res) {
   const statusClause = status? {status: status} : {};
   const invoiceName = req.query.q
   const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
-  const dateClause = (startDate == "undefined" && endDate == "undefined") ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+  const dateClause = (!startDate && !endDate) ? {} : {date: {[Op.between]: [startDate, endDate]}}  
 
   const offsetLimit = {};
     if (page) {
@@ -147,6 +147,9 @@ async function getTransactionHead(req, res) {
     date_asc: [["date", "ASC"]],
     date_desc: [["date", "DESC"]],
   };
+  // console.log("ini startDate", startDate)
+  // console.log("ini endDate", endDate)
+  // console.log("ini date caluse", dateClause)
   try {
     const result = await transHead.findAndCountAll({   
       where: {
@@ -166,6 +169,10 @@ async function getTransactionHead(req, res) {
             },
           ],
         },
+        {
+          model: db.Branch,
+          attributes: ["name","kota"]
+        }
       ],
       ...offsetLimit,
       order: sortMap[sortType] || null

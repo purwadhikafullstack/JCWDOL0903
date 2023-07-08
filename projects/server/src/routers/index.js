@@ -11,6 +11,7 @@ const stockRouter = require("./stockRouter");
 const adminRouter = require("./adminRouter");
 const transactionHeaderRouter = require("./TransactionHeaderRouter");
 const transactionRouter = require("./transactionRouter")
+const transactionDetailsRouter = require("./transactionDetailsRouter")
 
 module.exports = {
   productRouter,
@@ -26,5 +27,6 @@ module.exports = {
   branchRouter,
   adminRouter,
   transactionHeaderRouter,
-  transactionRouter
+  transactionRouter,
+  transactionDetailsRouter
 };
