@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
 export default function Pagination({
-  itemsPerPage = 12,
-  itemsInPage,
-  totalItems,
-  totalPages = 0,
-  currentPage,
-  setCurrentPage,
+  itemsPerPage = 12, //limit
+  itemsInPage, //1-12 karena page terakhir belum tentu 12 
+  totalItems, // findcountAll => total data seluruhnya
+  totalPages = 0, // banyak halaman (offset)
+  currentPage, // offset saat ini
+  setCurrentPage, // re-assign offset 
 }) {
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = startItem + itemsInPage - 1;

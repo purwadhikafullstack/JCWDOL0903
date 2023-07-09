@@ -1,6 +1,8 @@
 const db = require("../models");
 const { Sequelize } = require("sequelize");
 const sequelize = db.sequelize;
+const transHead = db.Transaction_Header;
+const status = require("../constant/status")
 
 module.exports = {
   fetchTransactionHeader: async (req, res) => {
@@ -56,4 +58,37 @@ module.exports = {
       return res.status(400).send({ data: error });
     }
   },
+
+  setTransImage : async (req, res) => {
+    try{
+      const file = req.file
+      const result = await transHead.findOne({
+        where: 
+        {id: req.params.id}
+      })
+
+      console.log(file);
+      
+      // console.log("cek",transHea)
+      await transHead.update({
+        user_payment: file.filename,
+        status: status.menunggu_konfirmasi 
+      },{
+        where:
+        {id: req.params.id}
+      })
+      // console.log("user_", user_payment)
+      console.log("ini status", status)
+
+      res.status(200).json({
+        message: "transhead updated successfully",
+        transHead: result,
+      });
+    }
+    catch (error) {
+      console.log("err", error);
+      return res.status(400).send({ data: error });
+    }
+  }
+
 };

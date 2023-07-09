@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../api/api";
 import { numToIDRCurrency } from "../helper/currency";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   CheckIcon,
   XMarkIcon,
@@ -17,10 +17,13 @@ import BrokenImg from "../assets/broken-img.png";
 import { errorAlert, errorAlertWithMessage } from "../helper/alerts";
 import { getProductDiscountAmount } from "../helper/voucher";
 import ProductVoucherBadge from "../components/ProductVoucherBadge";
+import { fetchUserCart } from "../reducers/cartSlice";
+import Swal from "sweetalert2";
 
 export default function ProductDetail() {
   const branchesGlobal = useSelector((state) => state.branch);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const [product, setProduct] = useState({});
   const productStock = product?.Stocks?.[0]?.stock || 0;
@@ -28,6 +31,22 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const productId = useParams().id;
+
+  const addOne = async (productId, userId) => {
+    const response = await api.post("/cart/", {
+      product_id: productId,
+      user_id: userId,
+    });
+
+    dispatch(fetchUserCart(user.id));
+
+    await Swal.fire({
+      icon: "success",
+      title: response.data.message,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -196,6 +215,7 @@ export default function ProductDetail() {
               </div>
               <div className="mt-10">
                 <button
+                  onClick={() => addOne(product.id, user.id)}
                   type="submit"
                   className="flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 py-3 px-8 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={!productStock || !user.id}

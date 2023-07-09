@@ -1,6 +1,7 @@
 const db = require("../models");
 const { Op } = require("sequelize");
-const TransactionHeader = db.Transaction_Header;
+const transHead = db.Transaction_Header;
+const transDet = db.Transaction_Details;
 
 async function updateTransaction(req, res) {
   try {
@@ -84,7 +85,7 @@ async function updateTransaction(req, res) {
 
 async function createTransaction(req, res) {
   try {
-    const { cart, selectedShippingOption } = req.body;
+    const { cart, selectedShippingOption, branch_id, invoice } = req.body;
     const user_id = req.params.id;
     const totalPrice = cart.reduce((total, product) => {
       return total + product.Product.price * product.qty;
@@ -92,13 +93,14 @@ async function createTransaction(req, res) {
 
     const transactionHeader = await transHead.create({
       user_id,
-      branch_id: 1 /*cart.Product.Stocks[0].Branch.id*/,
+      branch_id,
       user_voucher_id: null,
       expedition_id: 1,
       total_price: totalPrice,
       date: new Date(),
       status: "Menunggu Pembayaran",
       expedition_price: parseInt(selectedShippingOption),
+      invoice,
     });
 
     const newTransaction = await transDet.bulkCreate(
@@ -138,7 +140,7 @@ async function getTransactionHead(req, res) {
     ? { invoice: { [Op.like]: "%" + invoiceName + "%" } }
     : {};
   const dateClause =
-    startDate == "undefined" && endDate == "undefined"
+    !startDate && !endDate
       ? {}
       : { date: { [Op.between]: [startDate, endDate] } };
 
@@ -154,6 +156,9 @@ async function getTransactionHead(req, res) {
     date_asc: [["date", "ASC"]],
     date_desc: [["date", "DESC"]],
   };
+  // console.log("ini startDate", startDate)
+  // console.log("ini endDate", endDate)
+  // console.log("ini date caluse", dateClause)
   try {
     const result = await transHead.findAndCountAll({
       where: {
@@ -172,6 +177,10 @@ async function getTransactionHead(req, res) {
               attributes: ["image_url", "price"],
             },
           ],
+        },
+        {
+          model: db.Branch,
+          attributes: ["name", "kota"],
         },
       ],
       ...offsetLimit,

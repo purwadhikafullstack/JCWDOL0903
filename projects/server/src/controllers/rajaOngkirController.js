@@ -79,9 +79,9 @@ module.exports = {
 
     getOngkir: async (req, res) => {
       try {
-        const origin = req.body.origin;
-        const destination = req.body.destination;
-        const weight = req.body.weight;
+        const origin = parseInt(req.body.origin);
+        const destination = parseInt(req.body.destination);
+        const weight = parseInt(req.body.weight);
         const courier = req.body.courier;
 
         // const origin = 501;
@@ -99,13 +99,14 @@ module.exports = {
         });
     
         // Handle the response here
-        console.log(response.data);
+        console.log(response.data.rajaongkir);
         res.status(200).send(response.data);
       } catch (err) {
         console.log(err);
         res.status(400).send(err);
       }
     }
+    // origin: '420', destination: '255', weight: 1700, courier: 'jne'
     
       
 }
