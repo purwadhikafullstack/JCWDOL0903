@@ -33,6 +33,7 @@ import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
+import Loading from "./pages/Loading";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -62,16 +63,18 @@ function App() {
           .then((res) => res.data.user);
         dispatch(login(user));
         setIsLoading(false);
+        // setTimeout(() => setIsLoading(false), 2000);
         // console.log(user);
       } catch (err) {
         setIsLoading(false);
+        // setTimeout(() => setIsLoading(false), 2000);
         // console.log(err);
       }
     }
     fetchUser();
   }, []);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="min-h-full flex flex-col">
@@ -108,16 +111,16 @@ function App() {
           path="/order_list"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <OrderList />
             </>
           }
         />
-         <Route
+        <Route
           path="/cart/checkout"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <Checkout />
             </>
           }
@@ -131,10 +134,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/*"
-          element={<Error />}
-        />
+        <Route path="/*" element={<Error />} />
         <Route
           path="/products"
           element={

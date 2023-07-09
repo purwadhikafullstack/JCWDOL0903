@@ -17,7 +17,7 @@ const {
   stockRouter,
   adminRouter,
   transactionHeaderRouter,
-  transactionRouter
+  transactionRouter,
 } = require("./routers");
 const userVoucherRouter = require("./routers/userVoucherRouter");
 
@@ -66,7 +66,7 @@ app.use(rajaOngkirRouter);
 app.use("/vouchers", voucherRouter);
 app.use("/stocks", stockRouter);
 app.use("/transaction-header", transactionHeaderRouter);
-app.use("/transaction", transactionRouter)
+app.use("/transaction", transactionRouter);
 app.use("/user-vouchers", userVoucherRouter);
 app.use("/transactions", transactionRouter);
 

@@ -12,6 +12,7 @@ async function getStocks(req, res) {
     const categoryId = parseInt(req.query.categoryId);
     const branchId = parseInt(req.query.branchId);
     const sortType = req.query.sort;
+    const showEmptyStock = req.query.showEmptyStock;
 
     const sortMap = {
       name_asc: [["name", "ASC"]],
@@ -32,25 +33,40 @@ async function getStocks(req, res) {
       ? { name: { [Op.like]: "%" + productName + "%" } }
       : {};
     const productIdClause = productId ? { id: productId } : {};
+    const stockClause =
+      showEmptyStock === "false" ? { stock: { [Op.gt]: 0 } } : {};
 
     const stocks = await Stocks.findAndCountAll({
       attributes: ["id", "stock"],
       where: {
         ...branchClause,
+        ...stockClause,
       },
       include: [
         {
           model: db.Products,
-          attributes: ["id", "name", "price", "image_url", "desc"],
-          where: { ...categoryClause, ...productClause, ...productIdClause },
-          include: {
-            model: db.Category,
-            attributes: ["id", "name"],
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
           },
+          where: { ...categoryClause, ...productClause, ...productIdClause },
+          include: [
+            {
+              model: db.Category,
+              attributes: ["id", "name"],
+            },
+            {
+              model: db.Voucher,
+              attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+              },
+            },
+          ],
         },
         {
           model: db.Branch,
-          attributes: ["kota", "kecamatan", "provinsi", "kode_pos"],
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
+          },
         },
       ],
       ...offsetLimit,

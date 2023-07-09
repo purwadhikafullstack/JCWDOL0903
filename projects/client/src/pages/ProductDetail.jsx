@@ -12,14 +12,16 @@ import {
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import ProductNotFound from "../components/ProductNotFound";
 import InputNumber from "../components/InputNumber";
+import Badge from "../components/Badge";
 import BrokenImg from "../assets/broken-img.png";
 import { errorAlert, errorAlertWithMessage } from "../helper/alerts";
+import { getProductDiscountAmount } from "../helper/voucher";
+import ProductVoucherBadge from "../components/ProductVoucherBadge";
 
 export default function ProductDetail() {
   const branchesGlobal = useSelector((state) => state.branch);
   const user = useSelector((state) => state.user);
 
-  // console.log('')
   const [product, setProduct] = useState({});
   const productStock = product?.Stocks?.[0]?.stock || 0;
   const productBranch = product?.Stocks?.[0]?.Branch || {};
@@ -102,52 +104,19 @@ export default function ProductDetail() {
             />
           </div>
         </div>
-
         <div>
           <div className="mt-4 lg:mt-0">
-            <div className="flex gap-2 flex-wrap">
-              {product.Vouchers.map((v) => {
-                return v.voucher_type === "Buy One Get One" ? (
-                  <span
-                    key={v.id}
-                    className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
-                  >
-                    Buy One Get One
-                  </span>
-                ) : v.voucher_type === "Produk" ? (
-                  (v.amount || v.percentage) && (
-                    <span
-                      key={v.id}
-                      className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
-                    >
-                      Discount{" "}
-                      {v.amount
-                        ? numToIDRCurrency(v.amount)
-                        : `${v.percentage}%`}
-                    </span>
-                  )
-                ) : null;
-              })}
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
               {product.name}
             </h1>
           </div>
-          <section
-            aria-labelledby="information-heading"
-            className="mt-4"
-          >
-            <h2
-              id="information-heading"
-              className="sr-only"
-            >
+          <section aria-labelledby="information-heading" className="mt-1">
+            <h2 id="information-heading" className="sr-only">
               Product information
             </h2>
             <div className="flex items-center">
-              <p className="text-lg text-gray-900 sm:text-xl">
-                {numToIDRCurrency(product.price)}
-              </p>
-              <div className="ml-4 border-l border-gray-300 pl-4">
+              <p className="text-gray-900">Sold {product.sold}</p>
+              <div className="ml-2 border-l border-gray-300 pl-2">
                 <div className="flex items-center">
                   {[0, 1, 2, 3, 4].map((rating) => (
                     <StarIcon
@@ -158,6 +127,14 @@ export default function ProductDetail() {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="py-4 border-b">
+              <p className="text-xl text-gray-900 font-bold sm:text-2xl mb-1">
+                {numToIDRCurrency(
+                  product.price - getProductDiscountAmount(product.Vouchers)
+                )}
+              </p>
+              <ProductVoucherBadge product={product} />
             </div>
             <div className="mt-4 space-y-6">
               <p className="text-base text-gray-500">{product.desc}</p>
@@ -188,13 +165,9 @@ export default function ProductDetail() {
             </div>
           </section>
         </div>
-
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
-            <h2
-              id="options-heading"
-              className="sr-only"
-            >
+            <h2 id="options-heading" className="sr-only">
               Product options
             </h2>
             <form onSubmit={handleSubmit}>

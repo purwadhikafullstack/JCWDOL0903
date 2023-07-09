@@ -40,7 +40,7 @@ async function getProducts(req, res) {
     const products = await Products.findAndCountAll({
       subQuery: false,
       attributes: {
-        exclude: ["category_id", "createdAt", "updatedAt", "deletedAt"],
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
       },
       where: {
         ...categoryClause,
@@ -68,8 +68,9 @@ async function getProducts(req, res) {
         },
         {
           model: db.Voucher,
+          separate: true,
           attributes: {
-            exclude: ["product_id", "createdAt", "updatedAt", "deletedAt"],
+            exclude: ["createdAt", "updatedAt", "deletedAt"],
           },
         },
       ],

@@ -41,14 +41,18 @@ async function getValidVoucher(
 
   const voucherClause = voucherId ? { id: voucherId } : {};
 
-  if (voucher_type === "Produk") {
-    if (!product_id) throw new Error("Product ID field cannot be empty");
-  } else if (voucher_type === "Buy One Get One") {
+  if (voucher_type === "Produk" || voucher_type === "Buy One Get One") {
     if (!product_id) throw new Error("Product ID field cannot be empty");
   } else if (voucher_type === "Total Belanja") {
     if (!min_purchase)
       throw new Error("Minimum Purchase field cannot be empty");
   }
+
+  const productClause = product_id ? { product_id } : {};
+  const isVoucherExist = await db.Voucher.findOne({
+    where: { voucher_type, ...productClause },
+  });
+  if (isVoucherExist) throw new Error("Voucher already exists");
 
   const result = await cb(
     {

@@ -3,15 +3,15 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import BanguninLogo from "../assets/logoFull.png";
+import { useLocation } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function DashboardSidebar({ navigation = [], children }) {
-  console.log("childrenmAdlando", children);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const currentPath = window.location.pathname;
+  const currentPath = useLocation().pathname;
 
   return (
     <>
@@ -166,7 +166,7 @@ export default function DashboardSidebar({ navigation = [], children }) {
           <main className="flex-1">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                <div className="pb-4 pt-12">{children}</div>
+                <div className="pb-4 pt-12 min-h-screen">{children}</div>
               </div>
             </div>
           </main>
