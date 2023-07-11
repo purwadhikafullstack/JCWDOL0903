@@ -1,36 +1,8 @@
 const db = require("../models");
-const { Op, fn, literal } = require("sequelize");
+const { Op } = require("sequelize");
 const transHead = db.Transaction_Header;
 const transDet = db.Transaction_Details;
 const ORDER_STATUS = require("../constant/status");
-
-async function confirmTransactionsAfter7D(req, res) {
-  try {
-    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
-      throw new Error("Unauthorized");
-
-    const [isUpdated] = await transHead.update(
-      { status: ORDER_STATUS.konfirmasi },
-      {
-        where: {
-          status: ORDER_STATUS.dikirim,
-          date: {
-            [Op.lt]: fn(
-              "DATE_SUB",
-              literal("CURDATE()"),
-              literal("INTERVAL 7 DAY")
-            ),
-          },
-        },
-      }
-    );
-    if (!isUpdated) return res.status(404).end();
-    return res.status(200).end();
-  } catch (err) {
-    console.log(err.message);
-    return res.status(400).json({ error: err.message });
-  }
-}
 
 async function updateTransaction(req, res) {
   try {
@@ -239,7 +211,6 @@ async function getTransactionHead(req, res) {
 }
 
 module.exports = {
-  confirmTransactionsAfter7D,
   updateTransaction,
   createTransaction,
   getTransactionHead,

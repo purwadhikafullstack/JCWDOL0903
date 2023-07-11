@@ -73,10 +73,6 @@ function App() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    api.patch("/transactions/confirm-overdue");
-  }, []);
-
   if (isLoading) return <Spinner />;
 
   return (

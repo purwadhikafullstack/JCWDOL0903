@@ -21,8 +21,16 @@ const {
   transactionDetailsRouter,
 } = require("./routers");
 const userVoucherRouter = require("./routers/userVoucherRouter");
+const cron = require("node-cron");
+const { confirmTransactionsAfter7D } = require("./services/transaction");
 
 const PORT = process.env.PORT || 8000;
+
+// Run every day at 07:00 WIB
+cron.schedule("0 7 * * *", confirmTransactionsAfter7D, {
+  scheduled: true,
+  timezone: "Asia/Jakarta",
+});
 
 const app = express();
 
