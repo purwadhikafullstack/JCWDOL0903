@@ -91,6 +91,7 @@ export default function ProductForm({
                 id="productName"
                 className="block w-full min-w-0 flex-1 rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                 defaultValue={product.name}
+                required
               />
             </div>
 
