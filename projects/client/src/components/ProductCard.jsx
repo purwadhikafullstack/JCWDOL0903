@@ -38,7 +38,10 @@ export default function ProductCard({ products = [], isLoading = false }) {
               </div>
               <p className="relative text-lg font-semibold text-red-400 truncate">
                 {numToIDRCurrency(
-                  product.price - getProductDiscountAmount(product.Vouchers)
+                  product.price - getProductDiscountAmount(product.Vouchers) <=
+                    0
+                    ? 0
+                    : product.price - getProductDiscountAmount(product.Vouchers)
                 )}
               </p>
               <ProductVoucherBadge product={product} />

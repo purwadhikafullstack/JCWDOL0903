@@ -26,6 +26,9 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
 
   const [product, setProduct] = useState({});
+  const productPriceAfterDiscount = product.price
+    ? product.price - getProductDiscountAmount(product.Vouchers)
+    : 0;
   const productStock = product?.Stocks?.[0]?.stock || 0;
   const productBranch = product?.Stocks?.[0]?.Branch || {};
   const [quantity, setQuantity] = useState(1);
@@ -150,7 +153,7 @@ export default function ProductDetail() {
             <div className="py-4 border-b">
               <p className="text-xl text-gray-900 font-bold sm:text-2xl mb-1">
                 {numToIDRCurrency(
-                  product.price - getProductDiscountAmount(product.Vouchers)
+                  productPriceAfterDiscount <= 0 ? 0 : productPriceAfterDiscount
                 )}
               </p>
               <ProductVoucherBadge product={product} />
@@ -209,8 +212,8 @@ export default function ProductDetail() {
                 <p>Subtotal</p>
                 <p className="font-bold text-lg">
                   {quantity
-                    ? numToIDRCurrency(product.price * quantity)
-                    : numToIDRCurrency(product.price)}
+                    ? numToIDRCurrency(productPriceAfterDiscount * quantity)
+                    : numToIDRCurrency(productPriceAfterDiscount)}
                 </p>
               </div>
               <div className="mt-10">
