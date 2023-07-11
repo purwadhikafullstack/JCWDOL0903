@@ -17,6 +17,7 @@ import Pagination from "../components/Pagination";
 import { style, loadProduct } from "../helper/reactSelect";
 import { voucherTypes } from "../helper/filterOptions";
 import { deleteConfirmationAlert } from "../helper/alerts";
+import Spinner from "../components/Spinner";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -57,6 +58,13 @@ export default function Discount() {
     productId,
   ]);
 
+  useEffect(() => {
+    if (!vouchersGlobal.isLoading) {
+      setOpenAddModal(false);
+      setOpenEditModal(false);
+    }
+  }, [vouchersGlobal.isLoading]);
+
   function getVoucherData(data) {
     const {
       "voucher_type[value]": voucher_type,
@@ -88,7 +96,6 @@ export default function Discount() {
   function handleCreateVoucher(e) {
     e.preventDefault();
     dispatch(createVoucher(getVoucherData(e.target), currentPage));
-    setOpenAddModal(false);
   }
 
   function handleEditVoucher(e) {
@@ -96,7 +103,6 @@ export default function Discount() {
     dispatch(
       updateVoucher(editedVoucher.id, getVoucherData(e.target), currentPage)
     );
-    setOpenEditModal(false);
   }
 
   function handleDelete(id) {
@@ -108,6 +114,12 @@ export default function Discount() {
     setOpenEditModal(true);
   }
 
+  if (
+    vouchersGlobal.isLoading &&
+    !(openAddModal === true || openEditModal === true)
+  )
+    return <Spinner />;
+
   return (
     <div>
       <ModalForm
@@ -115,6 +127,7 @@ export default function Discount() {
         open={openAddModal}
         setOpen={setOpenAddModal}
         action="add"
+        isLoading={vouchersGlobal.isLoading}
         onSubmit={handleCreateVoucher}
         children={<DiscountFormControl />}
       />
@@ -123,6 +136,7 @@ export default function Discount() {
         open={openEditModal}
         setOpen={setOpenEditModal}
         action="edit"
+        isLoading={vouchersGlobal.isLoading}
         onSubmit={handleEditVoucher}
         children={<DiscountFormControl voucher={editedVoucher} />}
       />

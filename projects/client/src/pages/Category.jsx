@@ -15,6 +15,7 @@ import CategoryTableBody from "../components/CategoryTableBody";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import Dropdown from "../components/Dropdown";
+import Spinner from "../components/Spinner";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -43,10 +44,16 @@ export default function Category() {
     dispatch(fetchCategories(query));
   }, [dispatch, userGlobal.role, currentPage, categoryName, sortFilter.value]);
 
+  useEffect(() => {
+    if (!categoriesGlobal.isLoading) {
+      setOpenAddModal(false);
+      setOpenEditModal(false);
+    }
+  }, [categoriesGlobal.isLoading]);
+
   function handleCreateCategory(e) {
     e.preventDefault();
     dispatch(createCategory(e.target.categoryName?.value, currentPage));
-    setOpenAddModal(false);
   }
 
   function handleEditCategory(e) {
@@ -58,7 +65,6 @@ export default function Category() {
         currentPage
       )
     );
-    setOpenEditModal(false);
   }
 
   function handleDelete(id) {
@@ -75,6 +81,12 @@ export default function Category() {
     setCategoryName(e.target.searchBar?.value);
   }
 
+  if (
+    categoriesGlobal.isLoading &&
+    !(openAddModal === true || openEditModal === true)
+  )
+    return <Spinner />;
+
   return (
     <div>
       <ModalForm
@@ -82,6 +94,7 @@ export default function Category() {
         open={openAddModal}
         setOpen={setOpenAddModal}
         action="add"
+        isLoading={categoriesGlobal.isLoading}
         onSubmit={handleCreateCategory}
         children={<CategoryFormControl />}
       />
@@ -90,6 +103,7 @@ export default function Category() {
         open={openEditModal}
         setOpen={setOpenEditModal}
         action="edit"
+        isLoading={categoriesGlobal.isLoading}
         onSubmit={handleEditCategory}
         children={<CategoryFormControl category={editedCategory} />}
       />

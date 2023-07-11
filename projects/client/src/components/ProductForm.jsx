@@ -4,9 +4,11 @@ import ImageDragAndDrop from "./ImageDragAndDrop";
 import Dropdown from "./Dropdown";
 import { createProduct, updateProduct } from "../reducers/productSlice";
 import { useSelector } from "react-redux";
+import LoadingButton from "./LoadingButton";
 
 export default function ProductForm({
   action = "add",
+  isLoading = false,
   setShowForm,
   categoryOptions = [],
   currPage,
@@ -57,7 +59,6 @@ export default function ProductForm({
       dispatch(
         updateProduct(product.id, newProduct, currPage, userGlobal.branch_id)
       );
-    setShowForm(false);
   }
 
   return (
@@ -189,12 +190,16 @@ export default function ProductForm({
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-          >
-            Save
-          </button>
+          {isLoading ? (
+            <LoadingButton className="ml-3" />
+          ) : (
+            <button
+              type="submit"
+              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+            >
+              Save
+            </button>
+          )}
         </div>
       </div>
     </form>

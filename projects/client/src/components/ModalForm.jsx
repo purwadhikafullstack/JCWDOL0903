@@ -1,5 +1,6 @@
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import LoadingButton from "./LoadingButton";
 
 export default function ModalForm({
   title = "",
@@ -7,6 +8,7 @@ export default function ModalForm({
   setOpen,
   onSubmit,
   action = "add",
+  isLoading = false,
   children,
 }) {
   const cancelButtonRef = useRef(null);
@@ -56,12 +58,16 @@ export default function ModalForm({
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-                    <button
-                      type="submit"
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-                    >
-                      {action === "add" ? "Add" : "Save"}
-                    </button>
+                    {isLoading ? (
+                      <LoadingButton></LoadingButton>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-amber-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                      >
+                        {action === "add" ? "Add" : "Save"}
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"

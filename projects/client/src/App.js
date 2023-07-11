@@ -33,7 +33,6 @@ import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
-import Loading from "./pages/Loading";
 import Transaction from "./pages/Transaction";
 import TransactionDetails from "./pages/TransactionDetails";
 
@@ -65,18 +64,20 @@ function App() {
           .then((res) => res.data.user);
         dispatch(login(user));
         setIsLoading(false);
-        // setTimeout(() => setIsLoading(false), 2000);
         // console.log(user);
       } catch (err) {
         setIsLoading(false);
-        // setTimeout(() => setIsLoading(false), 2000);
         // console.log(err);
       }
     }
     fetchUser();
   }, []);
 
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    api.patch("/transactions/confirm-overdue");
+  }, []);
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="min-h-full flex flex-col">

@@ -5,9 +5,11 @@ import { numToIDRCurrency } from "../helper/currency";
 import { getProductDiscountAmount } from "../helper/voucher";
 import BrokenImg from "../assets/broken-img.png";
 import ProductVoucherBadge from "./ProductVoucherBadge";
+import ProductListSkeleton from "./ProductListSkeleton";
 
-export default function ProductCard({ products = [] }) {
-  if (!products.length) return <ProductNotFound />;
+export default function ProductCard({ products = [], isLoading = false }) {
+  if (isLoading) return <ProductListSkeleton />;
+  if (!products.length && !isLoading) return <ProductNotFound />;
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">

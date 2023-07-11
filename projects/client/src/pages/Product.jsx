@@ -14,6 +14,7 @@ import { fetchAllBranches } from "../reducers/branchSlice";
 import ProductTableBody from "../components/ProductTableBody";
 import { countProducts } from "../helper/products";
 import { deleteConfirmationAlert } from "../helper/alerts";
+import Spinner from "../components/Spinner";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -86,6 +87,13 @@ export default function Product() {
     currentPage,
   ]);
 
+  useEffect(() => {
+    if (!productsGlobal.isLoading) {
+      setShowAddProductForm(false);
+      setShowEditProductForm(false);
+    }
+  }, [productsGlobal.isLoading]);
+
   function handleSearch(e) {
     e.preventDefault();
     setProductName(e.target.searchBar?.value);
@@ -101,11 +109,18 @@ export default function Product() {
     setShowEditProductForm(true);
   }
 
+  if (
+    productsGlobal.isLoading &&
+    !(showAddProductForm === true || showEditProductForm === true)
+  )
+    return <Spinner />;
+
   return (
     <div>
       <TransitionFade show={showAddProductForm}>
         <ProductForm
           action="add"
+          isLoading={productsGlobal.isLoading}
           setShowForm={setShowAddProductForm}
           categoryOptions={categoryOptions}
           currPage={currentPage}
@@ -115,6 +130,7 @@ export default function Product() {
       <TransitionFade show={showEditProductForm}>
         <ProductForm
           action="edit"
+          isLoading={productsGlobal.isLoading}
           setShowForm={setShowEditProductForm}
           categoryOptions={categoryOptions}
           currPage={currentPage}
