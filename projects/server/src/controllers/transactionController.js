@@ -1,7 +1,36 @@
 const db = require("../models");
-const { Op } = require("sequelize");
+const { Op, fn, literal } = require("sequelize");
 const transHead = db.Transaction_Header;
 const transDet = db.Transaction_Details;
+const ORDER_STATUS = require("../constant/status");
+
+async function confirmTransactionsAfter7D(req, res) {
+  try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
+    const [isUpdated] = await transHead.update(
+      { status: ORDER_STATUS.konfirmasi },
+      {
+        where: {
+          status: ORDER_STATUS.dikirim,
+          date: {
+            [Op.lt]: fn(
+              "DATE_SUB",
+              literal("CURDATE()"),
+              literal("INTERVAL 7 DAY")
+            ),
+          },
+        },
+      }
+    );
+    if (!isUpdated) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
 
 async function updateTransaction(req, res) {
   try {
@@ -10,11 +39,13 @@ async function updateTransaction(req, res) {
 
     if (
       !(req.user.role === "admin" || req.user.role === "superadmin") &&
-      !(status === "Pesanan Dikonfirmasi" || status === "Dibatalkan")
+      !(
+        status === ORDER_STATUS.konfirmasi || status === ORDER_STATUS.dibatalkan
+      )
     )
       throw new Error("Unauthorized");
 
-    const isTransactionExist = await TransactionHeader.findOne({
+    const isTransactionExist = await transHead.findOne({
       where: {
         id: transactionHeaderId,
       },
@@ -25,12 +56,12 @@ async function updateTransaction(req, res) {
 
     let isUpdated;
 
-    if (status === "Dikirim") {
+    if (status === ORDER_STATUS.dikirim) {
       if (currStatus === status) return res.status(200).end();
 
-      isUpdated = await TransactionHeader.update(
+      isUpdated = await transHead.update(
         {
-          status: "Dikirim",
+          status,
         },
         {
           where: {
@@ -38,12 +69,12 @@ async function updateTransaction(req, res) {
           },
         }
       );
-    } else if (status === "Pesanan Dikonfirmasi") {
+    } else if (status === ORDER_STATUS.konfirmasi) {
       if (currStatus === status) return res.status(200).end();
 
-      isUpdated = await TransactionHeader.update(
+      isUpdated = await transHead.update(
         {
-          status: "Pesanan Dikonfirmasi",
+          status,
         },
         {
           where: {
@@ -51,21 +82,21 @@ async function updateTransaction(req, res) {
           },
         }
       );
-    } else if (status === "Dibatalkan") {
+    } else if (status === ORDER_STATUS.dibatalkan) {
       if (currStatus === status) return res.status(200).end();
 
       if (
         !(
-          currStatus === "Menunggu Pembayaran" ||
-          currStatus === "Menunggu Konfirmasi Pembayaran" ||
-          currStatus === "Diproses"
+          currStatus === ORDER_STATUS.menunggu_pembayaran ||
+          currStatus === ORDER_STATUS.menunggu_konfirmasi ||
+          currStatus === ORDER_STATUS.diproses
         )
       )
         throw new Error("Order cannot be canceled");
 
-      isUpdated = await TransactionHeader.update(
+      isUpdated = await transHead.update(
         {
-          status: "Dibatalkan",
+          status,
         },
         {
           where: {
@@ -208,6 +239,7 @@ async function getTransactionHead(req, res) {
 }
 
 module.exports = {
+  confirmTransactionsAfter7D,
   updateTransaction,
   createTransaction,
   getTransactionHead,

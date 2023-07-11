@@ -3,10 +3,17 @@ const { transactionController } = require("../controllers");
 const userExtractor = require("../middleware/userExtractor");
 
 transactionRouter.patch(
+  "/confirm-overdue",
+  userExtractor,
+  transactionController.confirmTransactionsAfter7D
+);
+
+transactionRouter.patch(
   "/:id",
   userExtractor,
   transactionController.updateTransaction
 );
+
 transactionRouter.post(
   "/create_transaction/:id",
   transactionController.createTransaction
