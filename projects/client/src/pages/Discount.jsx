@@ -4,6 +4,7 @@ import Table from "../components/Table";
 import ModalForm from "../components/ModalForm";
 import DiscountFormControl from "../components/DiscountFormControl";
 import { useSelector, useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import {
   fetchVouchers,
   createVoucher,
@@ -28,6 +29,7 @@ const sortOptions = [
 const voucherOptions = [{ value: "", label: "None" }, ...voucherTypes];
 
 export default function Discount() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const vouchersGlobal = useSelector((state) => state.voucher);
   const userGlobal = useSelector((state) => state.user);
@@ -35,19 +37,41 @@ export default function Discount() {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productId, setProductId] = useState();
   const [productName, setProductName] = useState("");
-  const [sortFilter, setSortFilter] = useState(sortOptions[0]);
-  const [typeFilter, setTypeFilter] = useState(voucherOptions[0]);
+
+  const [productId, setProductId] = useState(
+    searchParams.get("productId") || 0
+  );
+  const sortFilterInitial = sortOptions.findIndex(
+    (s) => s.value === searchParams.get("sort")
+  );
+  const [sortFilter, setSortFilter] = useState(
+    sortOptions[sortFilterInitial === -1 ? 0 : sortFilterInitial]
+  );
+  const typeFilterInitial = voucherOptions.findIndex(
+    (s) => s.value === searchParams.get("q")
+  );
+  const [typeFilter, setTypeFilter] = useState(
+    voucherOptions[typeFilterInitial === -1 ? 0 : typeFilterInitial]
+  );
   const [editedVoucher, setEditedVoucher] = useState({});
 
   useEffect(() => {
     if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
       return;
     let query = `page=${currentPage}`;
-    if (typeFilter.value) query += `&q=${typeFilter.value}`;
-    if (sortFilter.value) query += `&sort=${sortFilter.value}`;
-    if (productId) query += `&productId=${productId}`;
+    typeFilter.value
+      ? searchParams.set("q", typeFilter.value)
+      : searchParams.delete("q");
+    sortFilter.value
+      ? searchParams.set("sort", sortFilter.value)
+      : searchParams.delete("sort");
+    productId
+      ? searchParams.set("productId", productId)
+      : searchParams.delete("productId");
+    searchParams.sort();
+    query += `&${searchParams.toString()}`;
+    setSearchParams(searchParams);
     dispatch(fetchVouchers(query));
   }, [
     dispatch,
@@ -56,6 +80,8 @@ export default function Discount() {
     sortFilter.value,
     typeFilter.value,
     productId,
+    searchParams,
+    setSearchParams,
   ]);
 
   useEffect(() => {

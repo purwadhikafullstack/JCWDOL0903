@@ -22,7 +22,7 @@ const sortOptions = [
 const categoryOptions = [{ value: 0, label: "None" }];
 
 function ProductList() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q");
 
   const dispatch = useDispatch();
@@ -60,19 +60,9 @@ function ProductList() {
       ...newCategoryOptions
     );
 
-    console.log("categoryOptions", categoryOptions); // returns length of 6
-    console.log(categoryOptions.length); // returns length of 1 ???
-
-    /**
-     * ? Why findIndex only iterate once even tho categoryOptions' length > 1?
-     * * Tried using forEach, map
-     * * Tried to hardcode additional objects to categoryOptions
-     */
-
-    const initialCategoryIdx = categoryOptions.findIndex((s, i) => {
-      console.log("inside findIndex", i);
-      return s.value === initialCategoryIdRef.current;
-    });
+    const initialCategoryIdx = categoryOptions.findIndex(
+      (c) => c.value === initialCategoryIdRef.current
+    );
 
     if (initialCategoryIdx > -1) {
       setCategoryFilter(categoryOptions[initialCategoryIdx]);
