@@ -6,6 +6,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "../reducers/categorySlice";
+import { useSearchParams } from "react-router-dom";
 import ModalForm from "../components/ModalForm";
 import { deleteConfirmationAlert } from "../helper/alerts";
 import AddDataHeader from "../components/AddDataHeader";
@@ -15,6 +16,7 @@ import CategoryTableBody from "../components/CategoryTableBody";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import Dropdown from "../components/Dropdown";
+import Spinner from "../components/Spinner";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -23,6 +25,7 @@ const sortOptions = [
 ];
 
 export default function Category() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const categoriesGlobal = useSelector((state) => state.category);
   const userGlobal = useSelector((state) => state.user);
@@ -31,22 +34,48 @@ export default function Category() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedCategory, setEditedCategory] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [categoryName, setCategoryName] = useState("");
-  const [sortFilter, setSortFilter] = useState(sortOptions[0]);
+  const [categoryName, setCategoryName] = useState(searchParams.get("q") || "");
+  const sortFilterInitial = sortOptions.findIndex(
+    (s) => s.value === searchParams.get("sort")
+  );
+  const [sortFilter, setSortFilter] = useState(
+    sortOptions[sortFilterInitial === -1 ? 0 : sortFilterInitial]
+  );
 
   useEffect(() => {
     if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
       return;
     let query = `page=${currentPage}`;
-    if (categoryName) query += `&q=${categoryName}`;
-    if (sortFilter.value) query += `&sort=${sortFilter.value}`;
+    categoryName
+      ? searchParams.set("q", categoryName)
+      : searchParams.delete("q");
+    sortFilter.value
+      ? searchParams.set("sort", sortFilter.value)
+      : searchParams.delete("sort");
+    searchParams.sort();
+    query += `&${searchParams.toString()}`;
+    setSearchParams(searchParams);
     dispatch(fetchCategories(query));
-  }, [dispatch, userGlobal.role, currentPage, categoryName, sortFilter.value]);
+  }, [
+    dispatch,
+    userGlobal.role,
+    currentPage,
+    categoryName,
+    sortFilter.value,
+    searchParams,
+    setSearchParams,
+  ]);
+
+  useEffect(() => {
+    if (!categoriesGlobal.isLoading) {
+      setOpenAddModal(false);
+      setOpenEditModal(false);
+    }
+  }, [categoriesGlobal.isLoading]);
 
   function handleCreateCategory(e) {
     e.preventDefault();
     dispatch(createCategory(e.target.categoryName?.value, currentPage));
-    setOpenAddModal(false);
   }
 
   function handleEditCategory(e) {
@@ -58,7 +87,6 @@ export default function Category() {
         currentPage
       )
     );
-    setOpenEditModal(false);
   }
 
   function handleDelete(id) {
@@ -75,6 +103,12 @@ export default function Category() {
     setCategoryName(e.target.searchBar?.value);
   }
 
+  if (
+    categoriesGlobal.isLoading &&
+    !(openAddModal === true || openEditModal === true)
+  )
+    return <Spinner />;
+
   return (
     <div>
       <ModalForm
@@ -82,6 +116,7 @@ export default function Category() {
         open={openAddModal}
         setOpen={setOpenAddModal}
         action="add"
+        isLoading={categoriesGlobal.isLoading}
         onSubmit={handleCreateCategory}
         children={<CategoryFormControl />}
       />
@@ -90,6 +125,7 @@ export default function Category() {
         open={openEditModal}
         setOpen={setOpenEditModal}
         action="edit"
+        isLoading={categoriesGlobal.isLoading}
         onSubmit={handleEditCategory}
         children={<CategoryFormControl category={editedCategory} />}
       />

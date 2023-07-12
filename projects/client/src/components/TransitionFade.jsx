@@ -1,6 +1,6 @@
 import { Transition } from "@headlessui/react";
 
-export default function TransitionFade({ show, children }) {
+export default function TransitionFade({ show = true, children }) {
   return (
     <Transition
       show={show}

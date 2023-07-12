@@ -18,26 +18,36 @@ const {
   adminRouter,
   transactionHeaderRouter,
   transactionRouter,
-  transactionDetailsRouter
+  transactionDetailsRouter,
 } = require("./routers");
 const userVoucherRouter = require("./routers/userVoucherRouter");
+const cron = require("node-cron");
+const { confirmTransactionsAfter7D } = require("./services/transaction");
 
 const PORT = process.env.PORT || 8000;
 
+// Run every day at 07:00 WIB
+cron.schedule("0 7 * * *", confirmTransactionsAfter7D, {
+  scheduled: true,
+  timezone: "Asia/Jakarta",
+});
+
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: [
-//       process.env.WHITELISTED_DOMAIN &&
-//         process.env.WHITELISTED_DOMAIN.split(","),
-//     ],
-//   })
-// );
+app.use(
+  cors({
+    origin: [
+      process.env.WHITELISTED_DOMAIN &&
+        process.env.WHITELISTED_DOMAIN.split(","),
+    ],
+  })
+);
 
 app.use(cors());
 app.use(express.json());
-// app.use(authorize);
+
+app.use("/static", express.static(join(__dirname, "..", "public")));
+app.use(authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);
@@ -67,12 +77,10 @@ app.use(rajaOngkirRouter);
 app.use("/vouchers", voucherRouter);
 app.use("/stocks", stockRouter);
 app.use("/transaction-header", transactionHeaderRouter);
-app.use("/transaction", transactionRouter)
+app.use("/transaction", transactionRouter);
 app.use("/user-vouchers", userVoucherRouter);
 app.use("/transactions", transactionRouter);
-app.use(transactionDetailsRouter)
-
-app.use("/static", express.static(join(__dirname, "..", "public")));
+app.use(transactionDetailsRouter);
 
 // ===========================
 

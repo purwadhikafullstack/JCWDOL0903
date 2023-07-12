@@ -31,10 +31,45 @@
       rel="stylesheet"
     />
     <title>Bangunin</title>
+    <style>
+      .loader-container {
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        background-image: url("%PUBLIC_URL%/pattern.jpg");
+      }
+
+      .loader-logo {
+        width: 6rem;
+        height: 6rem;
+        animation: bounce1 1.1s infinite;
+      }
+
+      @keyframes bounce1 {
+        0%,
+        100% {
+          transform: translateY(-25%);
+          animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+        }
+        50% {
+          transform: none;
+          animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loader-container">
+        <img
+          class="loader-logo"
+          src="%PUBLIC_URL%/logo.svg"
+          alt="bangunin logo"
+        />
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -45,6 +80,5 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  
   </body>
 </html>

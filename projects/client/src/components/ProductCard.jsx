@@ -2,19 +2,20 @@ import { Link } from "react-router-dom";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 import ProductNotFound from "../components/ProductNotFound";
 import { numToIDRCurrency } from "../helper/currency";
+import { getProductDiscountAmount } from "../helper/voucher";
 import BrokenImg from "../assets/broken-img.png";
-import { useSelector, useDispatch } from "react-redux";
+import ProductVoucherBadge from "./ProductVoucherBadge";
+import ProductListSkeleton from "./ProductListSkeleton";
 
-export default function ProductCard({ products = [] }) {
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  if (!products.length) return <ProductNotFound />;
+export default function ProductCard({ products = [], isLoading = false }) {
+  if (isLoading) return <ProductListSkeleton />;
+  if (!products.length && !isLoading) return <ProductNotFound />;
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
       {products.map((product) => (
         <Link key={product.id} to={`/products/${product.id}`}>
-          <div className="shadow-md rounded-md border p-4 min-h-[430px] bg-white">
+          <div className="shadow-md rounded-md border p-4 min-h-[460px] bg-white">
             <div>
               <div className="relative h-64 w-full overflow-hidden rounded-lg">
                 <img
@@ -36,32 +37,14 @@ export default function ProductCard({ products = [] }) {
                 </h3>
               </div>
               <p className="relative text-lg font-semibold text-red-400 truncate">
-                {numToIDRCurrency(product.price)}
+                {numToIDRCurrency(
+                  product.price - getProductDiscountAmount(product.Vouchers) <=
+                    0
+                    ? 0
+                    : product.price - getProductDiscountAmount(product.Vouchers)
+                )}
               </p>
-              <div className="flex gap-2 flex-wrap">
-                {product.Vouchers.map((v) => {
-                  return v.voucher_type === "Buy One Get One" ? (
-                    <span
-                      key={v.id}
-                      className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
-                    >
-                      Buy One Get One
-                    </span>
-                  ) : v.voucher_type === "Produk" ? (
-                    (v.amount || v.percentage) && (
-                      <span
-                        key={v.id}
-                        className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
-                      >
-                        Discount{" "}
-                        {v.amount
-                          ? numToIDRCurrency(v.amount)
-                          : `${v.percentage}%`}
-                      </span>
-                    )
-                  ) : null;
-                })}
-              </div>
+              <ProductVoucherBadge product={product} />
               <div className="flex gap-1 items-center mt-2">
                 <MapPinIcon className="w-3 h-3 text-gray-400" />
                 <p className="text-sm text-gray-900">

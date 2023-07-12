@@ -5,10 +5,11 @@ import { voucherTypes } from "../helper/filterOptions";
 import { style, loadProduct } from "../helper/reactSelect";
 
 export default function DiscountFormControl({ voucher = {} }) {
+  const voucherTypeInitial = voucherTypes.findIndex(
+    (v) => v.value === voucher.voucher_type
+  );
   const [voucherType, setVoucherType] = useState(
-    voucher.voucher_type
-      ? { value: voucher.voucher_type, label: voucher.voucher_type }
-      : {}
+    voucherTypeInitial === -1 ? {} : voucherTypes[voucherTypeInitial]
   );
 
   const [unit, setUnit] = useState(

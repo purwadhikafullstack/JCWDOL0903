@@ -5,14 +5,18 @@ import { useSelector } from "react-redux";
 
 export default function ProductChoice({ className }) {
   const [products, setProducts] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const branchGlobal = useSelector((state) => state.branch);
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .get(`/products?branchId=${branchGlobal.selectedBranch.id}`)
       .then((res) => {
         setProducts(res.data.products.rows.slice(0, 4));
-      });
+        setIsLoading(false);
+      })
+      .catch((err) => setIsLoading(false));
   }, [branchGlobal.selectedBranch.id]);
 
   return (
@@ -38,7 +42,7 @@ export default function ProductChoice({ className }) {
           </p>
         </div>
         <section className="relative mx-auto mt-8 max-w-7xl">
-          <ProductCard products={products} />
+          <ProductCard products={products} isLoading={isLoading} />
         </section>
       </div>
     </div>

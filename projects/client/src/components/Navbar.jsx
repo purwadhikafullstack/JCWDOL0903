@@ -92,7 +92,7 @@ export default function Navbar() {
   }
 
   return (
-    <Disclosure as="nav" className="bg-red-500 sticky top-0 z-10">
+    <Disclosure as="nav" className="bg-red-500 sticky top-0 z-40">
       {({ open }) => (
         <>
           <div className="mx-auto container-screen px-2 sm:px-4 lg:px-1">

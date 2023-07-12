@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import ProductForm from "../components/ProductForm";
 import Table from "../components/Table";
@@ -14,6 +15,7 @@ import { fetchAllBranches } from "../reducers/branchSlice";
 import ProductTableBody from "../components/ProductTableBody";
 import { countProducts } from "../helper/products";
 import { deleteConfirmationAlert } from "../helper/alerts";
+import Spinner from "../components/Spinner";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -26,6 +28,8 @@ const categoryOptions = [{ value: "", label: "None" }];
 const branchOptions = [{ value: "", label: "None" }];
 
 export default function Product() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const dispatch = useDispatch();
   const userGlobal = useSelector((state) => state.user);
   const productsGlobal = useSelector((state) => state.product);
@@ -33,10 +37,18 @@ export default function Product() {
   const branchGlobal = useSelector((state) => state.branch);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
-  const [productName, setProductName] = useState("");
+  const [productName, setProductName] = useState(searchParams.get("q") || "");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortFilter, setSortFilter] = useState(sortOptions[0]);
+
+  const sortFilterInitial = sortOptions.findIndex(
+    (s) => s.value === searchParams.get("sort")
+  );
+  const [sortFilter, setSortFilter] = useState(
+    sortOptions[sortFilterInitial === -1 ? 0 : sortFilterInitial]
+  );
+  const initialCategoryIdRef = useRef(parseInt(searchParams.get("categoryId")));
   const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
+  const initialBranchIdRef = useRef(parseInt(searchParams.get("branchId")));
   const [branchFilter, setBranchFilter] = useState(branchOptions[0]);
   const [editedProduct, setEditedProduct] = useState({});
 
@@ -63,17 +75,39 @@ export default function Product() {
       ...newCategoryOptions
     );
     branchOptions.splice(1, branchOptions.length - 1, ...newBranchOptions);
+
+    const initialCategoryIdx = categoryOptions.findIndex(
+      (c) => c.value === initialCategoryIdRef.current
+    );
+    const initialBranchIdx = branchOptions.findIndex(
+      (b) => b.value === initialBranchIdRef.current
+    );
+
+    if (initialCategoryIdx > -1) {
+      setCategoryFilter(categoryOptions[initialCategoryIdx]);
+    }
+    if (initialBranchIdx > -1) {
+      setBranchFilter(branchOptions[initialBranchIdx]);
+    }
   }, [categoriesGlobal.categories, branchGlobal.allBranches]);
 
   useEffect(() => {
     if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
       return;
     let query = `page=${currentPage}`;
-    if (userGlobal.branch_id || branchFilter.value)
-      query += `&branchId=${userGlobal.branch_id || branchFilter.value}`;
-    if (productName) query += `&q=${productName}`;
-    if (sortFilter.value) query += `&sort=${sortFilter.value}`;
-    if (categoryFilter.value) query += `&categoryId=${categoryFilter.value}`;
+    userGlobal.branch_id || branchFilter.value
+      ? searchParams.set("branchId", userGlobal.branch_id || branchFilter.value)
+      : searchParams.delete("branchId");
+    productName ? searchParams.set("q", productName) : searchParams.delete("q");
+    sortFilter.value
+      ? searchParams.set("sort", sortFilter.value)
+      : searchParams.delete("sort");
+    categoryFilter.value
+      ? searchParams.set("categoryId", categoryFilter.value)
+      : searchParams.delete("categoryId");
+    searchParams.sort();
+    query += `&${searchParams.toString()}`;
+    setSearchParams(searchParams);
     dispatch(fetchProducts(query));
   }, [
     dispatch,
@@ -84,7 +118,16 @@ export default function Product() {
     sortFilter.value,
     categoryFilter.value,
     currentPage,
+    searchParams,
+    setSearchParams,
   ]);
+
+  useEffect(() => {
+    if (!productsGlobal.isLoading) {
+      setShowAddProductForm(false);
+      setShowEditProductForm(false);
+    }
+  }, [productsGlobal.isLoading]);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -101,11 +144,18 @@ export default function Product() {
     setShowEditProductForm(true);
   }
 
+  if (
+    productsGlobal.isLoading &&
+    !(showAddProductForm === true || showEditProductForm === true)
+  )
+    return <Spinner />;
+
   return (
     <div>
       <TransitionFade show={showAddProductForm}>
         <ProductForm
           action="add"
+          isLoading={productsGlobal.isLoading}
           setShowForm={setShowAddProductForm}
           categoryOptions={categoryOptions}
           currPage={currentPage}
@@ -115,6 +165,7 @@ export default function Product() {
       <TransitionFade show={showEditProductForm}>
         <ProductForm
           action="edit"
+          isLoading={productsGlobal.isLoading}
           setShowForm={setShowEditProductForm}
           categoryOptions={categoryOptions}
           currPage={currentPage}

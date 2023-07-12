@@ -1,7 +1,7 @@
 const db = require("../models");
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
-const { getValidVoucher } = require("../helpers/voucher");
+const { getValidVoucher } = require("../services/voucher");
 const Voucher = db.Voucher;
 
 async function getVouchers(req, res) {
@@ -65,8 +65,7 @@ async function createVoucher(req, res) {
     if (!(req.user.role === "admin" || req.user.role === "superadmin"))
       throw new Error("Unauthorized");
 
-    const createVoucher = Voucher.create.bind(Voucher);
-    const newVoucher = await getValidVoucher(req.body, createVoucher);
+    const newVoucher = await getValidVoucher(req.body, "create");
 
     return res.status(201).json({
       voucher: newVoucher,
@@ -85,8 +84,7 @@ async function updateVoucher(req, res) {
     const voucherId = parseInt(req.params.id);
     req.body.voucherId = voucherId;
 
-    const updateVoucher = Voucher.update.bind(Voucher);
-    const [isUpdated] = await getValidVoucher(req.body, updateVoucher);
+    const [isUpdated] = await getValidVoucher(req.body, "update");
 
     if (!isUpdated) return res.status(404).end();
     return res.status(200).end();

@@ -2,7 +2,6 @@ import { numToIDRCurrency } from "../helper/currency";
 import BrokenImg from "../assets/broken-img.png";
 
 export default function ProductTableBody({ products = [], onEdit, onDelete }) {
-  console.log("pro", products);
   return (
     <tbody className="divide-y divide-gray-200 bg-white">
       {products.map((product) =>

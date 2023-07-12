@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
@@ -19,19 +19,29 @@ const sortOptions = [
   { value: "price_desc", label: "Price (High - Low)" },
 ];
 
-const categoryOptions = [{ value: "", label: "None" }];
+const categoryOptions = [{ value: 0, label: "None" }];
 
 function ProductList() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q");
-  const categoryId = searchParams.get("categoryId");
 
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
+
   const branchesGlobal = useSelector((state) => state.branch);
+  const branchId = branchesGlobal.selectedBranch.id;
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortFilter, setSortFilter] = useState(sortOptions[0]);
+
+  const sortFilterInitial = sortOptions.findIndex(
+    (s) => s.value === searchParams.get("sort")
+  );
+  const [sortFilter, setSortFilter] = useState(
+    sortOptions[sortFilterInitial === -1 ? 0 : sortFilterInitial]
+  );
+
+  const initialCategoryIdRef = useRef(parseInt(searchParams.get("categoryId")));
   const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
 
   useEffect(() => {
@@ -49,23 +59,43 @@ function ProductList() {
       categoryOptions.length - 1,
       ...newCategoryOptions
     );
+
+    const initialCategoryIdx = categoryOptions.findIndex(
+      (c) => c.value === initialCategoryIdRef.current
+    );
+
+    if (initialCategoryIdx > -1) {
+      setCategoryFilter(categoryOptions[initialCategoryIdx]);
+    }
   }, [categoriesGlobal.categories]);
 
   useEffect(() => {
-    let query = `page=${currentPage}&showEmptyStock=false&branchId=${branchesGlobal.selectedBranch.id}`;
-    if (searchQuery) query += `&q=${searchQuery}`;
-    if (sortFilter.value) query += `&sort=${sortFilter.value}`;
-    if (categoryFilter.value || categoryId)
-      query += `&categoryId=${categoryFilter.value || categoryId}`;
+    let query = `page=${currentPage}&showEmptyStock=false`;
+
+    searchQuery ? searchParams.set("q", searchQuery) : searchParams.delete("q");
+    branchId
+      ? searchParams.set("branchId", branchId)
+      : searchParams.delete("branchId");
+    categoryFilter.value
+      ? searchParams.set("categoryId", categoryFilter.value)
+      : searchParams.delete("categoryId");
+    sortFilter.value
+      ? searchParams.set("sort", sortFilter.value)
+      : searchParams.delete("sort");
+
+    searchParams.sort();
+    query += `&${searchParams.toString()}`;
+    setSearchParams(searchParams);
     dispatch(fetchProducts(query));
   }, [
     dispatch,
-    categoryId,
+    branchId,
     sortFilter.value,
     categoryFilter.value,
     currentPage,
     searchQuery,
-    branchesGlobal.selectedBranch.id,
+    searchParams,
+    setSearchParams,
   ]);
 
   return (
@@ -75,18 +105,21 @@ function ProductList() {
           label="Sort"
           options={sortOptions}
           selectedValue={sortFilter}
-          onChange={setSortFilter}
+          onChange={(s) => setSortFilter(s)}
           className="font-medium"
         />
         <Dropdown
           label="Category"
           options={categoryOptions}
           selectedValue={categoryFilter}
-          onChange={setCategoryFilter}
+          onChange={(c) => setCategoryFilter(c)}
           className="font-medium"
         />
       </Filter>
-      <ProductCard products={productsGlobal.products} />
+      <ProductCard
+        products={productsGlobal.products}
+        isLoading={productsGlobal.isLoading}
+      />
       <Pagination
         itemsInPage={countProducts(productsGlobal.products)}
         totalItems={productsGlobal.totalItems}
