@@ -1,8 +1,5 @@
-import axios from "axios";
-import logo from "./logo.svg";
 import "./index.css";
-import { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
 import ProductList from "./pages/ProductList";
@@ -10,9 +7,7 @@ import UpdateProfile from "./pages/UpdateProfile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Verification from "./pages/Verification";
-import api from "./api/api";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "./reducers/userSlice";
+
 import Dashboard from "./pages/Dashboard";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -28,53 +23,15 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Footer from "./components/Footer2";
 import ResendVerify from "./components/ResendVerify";
 import Management from "./pages/Management";
-import Spinner from "./components/Spinner";
 import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
 import Transaction from "./pages/Transaction";
 import TransactionDetails from "./pages/TransactionDetails";
+import ProtectedPage from "./routes/ProtectedPage";
 
 function App() {
-  const [message, setMessage] = useState("");
-  // const id = useSelector((state) => state.user.id);
-  const [isLoading, setIsLoading] = useState(true);
-  const user = useSelector((state) => state.user);
-  // console.log("role", user.role);
-  //global state variable state yg bisa digunakan disemua component
-  //state,setState = state variable
-  //store = reducer, dispatch = setState
-  //pada saat refresh globalstate kembali ke init
-  // cek token => api => user => dispatch
-
-  //store = state
-  //dispatch = setState
-
-  // const user = useSelector((state) => state.user);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const token = localStorage.getItem("token");
-        setIsLoading(true);
-        const user = await api
-          .get("/auth/v1/" + token)
-          .then((res) => res.data.user);
-        dispatch(login(user));
-        setIsLoading(false);
-        // console.log(user);
-      } catch (err) {
-        setIsLoading(false);
-        // console.log(err);
-      }
-    }
-    fetchUser();
-  }, []);
-
-  if (isLoading) return <Spinner />;
-
   return (
     <div className="min-h-full flex flex-col">
       <ResendVerify />
@@ -84,6 +41,7 @@ function App() {
           element={
             <>
               <Navbar /> <LandingPage />
+              <Footer />
             </>
           }
         />
@@ -92,6 +50,7 @@ function App() {
           element={
             <>
               <Register />
+              <Footer />
             </>
           }
         />
@@ -102,6 +61,7 @@ function App() {
             <>
               <Navbar />
               <TransactionDetails />
+              <Footer />
             </>
           }
         />
@@ -112,6 +72,7 @@ function App() {
             <>
               <Navbar />
               <Cart />
+              <Footer />
             </>
           }
         />
@@ -122,6 +83,7 @@ function App() {
             <>
               <Navbar />
               <OrderList />
+              <Footer />
             </>
           }
         />
@@ -131,6 +93,7 @@ function App() {
             <>
               <Navbar />
               <Checkout />
+              <Footer />
             </>
           }
         />
@@ -139,7 +102,7 @@ function App() {
           path="/user/settings"
           element={
             <>
-              <Navbar /> <UpdateProfile />
+              <Navbar /> <UpdateProfile /> <Footer />
             </>
           }
         />
@@ -150,6 +113,7 @@ function App() {
             <>
               <Navbar />
               <ProductList />
+              <Footer />
             </>
           }
         />
@@ -159,6 +123,7 @@ function App() {
             <>
               <Navbar />
               <ProductDetail />
+              <Footer />
             </>
           }
         />
@@ -167,69 +132,122 @@ function App() {
           element={
             <>
               <Login />
+              <Footer />
             </>
           }
         />
-        <Route path="/verification/:token" element={<Verification />} />
-        <Route path={"/changePass/:id"} element={<ChangePassword />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
+        <Route
+          path="/verification/:token"
+          element={
+            <>
+              <Verification />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path={"/changePass/:id"}
+          element={
+            <>
+              <ChangePassword />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <>
+              <ForgotPassword />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path={"/reset-password/:token"}
+          element={
+            <>
+              <ResetPassword />
+              <Footer />
+            </>
+          }
+        />
         <Route
           path={"/referral-code"}
           element={
             <>
               <Navbar />
               <ReferralCode />
+              <Footer />
             </>
           }
         />
-        {/* <Route
-          path="/dashboard"
-          element={
-            user.id === 0 || user.role === "user" ? (
-              <Navigate to="/" />
-            ) : (
-              <Dashboard element={null} />
-            )
-          }
-        /> */}
 
         <Route
           path="/dashboard"
-          element={<Dashboard element={<DashboardCharts />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<DashboardCharts />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/management-setting"
-          element={<Dashboard element={<Management />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Management />} />{" "}
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/products"
-          element={<Dashboard element={<Product />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Product />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/category"
-          element={<Dashboard element={<Category />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Category />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/transactions"
-          element={<Dashboard element={<Transaction />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Transaction />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/discounts"
-          element={<Dashboard element={<Discount />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Discount />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/reports"
-          element={<Dashboard element={<Reports />} />}
+          element={
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Reports />} />
+            </ProtectedPage>
+          }
         />
         <Route
           path="/dashboard/reports/stock-history"
           element={
-            <Dashboard element={<Reports element={<StockHistory />} />} />
+            <ProtectedPage adminOnly={true}>
+              <Dashboard element={<Reports element={<StockHistory />} />} />
+            </ProtectedPage>
           }
         />
       </Routes>
-      <Footer />
     </div>
   );
 }

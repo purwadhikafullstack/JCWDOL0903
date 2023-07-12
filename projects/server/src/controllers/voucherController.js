@@ -1,7 +1,7 @@
 const db = require("../models");
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
-const { getValidVoucher } = require("../helpers/voucher");
+const { getValidVoucher } = require("../services/voucher");
 const Voucher = db.Voucher;
 
 async function getVouchers(req, res) {

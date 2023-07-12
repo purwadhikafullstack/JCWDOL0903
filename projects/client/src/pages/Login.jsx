@@ -4,7 +4,7 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../reducers/userSlice";
-import axios from "axios";
+import api from "../api/api";
 import Swal from "sweetalert2";
 import { successAlert, errorAlertWithMessage } from "../helper/alerts";
 import logo from "../assets/logo.png";
@@ -25,7 +25,7 @@ const Login = () => {
 
     console.log("data login", data);
     try {
-      const result = await axios.post(url, data);
+      const result = await api.post(url, data);
 
       localStorage.setItem("token", result.data.result.token.token);
 
@@ -70,11 +70,7 @@ const Login = () => {
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          className="mx-auto h-12 w-auto"
-          src={logo}
-          alt="Your Company"
-        />
+        <img className="mx-auto h-12 w-auto" src={logo} alt="Your Company" />
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
           Sign in to Bangunin
         </h2>
@@ -88,10 +84,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-      <form
-        className="space-y-6"
-        onSubmit={OnLogin}
-      >
+      <form className="space-y-6" onSubmit={OnLogin}>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
             <div>

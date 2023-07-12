@@ -35,7 +35,7 @@ async function deleteConfirmationAlert(cb = () => {}) {
     showCancelButton: true,
     confirmButtonColor: "#06b6d4",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
+    confirmButtonText: "Yes",
   });
   if (result.isConfirmed) {
     cb();

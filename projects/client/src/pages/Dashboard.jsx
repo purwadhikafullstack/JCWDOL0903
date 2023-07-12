@@ -50,20 +50,11 @@ const navigation = [
 ];
 
 export default function Dashboard({ element }) {
-  console.log("element", element);
   const user = useSelector((state) => state.user);
-
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const userId = useSelector((state) => state.user.id);
-
-  console.log("user", user.id);
 
   useEffect(() => {
-    // console.log("isloading", isLoading);
-    // if (!isLoading) {
-    // }
-    if (!user.id || user.role === "user") navigate("/");
+    // if (!user.id || user.role === "user") navigate("/");
   }, [navigate, user.id, user.role]);
 
   return (

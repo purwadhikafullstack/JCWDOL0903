@@ -1,7 +1,7 @@
 const db = require("../models");
 const { Op } = require("sequelize");
 const Products = db.Products;
-const productHelper = require("../helpers/product");
+const productHelper = require("../services/product");
 
 async function getProducts(req, res) {
   try {
