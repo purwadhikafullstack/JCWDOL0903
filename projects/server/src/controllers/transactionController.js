@@ -133,7 +133,7 @@ async function createTransaction(req, res) {
 async function confirmTransaction  (req, res) {
   try{
     const id  = req.params.id
-    const result = await transHead.update({status: status.konfirmasi},
+    const result = await transHead.update({status: ORDER_STATUS.konfirmasi},
       {where:{
         id
       }
@@ -153,17 +153,15 @@ async function confirmTransaction  (req, res) {
 
 async function getTransactionHead(req, res) {
   const page = parseInt(req.query.page);
-  const startDate = req.query.startDate
-  const endDate = req.query.endDate
+  const startDate = req.query.startDate === "undefined" ? null : req.query.startDate
+  const endDate = req.query.endDate === "undefined" ? null : req.query.endDate
   const sortType = req.query.sort
   const itemsPerPage = 3
   const status = req.query.status
   const statusClause = status? {status: status} : {};
   const invoiceName = req.query.q
   const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
-  const dateClause = (startDate === "undefined" && endDate === "undefined") ? {} : {date: {[Op.between]: [startDate, endDate]}}  
-  console.log("ini startdate", startDate)
-  console.log("ini date", dateClause)
+  const dateClause = (!startDate  && !endDate ) ? {} : {date: {[Op.between]: [startDate, endDate]}}  
 
   const offsetLimit = {};
   if (page) {
@@ -177,9 +175,6 @@ async function getTransactionHead(req, res) {
     date_asc: [["date", "ASC"]],
     date_desc: [["date", "DESC"]],
   };
-  // console.log("ini startDate", startDate)
-  // console.log("ini endDate", endDate)
-  // console.log("ini date caluse", dateClause)
   try {
     const result = await transHead.findAndCountAll({
       where: {
@@ -228,6 +223,78 @@ async function getTransactionHead(req, res) {
   }
 }
 
+async function getTransactionHeaders(req, res) {
+  const page = parseInt(req.query.page);
+  const startDate = req.query.startDate === "undefined" ? null : req.query.startDate
+  const endDate = req.query.endDate === "undefined" ? null : req.query.endDate
+  const sortType = req.query.sort
+  const itemsPerPage = 3
+  const status = req.query.status
+  const statusClause = status? {status: status} : {};
+  const invoiceName = req.query.q
+  const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
+  const dateClause = (!startDate  && !endDate ) ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+
+  const offsetLimit = {};
+  if (page) {
+    offsetLimit.limit = itemsPerPage;
+    offsetLimit.offset = (page - 1) * itemsPerPage;
+  }
+  const branch_id = req.params.branchid;
+  const sortMap = {
+    invoice_asc: [["invoice", "ASC"]],
+    invoice_desc: [["invoice", "DESC"]],
+    date_asc: [["date", "ASC"]],
+    date_desc: [["date", "DESC"]],
+  };
+  try {
+    const result = await transHead.findAndCountAll({
+      where: {
+        branch_id,
+        ...statusClause,
+        ...invoiceClause,
+        ...dateClause,
+      },
+      include: [
+        {
+          model: db.Transaction_Details,
+          attributes: ["product_name", "qty"],
+          include: [
+            {
+              model: db.Products,
+              attributes: ["image_url", "price"],
+            },
+          ],
+        },
+        {
+          model: db.Branch,
+          attributes: ["name", "kota"],
+        },
+      ],
+      ...offsetLimit,
+      order: sortMap[sortType] || null,
+    });
+    const results = await transHead.findAndCountAll({
+      where: {
+        branch_id,
+        ...statusClause,
+        ...invoiceClause,
+        ...dateClause,
+      },
+    });
+    res.status(200).send({
+      message: "Successfully fetch user transaction headers",
+      data: {
+        Transaction_Header: result,
+        count: results,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+}
+
 module.exports = {
-  updateTransaction, createTransaction, getTransactionHead, confirmTransaction
+  updateTransaction, createTransaction, getTransactionHead, confirmTransaction, getTransactionHeaders
 };

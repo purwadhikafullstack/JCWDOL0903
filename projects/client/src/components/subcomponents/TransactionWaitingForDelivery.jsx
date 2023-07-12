@@ -15,7 +15,7 @@ export default function TransactionWaitingForDelivery() {
   const [transWaitingForPayment, setTrans] = useState([]);
 
   const getTransHead = async () => {
-    const result = await api.get("/transaction/get_transaction/" + user.id);
+    const result = await api.get("/transaction/get_transaction/" + user.branch_id);
     setTransHead(result.data.data.Transaction_Header.rows);
     console.log("inicek", result.data.data.Transaction_Header.rows);
   };
