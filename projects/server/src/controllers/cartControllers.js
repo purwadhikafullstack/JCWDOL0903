@@ -15,14 +15,19 @@ module.exports = {
         include:{
             model: db.Products,
             attributes: ["name", "price", "image_url"],
-            include:{
+            include:[{
                 model: db.Stocks,
                 attributes: ["stock"],
                 include:{
                     model: db.Branch,
                     attributes: ["id", "kota"]
                 }
-            }
+            },
+            {
+              model: db.Voucher,
+              attributes: ["voucher_type", "amount", "percentage", "limit"],
+              required: false
+            }]
         }
       })
       res.status(200).send({
@@ -41,7 +46,7 @@ module.exports = {
       const result = await Cart.sum("qty", {
         where: {
           user_id,
-        },
+        }
       });
       const totalQuantity = result || 0;
       res.status(200).send({
@@ -56,8 +61,10 @@ module.exports = {
 
   addToCart: async (req, res) => {
     try {
-      const { product_id, user_id } = req.body;
-      const qty = 1;
+      const { product_id, user_id, qty } = req.body;
+      
+      console.log("ini qty", qty)
+      
       // untuk cek apakah sudah ada produk di dalam cart user
       const findUserCart = await Cart.findOne({
         where: {
@@ -133,7 +140,7 @@ module.exports = {
             });
           } else {
             const currentQty = findUserCart.dataValues.qty;
-            const updatedQty = currentQty + 1;
+            const updatedQty = currentQty + qty;
 
             const addProductCart = await Cart.update(
               { qty: updatedQty },
@@ -146,7 +153,7 @@ module.exports = {
             );
             res.status(200).send({
               message: `Amount of this product in your cart is now ${
-                currentQty + 1
+                currentQty + qty
               }`,
               data: addProductCart,
             });
@@ -161,7 +168,7 @@ module.exports = {
 
   reduceCartOne: async (req, res) => {
     try {
-      const { product_id } = req.body;
+      const { product_id, qty } = req.body;
       const user_id = req.params.id;
       const findUserCart = await Cart.findOne({
         where: {
@@ -175,7 +182,7 @@ module.exports = {
         };
 
       const currentQty = findUserCart.dataValues.qty;
-      const updatedQty = currentQty - 1;
+      const updatedQty = currentQty - qty;
 
       if (updatedQty === 0) {
         await Cart.destroy({

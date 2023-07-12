@@ -26,7 +26,7 @@ export default function Transaction() {
     {name: "In Process",current: false},
     {name: "On Delivery",current: false},
     {name: "Order Confirmed",current: false},
-    {name: "Order Cancled",current: false},
+    {name: "Order Canceled",current: false},
   ]
 
   return (

@@ -10,5 +10,6 @@ transactionRouter.patch(
 
 transactionRouter.post("/create_transaction/:id", transactionController.createTransaction)
 transactionRouter.get("/get_transaction/:id", transactionController.getTransactionHead)
+transactionRouter.patch("/update_transaction/confirm/:id",transactionController.confirmTransaction)
 
 module.exports = transactionRouter;

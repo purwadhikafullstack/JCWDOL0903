@@ -29,9 +29,10 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const productId = useParams().id;
+  const promo = document.getElementById("b1g1")
 
   const addOne = async (productId, userId) => {
-    const response = await api.post("/cart/", { product_id: productId, user_id: userId });
+    const response = await api.post("/cart/", { product_id: productId, user_id: userId, qty: promo? quantity * 2 : quantity });
     
     dispatch(fetchUserCart(user.id));
 
@@ -126,6 +127,7 @@ export default function ProductDetail() {
                 return v.voucher_type === "Buy One Get One" ? (
                   <span
                     key={v.id}
+                    id={"b1g1"}
                     className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700"
                   >
                     Buy One Get One

@@ -9,6 +9,7 @@ import { fetchVouchers } from '../reducers/voucherSlice'
 import Swal from "sweetalert2";
 import { generateInvoiceNumber } from '../helper/invoice'
 
+
 export default function Checkout() {
   const navigate = useNavigate()
   const [cart, setCart] = useState([])
@@ -20,6 +21,7 @@ export default function Checkout() {
   const [ongkir, setOngkir] = useState([])
   const [selectedShippingOption, setSelectedShippingOption] = useState("0");
   const [voucher, setVoucher] = useState([])
+  const [discountVoucher, setDiscountVoucher] = useState(0)
   const user = useSelector((state) => state.user)
   const voucherGlobal = useSelector((state) => state.voucher)
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ export default function Checkout() {
     const result = await api.get("/profile/mainaddress/" + user.id)
     setAddress(result.data.data)
   }
+  console.log("ini address", address)
 
   const getRajaOngkirCity = async () => {
     const result = await api.post("/city/rajaongkir", {
@@ -50,7 +53,9 @@ export default function Checkout() {
     generateCart()
     getUserMainAddress()   
     getRajaOngkirCity()
-  },[])
+    discountVouchers()
+  },[selectedShippingOption])
+  console.log("ini dikon vocer", discountVoucher )
 
   useEffect(() => {
     dispatch(fetchVouchers())
@@ -67,7 +72,8 @@ export default function Checkout() {
 
 
   useEffect(() => {
-    const findDestination = cityRaja.find((val) => val.city_name === address.kota);
+    if (address) {
+      const findDestination = cityRaja.find((val) => val.city_name === address.kota);
     if (findDestination) {
       const city_id = findDestination.city_id;
       setCityId(city_id);
@@ -82,6 +88,8 @@ export default function Checkout() {
     } else {
       console.log("Kota origin tidak ditemukan dalam data.");
     }
+    }
+    
   }, [address, cityRaja, origin]);
 
   // console.log("ini origin", origin)
@@ -125,6 +133,10 @@ export default function Checkout() {
     });
     return totalPrice;
   };
+
+  const onAddAddress = () => {
+    navigate("/user/settings")
+  }
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -187,8 +199,33 @@ export default function Checkout() {
   ))
 
   const totalPrice = calculateTotalPrice()
-  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) : 0);
-
+  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) - discountVoucher : 0);
+  
+  const discountVouchers = () => {
+    let totalDiscount = 0;
+    
+    cart.forEach((value) => {
+      if (value.Product.Vouchers && value.Product.Vouchers.length > 0) {
+        const voucher = value.Product.Vouchers[0];
+        
+        if (voucher.amount) {
+          totalDiscount += voucher.amount;
+        } else if (voucher.percentage) {
+          const discountAmount = (value.Product.price * value.qty) * voucher.percentage;
+          
+          if (discountAmount > voucher.limit) {
+            totalDiscount += voucher.limit;
+          } else {
+            totalDiscount += discountAmount;
+          }
+        }
+      }
+    });
+  
+    setDiscountVoucher(totalDiscount);
+  };
+  
+  console.log("ini cart",)
   return (
     <div className="bg-white" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -198,30 +235,42 @@ export default function Checkout() {
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
             </h2>
-
-            <div  className="py-3">
-            <div className="grid grid-cols-2 w-full">
+          {address ? (
+             <div  className="py-3">
+             <div className="grid grid-cols-2 w-full">
+               <div>
+                 <h1 className="mb-3">
+                   <span className="text-xl font-semibold border-b-2">Shipping Address</span>
+                 </h1>
+                 <p><span className="font-medium mr-3 text-slate-600">Kota:</span>{address.kota}</p>
+                 <p><span className="font-medium mr-3 text-slate-600">Provinsi:</span>{address.provinsi}</p>
+                 <p><span className="font-medium mr-3 text-slate-600">Kecamatan:</span>{address.kecamatan}</p>
+                 <p><span className="font-medium mr-3 text-slate-600">Kode Pos:</span>{address.kode_pos}</p>
+               </div>
+               <div className="flex justify-end items-center">
+                 <p className="text-center font-medium text-slate-400 mr-2">Main Address</p>              
+               </div>
+             </div>
+           </div>
+          ) : (
+            <div className='font-bold rounded-lg p-2 border-dashed border-2'>
+              You Haven't Registered Any Addresses Yet.
               <div>
-                <h1 className="mb-3">
-                  <span className="text-xl font-semibold border-b-2">Shipping Address</span>
-                </h1>
-                <p><span className="font-medium mr-3 text-slate-600">Kota:</span>{address.kota}</p>
-                <p><span className="font-medium mr-3 text-slate-600">Provinsi:</span>{address.provinsi}</p>
-                <p><span className="font-medium mr-3 text-slate-600">Kecamatan:</span>{address.kecamatan}</p>
-                <p><span className="font-medium mr-3 text-slate-600">Kode Pos:</span>{address.kode_pos}</p>
-              </div>
-              <div className="flex justify-end items-center">
-                <p className="text-center font-medium text-slate-400 mr-2">Main Address</p>              
+                <button 
+                className='text-white bg-red-500 hover:bg-red-700 focus:outline-none font-medium text-sm rounded-lg px-5 py-2.5 text-center my-5'
+                onClick={() => onAddAddress()}
+                >Add Address</button>
               </div>
             </div>
-          </div>
+          )}
+           
 
             <ul role="list" className="divide-y divide-gray-200 border-t border-b border-gray-200 mt-3">
               {cart.map((value) => (
                 <li key={value.id} className="flex py-6 bg-white sm:py-10">
                   <div className="flex-shrink-0">
                     <img
-                      src={value.Product.image_url}
+                      src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Product.image_url}`}
                       alt={`${value.Product.name} image`}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                     />
@@ -255,7 +304,8 @@ export default function Checkout() {
             </ul>
           </section>
           {/* Order summary */}
-          <section
+          {address? (
+            <section
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
           >
@@ -290,9 +340,17 @@ export default function Checkout() {
                 </select>                 
                 </dd>
               </div>
+
               <div className="flex items-center justify-between">
-                <dt className="text-sm text-gray-600">Voucher</dt>
-                <dd className="text-sm font-medium text-gray-900" id='jne'>
+                <dt className="text-sm text-gray-600">Product Discount</dt>
+                <dd className="text-sm font-medium text-gray-900" >
+                    - {numToIDRCurrency(discountVoucher)}
+                </dd>
+              </div>
+                  
+              <div className="flex items-center justify-between">
+                <dt className="text-sm text-gray-600">Users Voucher</dt>
+                <dd className="text-sm font-medium text-gray-900">
                 <select className="block w-full appearance-none rounded-md border border-gray-300 pl-3 pr-8 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
                   {voucherTotalBelanja.map((value) => {
                     if (value.min_purchase <= totalPriceWithShipping) {
@@ -303,6 +361,7 @@ export default function Checkout() {
                 </select>
                 </dd>
               </div>
+              
 
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">Order total</dt>
@@ -317,6 +376,25 @@ export default function Checkout() {
               </button>             
             </div>
           </section>
+          ) : (
+            <section
+            aria-labelledby="summary-heading"
+            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+          >
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
+              Order summary
+            </h2>
+
+            <dl className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <dt className="text-sm text-gray-600">Total Price</dt>
+                <dd className="text-sm font-medium text-gray-900">{numToIDRCurrency(calculateTotalPrice())}</dd>
+              </div>
+                      
+            </dl>
+          </section>
+          )}
+          
         </form>
       </div>
     </div>

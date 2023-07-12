@@ -11,6 +11,7 @@ import WaitingForPayment from "./subcomponents/TransactionWaitingForPayment"
 import WaitingForConfirm from "./subcomponents/TransactionWaitingForConfirmation"
 import WaitingForDelivery from "./subcomponents/TransactionWaitingForDelivery"
 import OnDelivery from "./subcomponents/TransactionOnDelivery"
+import OrderCanceled from "./subcomponents/TransactionCanceled"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -116,6 +117,14 @@ export default function NavDashGlobal({init}) {
           className="flex flex-col justify-center items-center mx-10"
         >
           <OnDelivery/>
+        </div>
+      )}
+
+    {tabs.find((tab) => tab.current && tab.name === "Order Canceled") && (
+        <div
+          className="flex flex-col justify-center items-center mx-10"
+        >
+          <OrderCanceled/>
         </div>
       )}
     </div>

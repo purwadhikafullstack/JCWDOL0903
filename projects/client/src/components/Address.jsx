@@ -2,6 +2,7 @@ import api from "../api/api.js"
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import NoAddress from "../assets/noAddress.png"
 
 const Address = ({fetchAddress, setAddress, address}) => {
  
@@ -23,13 +24,15 @@ const Address = ({fetchAddress, setAddress, address}) => {
 
   useEffect(() => {  
     fetchAddress()
+    console.log("ini address",address)
   },[])
 
 
 
   return (
     <>
-      {address.map((value) => (
+    {address.length > 0 ? (
+      address.map((value) => (
         value.is_main ? (
           <div key={value.id} className="my-4 p-4 border border-red-500 bg-white flex justify-center items-center w-3/4 rounded-lg drop-shadow-md">
             <div className="grid grid-cols-2 w-full">
@@ -80,7 +83,22 @@ const Address = ({fetchAddress, setAddress, address}) => {
         </div>
               
         )
-      ))}
+      ))
+   ):
+    (
+      <section>
+      <div className="text-3xl flex flex-row justify-center items-center font-bold text-slate-400">
+        <img
+        className="w-1/3 mr-10"
+          src={NoAddress}
+          alt="No Address"
+        />
+        
+        You Haven't Registered <br/>Any Addresses Yet.
+      </div>
+    </section>
+    )}
+      
     </>
   );
   

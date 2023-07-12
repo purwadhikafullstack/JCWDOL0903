@@ -4,5 +4,8 @@ const { fileUploader } = require("../middleware/multer");
 
 router.get("/:id", transactionHeaderController.fetchTransactionHeader);
 router.patch("/user_payment/:id", fileUploader({destinationFolder:"transhead", prefix: "PAYIMG"}).single("user_payment"), transactionHeaderController.setTransImage)
+router.delete("/user_payment/delete", transactionHeaderController.deleteTransactionHeader)
+router.patch("/user_payment/update", transactionHeaderController.confirmTransactionsAfter1D)
+
 
 module.exports = router;

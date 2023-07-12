@@ -89,6 +89,60 @@ module.exports = {
       console.log("err", error);
       return res.status(400).send({ data: error });
     }
+  },
+
+  deleteTransactionHeader : async(req,res) => {
+    try{
+      const {id} = req.body
+
+      const result = await transHead.destroy({
+        where:{
+          id,
+          status: "Menunggu Pembayaran"
+        }
+      })
+      res.status(200).send({
+        message: "Transaction Canceled",
+        data: {
+            result,
+        },
+        });
+
+    }catch (error) {
+      console.log("err", error);
+      return res.status(400).send({ message:"Unable to Cancle Order" });
+    }
+  },
+
+ confirmTransactionsAfter1D  : async(req, res) => {
+  try {
+    if (!(req.user.role === "admin" || req.user.role === "superadmin"))
+      throw new Error("Unauthorized");
+
+    const [isUpdated] = await transHead.update(
+      { status: status.dibatalkan },
+      {
+        where: {
+          status: status.menunggu_pembayaran,
+          date: {
+            [Op.lt]: fn(
+              "DATE_SUB",
+              literal("CURDATE()"),
+              literal("INTERVAL 1 DAY")
+            ),
+          },
+        },
+      }
+    );
+    if (!isUpdated) return res.status(404).end();
+    return res.status(200).end();
+  } catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
   }
+},
+
+
+
 
 };

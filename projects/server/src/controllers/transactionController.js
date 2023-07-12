@@ -2,7 +2,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 const transHead = db.Transaction_Header;
 const transDet = db.Transaction_Details
-
+const status = require("../constant/status")
 
 async function updateTransaction(req, res) {
   try {
@@ -123,6 +123,27 @@ async function createTransaction  (req, res)  {
   }
 }
 
+async function confirmTransaction  (req, res) {
+  try{
+    const id  = req.params.id
+    const result = await transHead.update({status: status.konfirmasi},
+      {where:{
+        id
+      }
+    })
+
+    res.status(200).send({
+      message: "Transaction Finished",
+      data: {
+          result,
+      },
+      });
+  }catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
+
 async function getTransactionHead(req, res) {
   const page = parseInt(req.query.page);
   const startDate = req.query.startDate
@@ -133,7 +154,9 @@ async function getTransactionHead(req, res) {
   const statusClause = status? {status: status} : {};
   const invoiceName = req.query.q
   const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
-  const dateClause = (!startDate && !endDate) ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+  const dateClause = (startDate === "undefined" && endDate === "undefined") ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+  console.log("ini startdate", startDate)
+  console.log("ini date", dateClause)
 
   const offsetLimit = {};
     if (page) {
@@ -200,5 +223,5 @@ async function getTransactionHead(req, res) {
 }
 
 module.exports = {
-  updateTransaction, createTransaction, getTransactionHead
+  updateTransaction, createTransaction, getTransactionHead, confirmTransaction
 };

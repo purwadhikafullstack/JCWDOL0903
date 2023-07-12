@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function TransactionTableBody2({transaction, status,button1, button2 }) {
+export default function TransactionTableBody2({transaction, status, button1, button2 }) {
   const [transHead, setTransHead] = useState([])
   const [transWaitingForPayment, setTrans] = useState([])
   const navigate = useNavigate();
+  // console.log("ini status", transaction)
 
   const onDetails = (headerId) => {
     navigate("/dashboard/transactions/transdet/"+ headerId)

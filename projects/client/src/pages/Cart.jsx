@@ -1,9 +1,3 @@
-import {
-  CheckIcon,
-  ClockIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../api/api";
@@ -27,13 +21,27 @@ export default function Cart() {
   };
 
   const addOne = async (productId, userId) => {
-    await api.post("/cart/", { product_id: productId, user_id: userId });
+    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 1 });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
 
+  const addTwo = async (productId, userId) => {
+    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 2 });
+    generateCart();
+    dispatch(fetchUserCart(user.id));
+  };
+  
+  
+
   const deleteOne = async (productId) => {
-    await api.delete("/cart/" + user.id, { data: { product_id: productId } });
+    await api.delete("/cart/" + user.id, { data: { product_id: productId, qty: 1 } });
+    generateCart();
+    dispatch(fetchUserCart(user.id));
+  };
+
+  const deleteTwo= async (productId) => {
+    await api.delete("/cart/" + user.id, { data: { product_id: productId, qty: 2 } });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
@@ -107,18 +115,75 @@ export default function Cart() {
                         </p>
                       </div>
 
+                      
+                   
                       <div className="flex flex-row mt-4 sm:mt-0 sm:pr-9">
-                        <div>
+                       
+
+                {value.Product.Vouchers.length > 0 ?
+                    value.Product.Vouchers[0].voucher_type === "Buy One Get One" ? (
+                      <div>
+                      <button
+                        className="mx-3"
+                        type="button"
+                        onClick={() => deleteTwo(value.product_id)}
+                      >
+                        <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
+                      </button>
+                    </div>
+                    ):(
+                      <div>
+                      <button
+                        className="mx-3"
+                        type="button"
+                        onClick={() => deleteOne(value.product_id)}
+                      >
+                        <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
+                      </button>
+                    </div>
+                    ):(
+                      <div>
+                      <button
+                        className="mx-3"
+                        type="button"
+                        onClick={() => deleteTwo(value.product_id)}
+                      >
+                        <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
+                      </button>
+                    </div>
+                    )
+              }         
+
+              <div className="mx-3">{value.qty}</div>
+                       
+
+                        {value.Product.Vouchers.length > 0 ? 
+                         value.Product.Vouchers[0].voucher_type === "Buy One Get One" ? (
+                           <div>
+                           <button
+                             type="button"
+                             className="mx-3"
+                             onClick={() =>
+                               addTwo(value.product_id, value.user_id)
+                             }
+                           >
+                             <PlusCircleIcon className="h-6 w-6 text-blue-500 hover:text-green-600" />
+                           </button>
+                         </div>
+                        ):(
+                          <div>
                           <button
-                            className="mx-3"
                             type="button"
-                            onClick={() => deleteOne(value.product_id)}
+                            className="mx-3"
+                            onClick={() =>
+                              addOne(value.product_id, value.user_id)
+                            }
                           >
-                            <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
+                            <PlusCircleIcon className="h-6 w-6 text-blue-500 hover:text-green-600" />
                           </button>
                         </div>
-                        <div className="mx-3">{value.qty}</div>
-                        <div>
+                        ):(
+                          <div>
                           <button
                             type="button"
                             className="mx-3"
@@ -129,6 +194,8 @@ export default function Cart() {
                             <PlusCircleIcon className="h-6 w-6 text-green-500 hover:text-green-600" />
                           </button>
                         </div>
+                        )}
+                       
 
                         <div className="absolute top-0 right-0">
                           <button
@@ -145,6 +212,14 @@ export default function Cart() {
                         </div>
                       </div>
                     </div>
+                    
+                      {value.Product.Vouchers[0]?(                        
+                        <div className="bg-red-200 text-red-900 rounded-full font-semibold items-center flex justify-center w-1/3 p-1 text-xs">
+                          {value.Product.Vouchers[0].voucher_type === "Buy One Get One"?(value.Product.Vouchers[0].voucher_type) : ("Discount "+numToIDRCurrency(value.Product.Vouchers[0].amount)) }
+                        </div>
+                      ):(<></>)}
+                      {}
+                    
                   </div>
                 </li>
               ))}

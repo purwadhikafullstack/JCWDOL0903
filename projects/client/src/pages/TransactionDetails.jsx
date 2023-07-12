@@ -66,7 +66,7 @@ export default function TransactionDetails() {
             {transDet.map((value)=>(
                 <div className="border border-b-1 p-3 flex flex-row">
                     <img className="" 
-                        src={value.Product.image_url}
+                        src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Product.image_url}`}
                         style={{ width: '8rem', height: '8rem' }}>    
                     </img>
                     <div className="w-1/2 ">

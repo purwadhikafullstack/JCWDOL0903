@@ -10,7 +10,9 @@ import { convertToDate } from '../helper/date'
 import Pagination from '../components/Pagination';
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import DropImageModal from '../components/subcomponents/DropImageModal';
-
+import WarningModalOrderdList from "../components/subcomponents/WarningModalOrderList"
+import NoAddress from "../assets/noAddress.png"
+import Swal from 'sweetalert2';
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -41,18 +43,71 @@ const OrderList = () => {
   
   const [dates, setDates] = useState([]);
 
-  useEffect(()=> console.log(dates) ,[dates])
-
- 
   const getUsersCart = async() => {
     const result = await api.get("/transaction/get_transaction/" + user.id + `?page=${currentPage}` + `&status=${statusFilter.value}` + `&q=${searchFilter}` + `&sort=${sortByOption.value}` + `&startDate=${dates[0]}` + `&endDate=${dates[1]}`) 
     setUsersCart(result.data.data.Transaction_Header.rows)
     setCount(result.data.data.count.count)    
   }
+
+  const selesaikanPesanan = async(value) => {
+    try{
+      const result = await api.patch(`/transaction/update_transaction/confirm/${value}`)
+      await Swal.fire({
+        icon: "success",
+        title: result.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }
+
+
+
+  const finishOrder = async(value) => {  
+    await Swal.fire({
+      icon: "success",
+      // title: result.data.message,
+      title: "Are You Sure You Want to Confirm This Transaction ?",
+      confirmButtonText:"Yes",
+      denyButtonText:"No",
+      showConfirmButton: true,
+      showDenyButton: true,
+      isConfirmed: () => selesaikanPesanan(value)
+    }).then(async (result) => {
+      if(result.isConfirmed) {
+        try{
+          const result = await api.patch(`/transaction/update_transaction/confirm/${value}`)
+          await Swal.fire({
+            icon: "success",
+            title: result.data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          getUsersCart()
+        }catch (error) {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: error.response.data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      }
+    })
+  }
+ 
   useEffect(() => {
-    
     getUsersCart()
-  },[user, currentPage, statusFilter, searchFilter, sortByOption, dates, ]) 
+  },[user, currentPage, statusFilter, searchFilter, sortByOption, dates ]) 
 
 
   function handleSubmit(e) {
@@ -61,11 +116,11 @@ const OrderList = () => {
     setSearchFilter(searchFilter);
   }
   
-  console.log("ini user Cart", usersCart)
-  console.log("ini count", count)
-  console.log("ini statusFilter", statusFilter)
-  console.log("ini sortBy", sortByOption)
-  console.log("ini searchFilter", searchFilter)
+  // console.log("ini user Cart", usersCart)
+  // console.log("ini count", count)
+  // console.log("ini statusFilter", statusFilter)
+  // console.log("ini sortBy", sortByOption)
+  // console.log("ini searchFilter", searchFilter)
 
   return (
     <div style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem' }}>
@@ -116,45 +171,74 @@ const OrderList = () => {
         className='ml-auto'
         />
       </div>
-      {usersCart.map((value) => (
-         <div className='rounded-lg border mt-3 overflow-hidden bg-white'>
-         <div className='bg-red-500 flex items-center justify-between'>
-           <div className='flex items-center'>
-             <ShoppingBagIcon className='h-9 w-9 py-1 pl-3 text-red-50'/>
-             <p className='text-white mx-3'><span className='text-yellow-300'>{convertToDate(value.date)}</span> || <span className=''>INV/</span>{value.invoice}  </p>
-           </div>
-           <p className='mr-3 text-yellow-300 font-semibold'>Status: <span className='text-white'>{value.status}</span></p>
-         </div>
- 
-         <div  className=' flex items-center relative'>
-           <div className='rounded-lg overflow-hidden my-4 mx-2'>
-             <img className="" 
-             src={value.Transaction_Details[0].Product.image_url}
-             style={{ width: '8rem', height: '8rem' }}>    
-             </img>
-           </div>
-           <div className=''>
-             <p className='font-bold text-xl mb-2'>{value.Transaction_Details[0].product_name}</p>
-             <p className='mb-2'>{value.Transaction_Details[0].qty} X {numToIDRCurrency(value.Transaction_Details[0].Product.price)}</p>
-             {console.log("ini bingung",value)}
-             {value.Transaction_Details.length > 1 ? <p className='mb-2'>+{(value.Transaction_Details.length) -1} other products</p>
-             : null}
+      {usersCart.length > 0 ? (
+        usersCart.map((value) => (
+          <div className='rounded-lg border mt-3 overflow-hidden bg-white'>
+          <div className='bg-red-500 flex items-center justify-between'>
+            <div className='flex items-center'>
+              <ShoppingBagIcon className='h-9 w-9 py-1 pl-3 text-red-50'/>
+              <p className='text-white mx-3'><span className='text-yellow-300'>{convertToDate(value.date)}</span> || <span className=''>INV/</span>{value.invoice}  </p>
+            </div>
+            <p className='mr-3 text-yellow-300 font-semibold'>Status: <span className='text-white'>{value.status}</span></p>
+          </div>
+  
+          <div  className=' flex items-center relative'>
+            <div className='rounded-lg overflow-hidden my-4 mx-2'>
+              <img className="" 
+              src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Transaction_Details[0].Product.image_url}`}
+              style={{ width: '8rem', height: '8rem' }}>    
+              </img>
+            </div>
+            <div className=''>
+              <p className='font-bold text-xl mb-2'>{value.Transaction_Details[0].product_name}</p>
+              <p className='mb-2'>{value.Transaction_Details[0].qty} X {numToIDRCurrency(value.Transaction_Details[0].Product.price)}</p>
+              {console.log("ini bingung",value)}
+              {value.Transaction_Details.length > 1 ? <p className='mb-2'>+{(value.Transaction_Details.length) -1} other products</p>
+              : null}
+              
+            </div>
+            <div className='absolute right-3 font-bold'>
+              Total Belanja
+              <p>{numToIDRCurrency(value.total_price)}</p>
+            </div>
+          </div>
+  
+          <div className='flex items-center relative'>
+            {/* <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button> */}
+            {value.status === "Menunggu Pembayaran" ? (
+             <>
+              <DropImageModal id={value.id} getUsersCart={()=>getUsersCart()}/>
+              <WarningModalOrderdList headersId={value.id} getUsersCart={()=>getUsersCart()}/>
+             </>
+            ): (<></>)}  
+
+            {value.status === "Dikirim" ? (
+             <>
+              
+              <button onClick={() => finishOrder(value.id)} className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>
+                Konfirmasi Pesanan
+              </button>
              
-           </div>
-           <div className='absolute right-3 font-bold'>
-             Total Belanja
-             <p>{numToIDRCurrency(value.total_price)}</p>
-           </div>
-         </div>
- 
-         <div className='flex items-center relative'>
-           {/* <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button> */}
-           <DropImageModal id={value.id} getUsersCart={getUsersCart}/>
-           <button className='rounded-lg outline outline-2 outline-red-500 m-3 p-2 text-red-500 px-5 text-center hover:bg-slate-200 transition-all duration-300'>Cancle Order</button>
-         </div>
-         
-       </div>
-      ))}
+             </>
+            ): (<></>)}           
+          </div>
+          
+        </div>
+       ))
+      ): (
+        <section>
+      <div className="text-3xl flex flex-row justify-center items-center font-bold text-slate-400">
+        <img
+        className="w-1/3 mr-10"
+          src={NoAddress}
+          alt="No Address"
+        />
+        
+        Theres No Transaction<br/>Available.
+      </div>
+    </section>
+      )}
+      
      <Pagination
          itemsInPage={usersCart.length}
          itemsPerPage={3} 
