@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html,
+  #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply font-mulish h-full;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-rubik;
+  }
+}
+
 @layer components {
   .react-paginate {
     @apply flex items-center justify-between bg-white py-3;
@@ -9,7 +29,7 @@
 
   .react-paginate .paginate-page-num,
   .react-paginate .paginate-break {
-    @apply relative inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20;
+    @apply relative inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50;
   }
 
   .react-paginate .paginate-page-num-container,
@@ -18,15 +38,15 @@
   }
 
   .react-paginate .paginate-prev-btn {
-    @apply relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20;
+    @apply relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50;
   }
 
   .react-paginate .paginate-next-btn {
-    @apply relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20;
+    @apply relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50;
   }
 
   .react-paginate .paginate-active {
-    @apply relative z-10 inline-flex items-center border border-red-500 bg-red-50 text-sm font-medium text-red-600 focus:z-20;
+    @apply relative inline-flex items-center border border-red-500 bg-red-50 text-sm font-medium text-red-600;
   }
 }
 
@@ -34,4 +54,12 @@
   .container-screen {
     @apply mx-auto w-[80%] max-w-screen-xl;
   }
+
+  .spin-hidden {
+    @apply [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+  }
+}
+
+button[disabled] {
+  cursor: not-allowed;
 }

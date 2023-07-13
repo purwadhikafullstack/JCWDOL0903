@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Transaction_Header extends Model {
     /**
@@ -11,35 +9,61 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Transaction_Header.hasMany(models.Transaction_Details, {
+        foreignKey: 'transaction_header_id',
+      });
+
       Transaction_Header.belongsTo(models.User, {
-        foreignKey: "user_id"
-      })
+        foreignKey: "user_id",
+      });
 
       Transaction_Header.belongsTo(models.Branch, {
-        foreignKey: "branch_id"
-      })
+        foreignKey: "branch_id",
+      });
 
       Transaction_Header.belongsTo(models.Users_Voucher, {
-        foreignKey: "user_voucher_id"
-      })
+        foreignKey: "user_voucher_id",
+      });
 
       Transaction_Header.belongsTo(models.Expedition, {
-        foreignKey: "expedition_id"
-      })
+        foreignKey: "expedition_id",
+      });
     }
   }
-  Transaction_Header.init({
-    user_id: DataTypes.INTEGER,
-    branch_id: DataTypes.INTEGER,
-    user_voucher_id: DataTypes.INTEGER,
-    expedition_id: DataTypes.INTEGER,
-    total_price: DataTypes.INTEGER,
-    date: DataTypes.DATE,
-    status: DataTypes.ENUM("Menunggu Pembayaran", "Menunggu Konfirmasi Pembayaran","Diproses", "Dikirim", "Pesanan Dikonfirmasi", "Dibatalkan"),
-    expedition_price: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Transaction_Header',
-  });
+  Transaction_Header.init(
+    {
+      user_id: DataTypes.INTEGER,
+      branch_id: DataTypes.INTEGER,
+      user_voucher_id: DataTypes.INTEGER,
+      expedition_id: DataTypes.INTEGER,
+      invoice: DataTypes.STRING,
+      total_price: DataTypes.INTEGER,
+      user_payment: DataTypes.STRING,
+      date: {
+        type: DataTypes.DATEONLY,
+        get() {
+          const rawDate = this.getDataValue('date');
+          if (rawDate) {
+            const dateObject = new Date(rawDate);
+            return dateObject.toISOString().slice(0, 10);
+          }
+          return null;
+        },
+      },
+      status: DataTypes.ENUM(
+        "Menunggu Pembayaran",
+        "Menunggu Konfirmasi Pembayaran",
+        "Diproses",
+        "Dikirim",
+        "Pesanan Dikonfirmasi",
+        "Dibatalkan"
+      ),
+      expedition_price: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      modelName: "Transaction_Header",
+    }
+  );
   return Transaction_Header;
 };

@@ -9,11 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Branch.hasMany(models.User, {
+        foreignKey: "branch_id",
+      });
     }
   }
   Branch.init(
     {
       name: DataTypes.STRING,
+      address: DataTypes.STRING,
       kota: DataTypes.STRING,
       kecamatan: DataTypes.STRING,
       provinsi: DataTypes.STRING,
@@ -22,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Branch",
+      paranoid: true,
     }
   );
   return Branch;

@@ -16,21 +16,33 @@ module.exports = (sequelize, DataTypes) => {
       Products.hasMany(models.Stocks, {
         foreignKey: "product_id",
       });
+      Products.hasMany(models.Voucher, {
+        foreignKey: "product_id",
+      });
     }
   }
   Products.init(
     {
-      name: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       category_id: DataTypes.INTEGER,
-      price: DataTypes.INTEGER,
+      price: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       image_url: DataTypes.STRING,
-      is_deleted: DataTypes.BOOLEAN,
-      sold: DataTypes.INTEGER,
+      sold: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       desc: DataTypes.STRING(500),
     },
     {
       sequelize,
       modelName: "Products",
+      paranoid: true,
     }
   );
   return Products;

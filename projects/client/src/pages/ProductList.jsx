@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
 import ProductCard from "../components/ProductCard";
-import FilterDropdown from "../components/FilterDropdown";
+import Dropdown from "../components/Dropdown";
 
 import { fetchProducts } from "../reducers/productSlice";
 import { fetchCategories } from "../reducers/categorySlice";
+import { countProducts } from "../helper/products";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -18,53 +19,109 @@ const sortOptions = [
   { value: "price_desc", label: "Price (High - Low)" },
 ];
 
+const categoryOptions = [{ value: 0, label: "None" }];
+
 function ProductList() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q");
 
   const dispatch = useDispatch();
   const productsGlobal = useSelector((state) => state.product);
   const categoriesGlobal = useSelector((state) => state.category);
-  const [sortFilter, setSortFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+
+  const branchesGlobal = useSelector((state) => state.branch);
+  const branchId = branchesGlobal.selectedBranch.id;
+
   const [currentPage, setCurrentPage] = useState(1);
+
+  const sortFilterInitial = sortOptions.findIndex(
+    (s) => s.value === searchParams.get("sort")
+  );
+  const [sortFilter, setSortFilter] = useState(
+    sortOptions[sortFilterInitial === -1 ? 0 : sortFilterInitial]
+  );
+
+  const initialCategoryIdRef = useRef(parseInt(searchParams.get("categoryId")));
+  const [categoryFilter, setCategoryFilter] = useState(categoryOptions[0]);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
   useEffect(() => {
-    let query = `page=${currentPage}`;
-    if (searchQuery) query += `&q=${searchQuery}`;
-    if (sortFilter) query += `&sort=${sortFilter}`;
-    if (categoryFilter) query += `&categoryId=${categoryFilter}`;
-    dispatch(fetchProducts(query));
-  }, [dispatch, sortFilter, categoryFilter, currentPage, searchQuery]);
+    const newCategoryOptions = categoriesGlobal.categories.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
 
-  const categoryOptions = [{ value: "", label: "None" }];
-  categoriesGlobal.forEach((category) => {
-    categoryOptions.push({ value: category.id, label: category.name });
-  });
+    categoryOptions.splice(
+      1,
+      categoryOptions.length - 1,
+      ...newCategoryOptions
+    );
+
+    const initialCategoryIdx = categoryOptions.findIndex(
+      (c) => c.value === initialCategoryIdRef.current
+    );
+
+    if (initialCategoryIdx > -1) {
+      setCategoryFilter(categoryOptions[initialCategoryIdx]);
+    }
+  }, [categoriesGlobal.categories]);
+
+  useEffect(() => {
+    let query = `page=${currentPage}&showEmptyStock=false`;
+
+    searchQuery ? searchParams.set("q", searchQuery) : searchParams.delete("q");
+    branchId
+      ? searchParams.set("branchId", branchId)
+      : searchParams.delete("branchId");
+    categoryFilter.value
+      ? searchParams.set("categoryId", categoryFilter.value)
+      : searchParams.delete("categoryId");
+    sortFilter.value
+      ? searchParams.set("sort", sortFilter.value)
+      : searchParams.delete("sort");
+
+    searchParams.sort();
+    query += `&${searchParams.toString()}`;
+    setSearchParams(searchParams);
+    dispatch(fetchProducts(query));
+  }, [
+    dispatch,
+    branchId,
+    sortFilter.value,
+    categoryFilter.value,
+    currentPage,
+    searchQuery,
+    searchParams,
+    setSearchParams,
+  ]);
 
   return (
     <div className="container-screen">
       <Filter>
-        <FilterDropdown
+        <Dropdown
           label="Sort"
           options={sortOptions}
-          selected={sortFilter}
-          setSelected={setSortFilter}
+          selectedValue={sortFilter}
+          onChange={(s) => setSortFilter(s)}
+          className="font-medium"
         />
-        <FilterDropdown
+        <Dropdown
           label="Category"
           options={categoryOptions}
-          selected={categoryFilter}
-          setSelected={setCategoryFilter}
+          selectedValue={categoryFilter}
+          onChange={(c) => setCategoryFilter(c)}
+          className="font-medium"
         />
       </Filter>
-      <ProductCard products={productsGlobal.products} />
+      <ProductCard
+        products={productsGlobal.products}
+        isLoading={productsGlobal.isLoading}
+      />
       <Pagination
-        itemsInPage={productsGlobal.products.length}
+        itemsInPage={countProducts(productsGlobal.products)}
         totalItems={productsGlobal.totalItems}
         totalPages={productsGlobal.totalPages}
         currentPage={currentPage}
