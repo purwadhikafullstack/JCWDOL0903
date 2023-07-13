@@ -233,14 +233,15 @@ async function getTransactionHeaders(req, res) {
   const statusClause = status? {status: status} : {};
   const invoiceName = req.query.q
   const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
-  const dateClause = (!startDate  && !endDate ) ? {} : {date: {[Op.between]: [startDate, endDate]}}  
+  const dateClause = (!startDate  && !endDate ) ? {} : {date: {[Op.between]: [startDate, endDate]}}
+  const branch_id = req.body.branch_id 
 
   const offsetLimit = {};
   if (page) {
     offsetLimit.limit = itemsPerPage;
     offsetLimit.offset = (page - 1) * itemsPerPage;
   }
-  const branch_id = req.params.branchid;
+  req.params.branchid;
   const sortMap = {
     invoice_asc: [["invoice", "ASC"]],
     invoice_desc: [["invoice", "DESC"]],
@@ -280,7 +281,7 @@ async function getTransactionHeaders(req, res) {
         ...statusClause,
         ...invoiceClause,
         ...dateClause,
-      },
+      },    
     });
     res.status(200).send({
       message: "Successfully fetch user transaction headers",
@@ -289,6 +290,7 @@ async function getTransactionHeaders(req, res) {
         count: results,
       },
     });
+    console.log("ini result",result)
   } catch (err) {
     console.log(err);
     res.status(400).send(err);

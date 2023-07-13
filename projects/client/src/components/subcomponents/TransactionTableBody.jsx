@@ -11,9 +11,8 @@ export default function TransactionTableBody() {
   const navigate = useNavigate();
 
   const getTransHead = async() => {
-    const result = await api.get("/transaction/get_transaction/" + user.branch_id) 
+    const result = await api.post("/transaction/get_transactions", {branch_id: user.branch_id} ) 
     setTransHead(result.data.data.Transaction_Header.rows)
-    console.log(result.data.data.Transaction_Header.rows)
   }
 
   const onDetails = (headerId) => {
@@ -27,7 +26,6 @@ export default function TransactionTableBody() {
     const filter = transHead.filter((value) => {
       return value.status === "Menunggu Pembayaran"
     })
-    console.log("ini transhead", transHead)
     setTrans(filter)
   },[transHead])
   return (

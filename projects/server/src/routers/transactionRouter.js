@@ -10,7 +10,7 @@ transactionRouter.patch(
 
 transactionRouter.post("/create_transaction/:id", transactionController.createTransaction)
 transactionRouter.get("/get_transaction/:id", transactionController.getTransactionHead)
-transactionRouter.get("/get_transaction/:branchid", transactionController.getTransactionHeaders)
+transactionRouter.post("/get_transactions", transactionController.getTransactionHeaders)
 transactionRouter.patch("/update_transaction/confirm/:id",transactionController.confirmTransaction)
 
 module.exports = transactionRouter;

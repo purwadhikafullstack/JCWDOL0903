@@ -11,6 +11,7 @@ import WaitingForPayment from "./subcomponents/TransactionWaitingForPayment"
 import WaitingForConfirm from "./subcomponents/TransactionWaitingForConfirmation"
 import WaitingForDelivery from "./subcomponents/TransactionWaitingForDelivery"
 import OnDelivery from "./subcomponents/TransactionOnDelivery"
+import OrderDone from "./subcomponents/TransactionDone"
 import OrderCanceled from "./subcomponents/TransactionCanceled"
 
 function classNames(...classes) {
@@ -116,7 +117,7 @@ export default function NavDashGlobal({init}) {
         <div
           className="flex flex-col justify-center items-center mx-10"
         >
-          <OnDelivery/>
+          <OrderDone/>
         </div>
       )}
 

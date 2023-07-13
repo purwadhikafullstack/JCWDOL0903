@@ -1,7 +1,7 @@
 import Table from "../Table"
 import TransactionTableBody from "./TransactionTableBody2"
 import api from "../../api/api";
-import { useSelector, useNavigate } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 export default function TransactionDone() {
 
@@ -11,9 +11,8 @@ const [transWaitingForPayment, setTrans] = useState([])
 
 
 const getTransHead = async() => {
-    const result = await api.get("/transaction/get_transaction/" + user.id) 
+    const result = await api.post("/transaction/get_transactions" , {branch_id: user.branch_id } ) 
     setTransHead(result.data.data.Transaction_Header.rows)
-    console.log("inicek",result.data.data.Transaction_Header.rows)
     }
 
     useEffect(() => {
@@ -32,7 +31,7 @@ const getTransHead = async() => {
               "Payment"
             ]}
             tableBody={
-              <TransactionTableBody transaction={transHead}
+              <TransactionTableBody transaction={transHead} status={"Pesanan Dikonfirmasi"}
               />
             }
           />
