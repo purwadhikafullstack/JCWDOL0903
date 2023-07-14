@@ -15,9 +15,8 @@ export default function TransactionWaitingForDelivery() {
   const [transWaitingForPayment, setTrans] = useState([]);
 
   const getTransHead = async () => {
-    const result = await api.get("/transaction/get_transaction/" + user.branch_id);
+    const result = await api.post("/transaction/get_transactions" , {branch_id: user.branch_id});
     setTransHead(result.data.data.Transaction_Header.rows);
-    console.log("inicek", result.data.data.Transaction_Header.rows);
   };
 
   async function changeStatusToDeliver(transactionId) {
@@ -25,7 +24,6 @@ export default function TransactionWaitingForDelivery() {
       const res = await api.patch(`/transactions/${transactionId}`, {
         status: "Dikirim",
       });
-      console.log("ress", res);
       if (res.status === 200) successAlert("Order Delivered!");
       getTransHead();
     } catch (err) {

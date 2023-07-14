@@ -40,8 +40,10 @@ export default function ProductDetail() {
     const response = await api.post("/cart/", {
       product_id: productId,
       user_id: userId,
+      qty: product.Vouchers.length > 0 ? product.Vouchers[0].voucher_type === "Buy One Get One" ? quantity * 2 : quantity :quantity
     });
 
+    
     dispatch(fetchUserCart(user.id));
 
     await Swal.fire({
@@ -62,6 +64,7 @@ export default function ProductDetail() {
         setProduct(res.data.products?.rows[0]);
         setIsLoading(false);
       });
+      console.log('ini product', product)
   }, [productId, branchesGlobal.selectedBranch.id]);
 
   function handleChange(e) {

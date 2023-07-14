@@ -18,6 +18,21 @@ async function confirmTransactionsAfter7D() {
       },
     }
   );
+  await db.Transaction_Header.update(
+    { status: ORDER_STATUS.dibatalkan },
+    {
+      where: {
+        status: ORDER_STATUS.menunggu_pembayaran,
+        date: {
+          [Op.lt]: fn(
+            "DATE_SUB",
+            literal("CURDATE()"),
+            literal("INTERVAL 7 DAY")
+          ),
+        },
+      }, 
+    }
+  )
 }
 
 module.exports = { confirmTransactionsAfter7D };

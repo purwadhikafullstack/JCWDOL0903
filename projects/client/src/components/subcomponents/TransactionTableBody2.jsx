@@ -27,7 +27,6 @@ export default function TransactionTableBody2({
     const filter = transaction.filter((value) => {
       return value.status === status;
     });
-    console.log("ini filter", filter);
     setTrans(filter);
   }, [transHead]);
   return (
