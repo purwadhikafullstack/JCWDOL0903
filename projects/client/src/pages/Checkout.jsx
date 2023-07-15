@@ -22,26 +22,21 @@ export default function Checkout() {
   const [selectedShippingOption, setSelectedShippingOption] = useState("0");
   const [voucher, setVoucher] = useState([])
   const [discountVoucher, setDiscountVoucher] = useState(0)
-  const [selectedVoucherAmount, setSelectedVoucherAmount] = useState(0);
   const user = useSelector((state) => state.user)
   const voucherGlobal = useSelector((state) => state.voucher)
-  const branchesGlobal = useSelector((state) => state.branch);
+  const branchGlobal = useSelector((state) => state.branch);
   const dispatch = useDispatch();
 
   const generateCart = async () => {
-    const cart = await api.get("/cart/"+user.id+`/${branchesGlobal.selectedBranch.id}`)
+    const cart = await api.get("/cart/"+user.id+`/${branchGlobal.selectedBranch.id}`)
+    console.log("ini cart", cart.data.cart)
     setCart(cart.data.cart)
     dispatch(fetchUserCart(user.id)); 
   }
-  // console.log("ini cart", cart)
+
+  
+  
   // console.log("ini branch id", cart[0].Product.Stocks[0].Branch.id)
-
-  const getUsersVoucher = async () => {
-    const usersVoucher = await api.get("/vouchers/users_voucher", {user_id: user.id})
-    setVoucher(usersVoucher.data.vouchers.rows)
-  }
-
-  console.log("ini users voucher", voucher)
 
   const getUserMainAddress = async () => {
     const result = await api.get("/profile/mainaddress/" + user.id)
@@ -63,9 +58,14 @@ export default function Checkout() {
     getUserMainAddress()   
     getRajaOngkirCity()
     discountVouchers()
-    getUsersVoucher()
   },[selectedShippingOption])
   console.log("ini dikon vocer", discountVoucher )
+
+  useEffect(() => {
+    dispatch(fetchVouchers())
+    setVoucher(voucherGlobal.vouchers)
+    console.log("ini voucher",voucher)
+  },[dispatch])
 
   
   useEffect(() => {
@@ -96,10 +96,10 @@ export default function Checkout() {
     
   }, [address, cityRaja, origin]);
 
-  console.log("ini origin", origin)
-  console.log("ini destination", address.kota)
-  console.log("ini city id", cityId)
-  console.log("ini origin id", originId)
+  // console.log("ini origin", origin)
+  // console.log("ini destination", address.kota)
+  // console.log("ini city id", cityId)
+  // console.log("ini origin id", originId)
 
   useEffect(() => {
     const fetchOngkir = async () => {
@@ -196,10 +196,14 @@ export default function Checkout() {
     }
   };
   
+  
+
+  const voucherTotalBelanja = voucher.filter((value) => (
+    value.voucher_type === "Total Belanja"
+  ))
 
   const totalPrice = calculateTotalPrice()
-  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) - discountVoucher - selectedVoucherAmount : 0);
-
+  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) - discountVoucher : 0);
   
   const discountVouchers = () => {
     let totalDiscount = 0;
@@ -297,7 +301,6 @@ export default function Checkout() {
                       </div>
                       
                     </div>
-                    {console.log("cek ini cart", cart)}
                     <p>From branch: {value.Product.Stocks[0].Branch.kota}</p>
                   </div>
                 </li>
@@ -348,27 +351,20 @@ export default function Checkout() {
                     - {numToIDRCurrency(discountVoucher)}
                 </dd>
               </div>
-                
+                  
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Users Voucher</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                  <select
-                    className="block w-full appearance-none rounded-md border border-gray-300 pl-3 pr-8 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
-                    value={selectedVoucherAmount}
-                    onChange={(e) => setSelectedVoucherAmount(e.target.value)}
-                  >
-                    <option value={0}> 
-                      Select Voucher
-                    </option>
-                    {voucher.map((value) => (
-                      <option key={value.Voucher.amount} value={value.Voucher.amount}>
-                        {numToIDRCurrency(value.Voucher.amount)}
-                      </option>
-                    ))}
-                  </select>
+                <select className="block w-full appearance-none rounded-md border border-gray-300 pl-3 pr-8 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
+                  {voucherTotalBelanja.map((value) => {
+                    if (value.min_purchase <= totalPriceWithShipping) {
+                      return <option key={value.id} value={value.amount}>- {numToIDRCurrency(value.amount)}</option>;
+                    }
+                    return <option key={value.id} value={value.amount}>No voucher available</option>;
+                  })}
+                </select>
                 </dd>
               </div>
-
               
 
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">

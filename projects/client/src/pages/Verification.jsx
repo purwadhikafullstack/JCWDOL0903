@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import api from "../api/api";
 
 const Verification = () => {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ const Verification = () => {
   useEffect(() => {
     // console.log(token);
     async function verify() {
-      await axios
+      await api
         .post(
-          "http://localhost:2000/auth/verify",
+          "/auth/verify",
           {},
           {
             headers: {

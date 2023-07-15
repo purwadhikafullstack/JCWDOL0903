@@ -6,11 +6,12 @@ import pattern from "../assets/pattern.jpg";
 import { numToIDRCurrency } from "../helper/currency";
 import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NoAddress from "../assets/dontHaveItem.png"
 
 
 export default function Cart() {
+  const navigate = useNavigate()
   const [cart, setCart] = useState([]);
   const user = useSelector((state) => state.user);
   const branchesGlobal = useSelector((state) => state.branch);
@@ -51,8 +52,9 @@ console.log("ini cart", cart)
   };
 
   useEffect(() => {
+    if (!user.id) navigate("/");
     generateCart();
-  }, []);
+  }, [navigate, user.id, user.role]);
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -73,7 +75,7 @@ console.log("ini cart", cart)
           alt="No Address"
         />
         
-        Your Don't Have Any <br/>Item in Your Cart.
+        You Don't Have Any <br/>Items in Your Cart.
       </div>
     </section>
   ):(

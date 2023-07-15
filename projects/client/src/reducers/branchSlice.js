@@ -48,22 +48,22 @@ export const { setBranch, setSelectedBranch, setAllAdminBranch } =
   branchSlice.actions;
 
 export function fetchAllBranches() {
+  // console.log("dispatch");
   return async (dispatch) => {
+    // console.log("disp", dispatch);
     try {
       const data = await api.get("/branch");
       dispatch(setBranch(data.data.data));
       dispatch(setSelectedBranch(data.data.data[0]));
     } catch (err) {
-      console.log(err.response.data.error);
+      console.log("bransc slice", err.response.data.error);
     }
   };
 }
 
 export function fetchAllAdminBranch() {
   return async (dispatch) => {
-    const response = await Axios.get(
-      "http://localhost:2000/admin/fetchbranchadmin"
-    );
+    const response = await api.get("/admin/fetchbranchadmin");
 
     // console.log("rrrr", response.data.data);
     dispatch(setAllAdminBranch(response.data.data));

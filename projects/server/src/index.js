@@ -18,8 +18,11 @@ const {
   adminRouter,
   transactionHeaderRouter,
   transactionRouter,
+  stockHistoryRouter,
+  SalesReportRouter,
   transactionDetailsRouter,
 } = require("./routers");
+
 const userVoucherRouter = require("./routers/userVoucherRouter");
 const cron = require("node-cron");
 const { confirmTransactionsAfter7D } = require("./services/transaction");
@@ -80,6 +83,8 @@ app.use("/transaction-header", transactionHeaderRouter);
 app.use("/transaction", transactionRouter);
 app.use("/user-vouchers", userVoucherRouter);
 app.use("/transactions", transactionRouter);
+app.use("/stock-history", stockHistoryRouter);
+app.use("/sales-report", SalesReportRouter);
 app.use(transactionDetailsRouter);
 
 // ===========================

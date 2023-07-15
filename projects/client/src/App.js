@@ -27,6 +27,7 @@ import ReferralCode from "./pages/ReferralCode";
 import Reports from "./pages/Reports";
 import StockHistory from "./pages/StockHistory";
 import DashboardCharts from "./pages/DashboardCharts";
+import SalesReport from "./pages/SalesReport";
 import Transaction from "./pages/Transaction";
 import TransactionDetails from "./pages/TransactionDetails";
 import ProtectedPage from "./routes/ProtectedPage";
@@ -173,6 +174,22 @@ function App() {
           }
         />
         <Route
+          path="/verification/:token"
+          element={<Verification />}
+        />
+        <Route
+          path={"/change-password"}
+          element={<ChangePassword />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          path={"/reset-password/:token"}
+          element={<ResetPassword />}
+        />
+        <Route
           path={"/referral-code"}
           element={
             <>
@@ -231,12 +248,15 @@ function App() {
             </ProtectedPage>
           }
         />
+        
         <Route
           path="/dashboard/reports"
           element={
+            
             <ProtectedPage adminOnly={true}>
-              <Dashboard element={<Reports />} />
-            </ProtectedPage>
+              <Dashboard element={<Reports element={<SalesReport />} />
+          } />
+          </ProtectedPage>
           }
         />
         <Route
@@ -248,6 +268,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </div>
   );
 }

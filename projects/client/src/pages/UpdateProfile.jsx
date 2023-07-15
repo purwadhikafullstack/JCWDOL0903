@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import iconLogo from "../assets/logo.png";
@@ -11,6 +11,7 @@ import DefaultAvatar from "../assets/default-avatar.jpg";
 import {convertToDate} from "../helper/date"
 import OrderList from "./OrderList";
 
+
 const initialTabs = [
   { name: "My Account", current: true },
   { name: "My Address", current: false },
@@ -21,6 +22,9 @@ const initialTabs = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
+
+
 
 export default function UpdateProfile() {
   const [address, setAddress] = useState([]);
@@ -41,6 +45,14 @@ export default function UpdateProfile() {
   // const date = new Date(user.birthdate);
   // const formattedDate = date.toISOString().split("T")[0];
   // console.log("ini date di updatea", formattedDate);
+
+  useEffect(() => {
+    fetchAddress()
+  },[]) 
+
+  const handleChangePass = () => {
+    navigate("/change-password");
+  };
 
   const changePage = () => {
     setPage(!page);
@@ -69,9 +81,9 @@ export default function UpdateProfile() {
     userEdit.append("gender", data.gender);
     userEdit.append("birthdate", data.birthdate);
     userEdit.append("profile_picture", data.profile_picture);
-
+    window.location.reload()
     try {
-      const result = await api.post("/profile/update/" + user.id, userEdit);
+      const result = await api.post("/profile/update/" + user.id, userEdit);   
       await Swal.fire({
         icon: "success",
         title: result.data.message,
@@ -92,7 +104,10 @@ export default function UpdateProfile() {
   return (
     <div>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+        <label
+          htmlFor="tabs"
+          className="sr-only"
+        >
           Select a tab
         </label>
         <select
@@ -177,6 +192,14 @@ export default function UpdateProfile() {
                       Allowed file extensions: .JPG, .JPEG, .PNG.
                     </h1>
                   </div>
+                  <div>
+                    <button
+                      className="rounded-lg w-3/4 h-12 bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-900"
+                      onClick={handleChangePass}
+                    >
+                      Change Password
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="ml-3">
@@ -255,8 +278,17 @@ export default function UpdateProfile() {
                   className="rounded-lg my-3"
                 />
                 <label for="gender">Gender:</label>
-                <select id="gender" name="gender" className="rounded-lg my-3">
-                  <option value="" disabled selected hidden>
+                <select
+                  id="gender"
+                  name="gender"
+                  className="rounded-lg my-3"
+                >
+                  <option
+                    value=""
+                    disabled
+                    selected
+                    hidden
+                  >
                     Choose your gender
                   </option>
                   <option value="Pria">Pria</option>
@@ -270,7 +302,10 @@ export default function UpdateProfile() {
                   placeholder="birthdate"
                   className="rounded-lg my-3"
                 />
-                <label for="profile_picture" className="mb-3">
+                <label
+                  for="profile_picture"
+                  className="mb-3"
+                >
                   Profile Picture:
                 </label>
                 <input

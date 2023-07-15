@@ -17,6 +17,7 @@ import AddDataHeader from "../components/AddDataHeader";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard", icon: HomeIcon },
+
   {
     name: "Management",
     path: "/dashboard/management-setting",
@@ -52,14 +53,19 @@ const navigation = [
 export default function Dashboard({ element }) {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // if (!user.id || user.role === "user") navigate("/");
-  }, [navigate, user.id, user.role]);
+  const filteredNavigation =
+    user.role === "admin"
+      ? navigation.filter((item) => item.name !== "Management")
+      : navigation;
 
   return (
     <div>
-      <DashboardSidebar navigation={navigation} children={element} />
+      <DashboardSidebar
+        navigation={filteredNavigation}
+        children={element}
+      />
     </div>
   );
 }

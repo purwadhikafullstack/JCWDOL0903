@@ -10,10 +10,10 @@ function classNames(...classes) {
 export default function NavDashReports({ navigation = [], children }) {
   const currentPath = window.location.pathname;
   const handleOnclick = (event, path) => {
-    console.log("navigasi", path);
+    // console.log("navigasi", path);
   };
-  console.log("nav1", navigation.path);
-  console.log("nav2", navigation[1].path);
+  // console.log("nav1", navigation.path);
+  // console.log("nav2", navigation[1].path);
   return (
     <div className="min-h-full">
       <Disclosure
@@ -100,23 +100,9 @@ export default function NavDashReports({ navigation = [], children }) {
       </Disclosure>
 
       <div className="py-10">
-        <header>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-              Dashboard
-            </h1>
-          </div>
-        </header>
+        <header></header>
         <main>
-          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            {/* Replace with your content */}
-            <div className="px-4 py-8 sm:px-0">
-              <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
-            </div>
-            {/* /End replace */}
-            {/* dsfdsfsdfs */}
-            {children}
-          </div>
+          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </div>

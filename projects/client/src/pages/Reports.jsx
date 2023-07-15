@@ -5,7 +5,7 @@ import NavDashReports from "../components/NavDashReports";
 const navigation = [
   {
     name: "Sales report",
-    path: "dashboard/reports",
+    path: "/dashboard/reports",
     // current: true
   },
   {
@@ -16,7 +16,6 @@ const navigation = [
 ];
 
 const Reports = ({ element }) => {
-  console.log(Element);
   return (
     <div>
       <NavDashReports

@@ -21,12 +21,14 @@ async function getCategories(req, res) {
       offsetLimit.offset = (page - 1) * itemsPerPage;
     }
 
+    console.log("ofsetLimit", offsetLimit);
+
     const categoryNameClause = categoryName
       ? { name: { [Op.like]: "%" + categoryName + "%" } }
       : {};
 
     const categories = await Category.findAndCountAll({
-      attributes: ["id", "name"], 
+      attributes: ["id", "name"],
       where: {
         ...categoryNameClause,
       },
@@ -34,6 +36,7 @@ async function getCategories(req, res) {
       order: sortMap[sortType] || null,
     });
 
+    console.log("categoris", categories);
     return res.status(200).json({
       categories,
     });

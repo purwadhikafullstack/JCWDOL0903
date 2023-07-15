@@ -12,6 +12,7 @@ async function getProducts(req, res) {
     const productId = parseInt(req.query.id);
     const categoryId = parseInt(req.query.categoryId);
     const branchId = parseInt(req.query.branchId);
+    console.log("branch_id nih boy", branchId);
     const sortType = req.query.sort;
     const showEmptyStock = req.query.showEmptyStock;
 

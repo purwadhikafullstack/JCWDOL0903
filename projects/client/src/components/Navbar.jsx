@@ -266,7 +266,7 @@ export default function Navbar() {
                                     to="/referral-code"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 text-center"
                                     )}
                                   >
                                     Referral Code
@@ -400,6 +400,7 @@ export default function Navbar() {
                   >
                     Your Profile
                   </Disclosure.Button>
+
                   <Disclosure.Button
                     as="a"
                     href="/order_list"
@@ -407,6 +408,15 @@ export default function Navbar() {
                   >
                     History
                   </Disclosure.Button>
+
+                  <Disclosure.Button
+                    as={Link}
+                    to="/referral-code"
+                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                  >
+                    Referral Code
+                  </Disclosure.Button>
+
                   <Disclosure.Button
                     onClick={handleLogout}
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
