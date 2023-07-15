@@ -8,6 +8,8 @@ async function updateTransaction(req, res) {
   try {
     const { status } = req.body;
     const transactionHeaderId = parseInt(req.params.id);
+    if (!Object.values(ORDER_STATUS).includes(status))
+      throw new Error("Status not supported");
 
     if (
       !(req.user.role === "admin" || req.user.role === "superadmin") &&
@@ -25,60 +27,28 @@ async function updateTransaction(req, res) {
     if (!isTransactionExist) throw new Error("Transaction not found");
 
     const currStatus = isTransactionExist.dataValues.status;
+    if (currStatus === status) return res.status(200).end();
 
-    let isUpdated;
-
-    if (status === ORDER_STATUS.dikirim) {
-      if (currStatus === status) return res.status(200).end();
-
-      isUpdated = await transHead.update(
-        {
-          status,
-        },
-        {
-          where: {
-            id: transactionHeaderId,
-          },
-        }
-      );
-    } else if (status === ORDER_STATUS.konfirmasi) {
-      if (currStatus === status) return res.status(200).end();
-
-      isUpdated = await transHead.update(
-        {
-          status,
-        },
-        {
-          where: {
-            id: transactionHeaderId,
-          },
-        }
-      );
-    } else if (status === ORDER_STATUS.dibatalkan) {
-      if (currStatus === status) return res.status(200).end();
-
+    if (status === ORDER_STATUS.dibatalkan) {
       if (
-        !(
-          currStatus === ORDER_STATUS.menunggu_pembayaran ||
-          currStatus === ORDER_STATUS.menunggu_konfirmasi ||
-          currStatus === ORDER_STATUS.diproses
-        )
+        ![
+          ORDER_STATUS.menunggu_pembayaran,
+          ORDER_STATUS.menunggu_konfirmasi,
+          ORDER_STATUS.diproses,
+        ].includes(currStatus)
       )
         throw new Error("Order cannot be canceled");
-
-      isUpdated = await transHead.update(
-        {
-          status,
-        },
-        {
-          where: {
-            id: transactionHeaderId,
-          },
-        }
-      );
     }
 
-    if (!isUpdated || !isUpdated[0]) throw new Error("Status is not supported");
+    const [isUpdated] = await transHead.update(
+      { status },
+      {
+        where: { id: transactionHeaderId },
+      }
+    );
+
+    if (!isUpdated) throw new Error("Status is not supported");
+
     return res.status(200).end();
   } catch (err) {
     console.log(err.message);
