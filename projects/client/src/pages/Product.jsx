@@ -4,9 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import ProductForm from "../components/ProductForm";
 import Table from "../components/Table";
-import Dropdown from "../components/Dropdown";
 import AddDataHeader from "../components/AddDataHeader";
-import SearchBar from "../components/SearchBar";
 import TransitionFade from "../components/TransitionFade";
 
 import { fetchProducts, deleteProduct } from "../reducers/productSlice";
@@ -16,6 +14,7 @@ import ProductTableBody from "../components/ProductTableBody";
 import { countProducts } from "../helper/products";
 import { deleteConfirmationAlert } from "../helper/alerts";
 import Spinner from "../components/Spinner";
+import FilterProduct from "../components/FilterProduct";
 
 const sortOptions = [
   { value: "", label: "None" },
@@ -180,34 +179,18 @@ export default function Product() {
             addButtonText="Add product"
             onAddClick={() => setShowAddProductForm(true)}
           />
-          <div className="flex items-center justify-between flex-wrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
-            <SearchBar onSubmit={handleSearch} />
-            <div className="flex gap-2 items-center flex-wrap">
-              <Dropdown
-                label="Sort"
-                options={sortOptions}
-                selectedValue={sortFilter}
-                onChange={setSortFilter}
-                className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-              />
-              <Dropdown
-                label="Category"
-                options={categoryOptions}
-                selectedValue={categoryFilter}
-                onChange={setCategoryFilter}
-                className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-              />
-              {userGlobal.role === "superadmin" && (
-                <Dropdown
-                  label="Branch"
-                  options={branchOptions}
-                  selectedValue={branchFilter}
-                  onChange={setBranchFilter}
-                  className="text-sm bg-gray-50 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                />
-              )}
-            </div>
-          </div>
+          <FilterProduct
+            onSearch={handleSearch}
+            sortOptions={sortOptions}
+            sortFilter={sortFilter}
+            onSortChange={setSortFilter}
+            categoryOptions={categoryOptions}
+            categoryFilter={categoryFilter}
+            onCategoryChange={setCategoryFilter}
+            branchOptions={branchOptions}
+            branchFilter={branchFilter}
+            onBranchChange={setBranchFilter}
+          />
           <Table
             className="mb-4"
             headCols={[

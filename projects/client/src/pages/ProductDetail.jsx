@@ -12,9 +12,8 @@ import {
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import ProductNotFound from "../components/ProductNotFound";
 import InputNumber from "../components/InputNumber";
-import Badge from "../components/Badge";
 import BrokenImg from "../assets/broken-img.png";
-import { errorAlert, errorAlertWithMessage } from "../helper/alerts";
+import { errorAlertWithMessage } from "../helper/alerts";
 import { getProductDiscountAmount } from "../helper/voucher";
 import ProductVoucherBadge from "../components/ProductVoucherBadge";
 import { fetchUserCart } from "../reducers/cartSlice";

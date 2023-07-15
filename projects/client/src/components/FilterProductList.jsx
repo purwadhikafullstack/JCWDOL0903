@@ -1,4 +1,4 @@
-export default function Filter({ children }) {
+export default function FilterProductList({ children }) {
   return (
     <div>
       <section aria-labelledby="filter-heading" className="py-6">
