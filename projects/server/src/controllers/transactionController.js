@@ -64,6 +64,7 @@ async function createTransaction(req, res) {
       return total + product.Product.price * product.qty;
     }, 0);
 
+
     const transactionHeader = await transHead.create({
       user_id,
       branch_id,
@@ -266,8 +267,7 @@ async function getTransactionHeaders(req, res) {
   const invoiceName = req.query.q
   const invoiceClause = invoiceName? {invoice: {[Op.like]: "%" + invoiceName +"%"}} : {}
   const dateClause = (!startDate  && !endDate ) ? {} : {date: {[Op.between]: [startDate, endDate]}}
-  const branch_id = req.body.branch_id 
-
+  const branch_id = req.body.branch_id ? {branch_id: req.body.branch_id} : {}
   const offsetLimit = {};
   if (page) {
     offsetLimit.limit = itemsPerPage;
@@ -283,7 +283,7 @@ async function getTransactionHeaders(req, res) {
   try {
     const result = await transHead.findAndCountAll({
       where: {
-        branch_id,
+        ...branch_id,
         ...statusClause,
         ...invoiceClause,
         ...dateClause,
@@ -309,7 +309,7 @@ async function getTransactionHeaders(req, res) {
     });
     const results = await transHead.findAndCountAll({
       where: {
-        branch_id,
+        ...branch_id,
         ...statusClause,
         ...invoiceClause,
         ...dateClause,

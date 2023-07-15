@@ -96,10 +96,10 @@ export default function Checkout() {
     
   }, [address, cityRaja, origin]);
 
-  // console.log("ini origin", origin)
-  // console.log("ini destination", address.kota)
-  // console.log("ini city id", cityId)
-  // console.log("ini origin id", originId)
+  console.log("ini origin", origin)
+  console.log("ini destination", address.kota)
+  console.log("ini city id", cityId)
+  console.log("ini origin id", originId)
 
   useEffect(() => {
     const fetchOngkir = async () => {
@@ -297,6 +297,7 @@ export default function Checkout() {
                       </div>
                       
                     </div>
+                    {console.log("cek ini cart", cart)}
                     <p>From branch: {value.Product.Stocks[0].Branch.kota}</p>
                   </div>
                 </li>
