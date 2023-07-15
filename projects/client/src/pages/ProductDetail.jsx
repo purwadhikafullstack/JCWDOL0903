@@ -36,11 +36,12 @@ export default function ProductDetail() {
   const productId = useParams().id;
   const promo = document.getElementById("b1g1")
 
-  const addOne = async (productId, userId) => {
+  const addOne = async (productId, userId, branchId) => {
     const response = await api.post("/cart/", {
       product_id: productId,
       user_id: userId,
-      qty: product.Vouchers.length > 0 ? product.Vouchers[0].voucher_type === "Buy One Get One" ? quantity * 2 : quantity :quantity
+      branch_id: branchId,
+      qty: product.Vouchers.length > 0 ? product.Vouchers[0].voucher_type === "Buy One Get One" ? quantity * 2 : quantity : quantity
     });
 
     
@@ -64,7 +65,6 @@ export default function ProductDetail() {
         setProduct(res.data.products?.rows[0]);
         setIsLoading(false);
       });
-      console.log('ini product', product)
   }, [productId, branchesGlobal.selectedBranch.id]);
 
   function handleChange(e) {
@@ -222,7 +222,7 @@ export default function ProductDetail() {
               </div>
               <div className="mt-10">
                 <button
-                  onClick={() => addOne(product.id, user.id)}
+                  onClick={() => addOne(product.id, user.id, branchesGlobal.selectedBranch.id)}
                   type="submit"
                   className="flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 py-3 px-8 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={!productStock || !user.id}

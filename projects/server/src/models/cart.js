@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "product_id",
       });
 
+      Cart.belongsTo(models.Branch,{
+        foreignKey: "branch_id"
+      })
+
       Cart.belongsTo(models.User, {
         foreignKey: "user_id",
       });
@@ -24,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       product_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
       qty: DataTypes.INTEGER,
+      branch_id: DataTypes.INTEGER
     },
     {
       sequelize,

@@ -28,8 +28,8 @@ const sortBy = [
   { value: "", label: "None" },
   { value: "invoice_asc", label: "Invoice (newer - older)" },
   { value: "invoice_desc", label: "Invoice (older - newer)" },
-  { value: "date_asc", label: "Date (newer - older)" },
-  { value: "date_desc", label: "Date (older - newer)" },
+  { value: "date_asc", label: "Date (older - newer)" },
+  { value: "date_desc", label: "Date (newer - older)" },
 ];
 
 const OrderList = () => {
@@ -207,8 +207,8 @@ const OrderList = () => {
             {/* <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button> */}
             {value.status === "Menunggu Pembayaran" ? (
              <>
-              <DropImageModal id={value.id} getUsersCart={()=>getUsersCart()}/>
-              <WarningModalOrderdList headersId={value.id} getUsersCart={()=>getUsersCart()}/>
+              <DropImageModal id={value.id} getUsersCart={()=>getUsersCart()} usersCart={value}/>
+              <WarningModalOrderdList headersId={value.id} getUsersCart={()=>getUsersCart()} transaction={value}/>
              </>
             ): (<></>)}  
 

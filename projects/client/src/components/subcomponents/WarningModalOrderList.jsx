@@ -5,12 +5,12 @@ import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom'
 
-const WarningModalOrderList = ({headersId, getUsersCart}) => {
+const WarningModalOrderList = ({headersId, getUsersCart, transaction}) => {
     const [showModal, setShowModal] = useState(false)
 
     const deleteItemTotally = async() =>{
         try{
-            const result = await api.delete("/transaction-header/user_payment/delete", {data:{id:headersId}} )
+            const result = await api.delete("/transaction-header/user_payment/delete", {data:{id:headersId, cart:transaction}} )
             await Swal.fire({
                 icon: "success",
                 title: result.data.message,

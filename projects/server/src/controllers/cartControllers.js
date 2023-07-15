@@ -5,19 +5,21 @@ module.exports = {
   getCart: async (req, res) => {
     try {
       const user_id = req.params.id;
+      const branch_id = req.params.branch_id
 
       console.log("lanjut ternyata");
 
       const cart = await Cart.findAll({
         where: {
-          user_id,
+          user_id
         },
         include:{
             model: db.Products,
             attributes: ["name", "price", "image_url"],
             include:[{
                 model: db.Stocks,
-                attributes: ["stock"],
+                where:{branch_id: branch_id},
+                attributes: ["stock","id"],
                 include:{
                     model: db.Branch,
                     attributes: ["id", "kota"]
@@ -61,7 +63,7 @@ module.exports = {
 
   addToCart: async (req, res) => {
     try {
-      const { product_id, user_id, qty } = req.body;
+      const { product_id, user_id, qty, branch_id } = req.body;
       
       console.log("ini qty", qty)
       
@@ -83,6 +85,7 @@ module.exports = {
           product_id,
           user_id,
           qty,
+          branch_id
         });
         res.status(200).send({
           message: `Successfully add new product to cart`,
@@ -102,15 +105,15 @@ module.exports = {
             },
           },
         });
-        const findInputBranch = await db.Stocks.findOne({
-          where: {
-            product_id,
-          },
-        });
+        // const findInputBranch = await db.Stocks.findOne({
+        //   where: {
+        //     product_id,
+        //   },
+        // });
         const branchCart =
-          findAvailableCart.dataValues.Product.dataValues.Stocks[0].dataValues
-            .branch_id;
-        const newBranchCart = findInputBranch.dataValues.branch_id;
+          findAvailableCart.branch_id
+
+        const newBranchCart = branch_id
 
         if (branchCart !== newBranchCart) {
           await Cart.destroy({
@@ -122,6 +125,7 @@ module.exports = {
             product_id,
             user_id,
             qty,
+            branch_id
           });
           res.status(200).send({
             message: `Successfully delete old cart and created a new cart`,
@@ -133,6 +137,7 @@ module.exports = {
               product_id,
               user_id,
               qty,
+              branch_id
             });
             res.status(200).send({
               message: `Successfully add new product to cart`,

@@ -11,6 +11,7 @@ transactionRouter.patch(
 transactionRouter.post("/create_transaction/:id", transactionController.createTransaction)
 transactionRouter.get("/get_transaction/:id", transactionController.getTransactionHead)
 transactionRouter.post("/get_transactions", transactionController.getTransactionHeaders)
+transactionRouter.patch("/coba_aja", transactionController.updateTransaction)
 transactionRouter.patch("/update_transaction/confirm/:id",transactionController.confirmTransaction)
 
 module.exports = transactionRouter;

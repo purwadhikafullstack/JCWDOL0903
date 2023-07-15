@@ -114,9 +114,31 @@ async function deleteVoucher(req, res) {
   }
 }
 
+async function getUsersVoucher (req, res) {
+  try{
+    const {user_id} = req.body
+
+    const result = await db.User.findAll({
+      where: {
+        user_id,
+        is_active: true
+      }
+    })
+
+    await res.status(200).send({
+      message: `succeess get users voucher`,
+      data:  result,
+    });
+  }catch (err) {
+    console.log(err.message);
+    return res.status(400).json({ error: err.message });
+  }
+}
+
 module.exports = {
   getVouchers,
   createVoucher,
   updateVoucher,
   deleteVoucher,
+  getUsersVoucher
 };

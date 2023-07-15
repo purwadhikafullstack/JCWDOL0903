@@ -8,11 +8,13 @@ import pattern from "../assets/pattern.jpg";
 import Address from "../components/Address";
 import PopModel from "../components/subcomponents/PopModel";
 import DefaultAvatar from "../assets/default-avatar.jpg";
+import {convertToDate} from "../helper/date"
+import OrderList from "./OrderList";
 
 const initialTabs = [
   { name: "My Account", current: true },
   { name: "My Address", current: false },
-  { name: "Payment", current: false },
+  { name: "Order List", current: false },
   { name: "Voucher", current: false },
 ];
 
@@ -186,7 +188,7 @@ export default function UpdateProfile() {
                 </p>
 
                 <p className="my-3 ml-3">
-                  Birthdate<span className="ml-14">{user.birthdate}</span>{" "}
+                  Birthdate<span className="ml-14">{convertToDate(user.birthdate)}</span>{" "}
                 </p>
 
                 <p className="my-3 ml-3">
@@ -308,6 +310,20 @@ export default function UpdateProfile() {
           {/* Your address box component */}
           <Address {...{ fetchAddress, setAddress, address }} />
           <PopModel {...{ fetchAddress, setAddress, address }} />
+        </div>
+      )}
+
+    {tabs.find((tab) => tab.current && tab.name === "Order List") && (
+        <div
+          className="flex flex-col justify-center items-center"
+          style={{
+            backgroundImage: `url(${pattern})`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "20rem 20rem",
+          }}
+        >
+          {/* Your address box component */}
+          <OrderList/>
         </div>
       )}
     </div>

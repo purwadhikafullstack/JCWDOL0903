@@ -117,11 +117,60 @@ async function createTransaction(req, res) {
         };
       })
     );
+
+    const stocks = cart.map(async (product) => {
+      const currentStock = await db.Stocks.findOne({
+        where: {
+          product_id: product.product_id,
+          branch_id: product.Product.Stocks[0].Branch.id,
+        },
+      });
+
+      const currentSoldProducts = await db.Products.findOne({
+        where:{
+          id: product.product_id
+        }
+      })
+      
+      const updatedSoldProducts = currentSoldProducts.sold + product.qty
+      const updatedStock = currentStock.stock - product.qty;
+      
+      await db.Products.update({sold: updatedSoldProducts},
+        {
+          where: {
+            id: product.product_id
+          }
+        })
+
+      await db.Stock_History.create(
+        {
+          status: "OUT",
+          qty:product.qty,
+          stock_id:product.Product.Stocks[0].id,
+          transaction_header_id: transactionHeader.id
+        }
+       )
+    
+      await db.Stocks.update(
+        {
+          stock: updatedStock,
+        },
+        {
+          where: {
+            product_id: product.product_id,
+            branch_id: product.branch_id,
+          },
+        }
+      );
+    });
+    
+    
     res.status(200).send({
       message: "Transaction successfully created",
       data: {
         Transaction_Header: transactionHeader,
         Transaction_detail: newTransaction,
+        Stock_Update: stocks
       },
     });
   } catch (err) {
@@ -139,10 +188,21 @@ async function confirmTransaction  (req, res) {
       }
     })
 
+    const giveVoucher = await transHead.findOne({
+      where:{
+        id
+      }
+    })
+    
+    if(giveVoucher.total_price > 1000000){
+      await db.Users_Voucher.create({voucher_id: 7, user_id: giveVoucher.user_id, expired_date: "2023-08-01 00:00:00"})
+    }
+
     res.status(200).send({
       message: "Transaction Finished",
       data: {
           result,
+          giveVoucher
       },
       });
   }catch (err) {
@@ -150,6 +210,8 @@ async function confirmTransaction  (req, res) {
     return res.status(400).json({ error: err.message });
   }
 }
+
+
 
 async function getTransactionHead(req, res) {
   const page = parseInt(req.query.page);
@@ -190,13 +252,13 @@ async function getTransactionHead(req, res) {
           include: [
             {
               model: db.Products,
-              attributes: ["image_url", "price"],
+              attributes: ["image_url", "price","id"],
             },
           ],
         },
         {
           model: db.Branch,
-          attributes: ["name", "kota"],
+          attributes: ["name", "kota", "id"],
         },
       ],
       ...offsetLimit,

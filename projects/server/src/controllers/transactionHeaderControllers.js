@@ -91,9 +91,18 @@ module.exports = {
     }
   },
 
+  
+
   deleteTransactionHeader : async(req,res) => {
     try{
-      const {id} = req.body
+      const {id, cart} = req.body
+
+      await db.Stock_History.destroy({
+        where:{
+          transaction_header_id: id
+        }
+        
+      })
 
       const result = await transHead.destroy({
         where:{
@@ -101,12 +110,54 @@ module.exports = {
           status: "Menunggu Pembayaran"
         }
       })
-      res.status(200).send({
-        message: "Transaction Canceled",
-        data: {
-            result,
-        },
+     
+
+        const stocks = cart.Transaction_Details.map(async (product) => {
+          const currentStock = await db.Stocks.findOne({
+            where: {
+              product_id: product.Product.id,
+              branch_id: cart.branch_id,
+            },
+          });
+
+          const currentSoldProducts = await db.Products.findOne({
+            where:{
+              id: product.Product.id
+            }
+          })
+          
+          const updatedSoldProducts = currentSoldProducts.sold - product.qty
+        
+          const updatedStock = currentStock.stock + product.qty;
+
+          await db.Products.update({sold: updatedSoldProducts},
+            {
+              where: {
+                id: product.Product.id
+              }
+            })
+        
+          await db.Stocks.update(
+            {
+              stock: updatedStock,
+            },
+            {
+              where: {
+                product_id: product.Product.id,
+                branch_id: cart.branch_id,
+              },
+            }
+          );
         });
+
+      
+
+        res.status(200).send({
+          message: "Transaction Canceled",
+          data: {
+              result,
+          },
+          });
 
     }catch (error) {
       console.log("err", error);
