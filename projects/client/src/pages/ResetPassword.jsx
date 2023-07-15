@@ -3,10 +3,10 @@ import logo from "../assets/logo.png";
 import Swal from "sweetalert2";
 import api from "../api/api";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { errorAlertWithMessage } from "../helper/alerts";
 
 const ResetPassword = () => {
-  const { token } = useParams()
+  const { token } = useParams();
   const navigate = useNavigate();
   const onResetPass = async (e) => {
     e.preventDefault();
@@ -28,10 +28,12 @@ const ResetPassword = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+
       setTimeout(() => {
         navigate("/login");
       }, 1500);
     } catch (error) {
+      errorAlertWithMessage(error.response.data.message);
       console.log("ini err reset pass", error);
       // Swal.fire({
       //   icon: "error",

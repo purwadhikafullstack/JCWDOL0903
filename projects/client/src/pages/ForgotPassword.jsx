@@ -1,6 +1,7 @@
 import Axios from "axios";
 import React from "react";
 import Swal from "sweetalert2";
+import api from "../api/api";
 
 const ForgotPassword = () => {
   const onForgotPass = async (e) => {
@@ -10,8 +11,8 @@ const ForgotPassword = () => {
       const data = {
         email: document.getElementById("email").value,
       };
-      const url = "http://localhost:2000/auth/forgot-password";
-      const result = await Axios.patch(url, data);
+      // const url = "http://localhost:2000/auth/forgot-password";
+      const result = await api.patch("/auth/forgot-password", data);
 
       // Reset Form
       document.getElementById("email").value = "";

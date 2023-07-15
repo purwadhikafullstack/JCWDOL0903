@@ -18,7 +18,10 @@ export default function InputNumber({
         onClick={onSubtract}
         disabled={disabledSubtract}
       >
-        <MinusSmallIcon className="w-5 h-5" aria-hidden />
+        <MinusSmallIcon
+          className="w-5 h-5"
+          aria-hidden
+        />
       </button>
       <input
         type="number"
@@ -36,11 +39,15 @@ export default function InputNumber({
         onClick={onAdd}
         disabled={disabledAdd}
       >
-        <PlusSmallIcon className="w-5 h-5 " aria-hidden />
+        <PlusSmallIcon
+          className="w-5 h-5 "
+          aria-hidden
+        />
       </button>
     </div>
   );
 }
+
 // export default function InputNumber(
 //   onSubtract,
 //   onAdd,

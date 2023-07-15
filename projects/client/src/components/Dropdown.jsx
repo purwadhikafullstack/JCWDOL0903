@@ -10,6 +10,7 @@ function Dropdown({
   selectedValue = {},
   onChange = () => {},
 }) {
+  // console.log("dropDown", Dropdown);
   return (
     <Listbox
       value={selectedValue}
@@ -60,7 +61,10 @@ function Dropdown({
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-red-600">
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        <CheckIcon
+                          className="h-5 w-5"
+                          aria-hidden="true"
+                        />
                       </span>
                     ) : null}
                   </>

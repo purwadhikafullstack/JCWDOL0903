@@ -8,8 +8,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { successAlert, errorAlertWithMessage } from "../helper/alerts";
 import logo from "../assets/logo.png";
-
-const url = "http://localhost:2000/auth/login";
+import api from "../api/api";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -25,7 +24,7 @@ const Login = () => {
 
     console.log("data login", data);
     try {
-      const result = await axios.post(url, data);
+      const result = await api.post("/auth/login", data);
 
       localStorage.setItem("token", result.data.result.token.token);
 
@@ -38,12 +37,6 @@ const Login = () => {
       document.getElementById("email").value = "";
       document.getElementById("password").value = "";
 
-      // Swal.fire({
-      //   icon: "Login",
-      //   title: result.data.message,
-      //   showConfirmButton: false,
-      //   timer: 1500,
-      // });
       successAlert(result.data.message);
 
       //setelah menerima token akan di navigate ke home
@@ -56,12 +49,6 @@ const Login = () => {
       }, 1500);
     } catch (error) {
       console.log("error", error);
-      // Swal.fire({
-      //   icon: "error",
-      //   title: "username or password does not exist",
-      //   showConfirmButton: false,
-      //   timer: 1500,
-      // });
 
       errorAlertWithMessage(error.response.data.message);
     }
@@ -70,11 +57,13 @@ const Login = () => {
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          className="mx-auto h-12 w-auto"
-          src={logo}
-          alt="Your Company"
-        />
+        <Link to="/">
+          <img
+            className="mx-auto h-12 w-auto"
+            src={logo}
+            alt="Your Company"
+          />
+        </Link>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
           Sign in to Bangunin
         </h2>

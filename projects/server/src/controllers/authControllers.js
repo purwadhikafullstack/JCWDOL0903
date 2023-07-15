@@ -23,6 +23,7 @@ module.exports = {
         birthdate,
       } = req.body;
 
+      // console.log("gender", gender);
       if (
         !name ||
         !username ||
@@ -42,6 +43,16 @@ module.exports = {
         return res.status(400).send({
           message: "Password does not match",
         });
+
+      const passwordRegex =
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[0-9a-zA-Z!@#$%^&*()_+]{8,}$/;
+
+      if (!passwordRegex.test(password)) {
+        return res.status(400).send({
+          message:
+            "Password must contain at least 8 characters including an uppercase letter, a symbol, and a number",
+        });
+      }
 
       const userExist = await user.findOne({ where: { email } });
 
@@ -76,12 +87,13 @@ module.exports = {
       });
 
       let mail = {
-        from: `Admin <banguninbang@gmail.com>`,
+        from: `Admin <${process.env.EMAIL}>`,
         to: `${email}`,
         subject: `Account Registration`,
-        html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here </a> to verify your account </p>`,
+        html: `<p> Click <a href="${process.env.WHITELISTED_DOMAIN}/verification/${generateToken}">here </a> to verify your account </p>`,
       };
 
+      console.log("email nih", email);
       await nodemailer.sendMail(mail);
 
       return res.status(200).send({
@@ -164,10 +176,10 @@ module.exports = {
       });
 
       let mail = {
-        from: `Admin <banguninbang@gmail.com>`,
+        from: `Admin <${process.env.EMAIL}>`,
         to: `${user.dataValues.email}`,
         subject: `Account Registration`,
-        html: `<p> Click <a href="http://localhost:3000/verification/${generateToken}">here </a> to verify your account </p>`,
+        html: `<p> Click <a href="${process.env.WHITELISTED_DOMAIN}/verification/${generateToken}">here </a> to verify your account </p>`,
       };
 
       await nodemailer.sendMail(mail);
@@ -293,10 +305,10 @@ module.exports = {
       console.log("ini toke after reset pass", token);
 
       let mail = {
-        from: `Admin <banguninbang@gmail.com>`,
+        from: `Admin <${process.env.EMAIL}>`,
         to: `${user.dataValues.email}`,
         subject: `Reset Password`,
-        html: `<p> Click <a href="http://localhost:3000/reset-password/${token.dataValues.token}">here </a> to verify your account </p>`,
+        html: `<p> Click <a href="${process.env.WHITELISTED_DOMAIN}/reset-password/${token.dataValues.token}">here </a> to verify your account </p>`,
       };
       await nodemailer.sendMail(mail);
       console.log("ini token", token);

@@ -10,7 +10,9 @@ const rajaOngkirRouter = require("./rajaOngkirRouters");
 const stockRouter = require("./stockRouter");
 const adminRouter = require("./adminRouter");
 const transactionHeaderRouter = require("./TransactionHeaderRouter");
-const transactionRouter = require("./transactionRouter")
+const transactionRouter = require("./transactionRouter");
+const stockHistoryRouter = require("./stockHistoryRouter");
+const SalesReportRouter = require("./SalesReportRouter");
 
 module.exports = {
   productRouter,
@@ -26,5 +28,7 @@ module.exports = {
   branchRouter,
   adminRouter,
   transactionHeaderRouter,
-  transactionRouter
+  transactionRouter,
+  stockHistoryRouter,
+  SalesReportRouter,
 };

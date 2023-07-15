@@ -52,6 +52,7 @@ export default function Product() {
       value: category.id,
       label: category.name,
     }));
+
     const newBranchOptions = branchGlobal.allBranches.map((branch) => ({
       value: branch.id,
       label: branch.name,
@@ -62,6 +63,7 @@ export default function Product() {
       categoryOptions.length - 1,
       ...newCategoryOptions
     );
+
     branchOptions.splice(1, branchOptions.length - 1, ...newBranchOptions);
   }, [categoriesGlobal.categories, branchGlobal.allBranches]);
 
@@ -90,6 +92,7 @@ export default function Product() {
     e.preventDefault();
     setProductName(e.target.searchBar?.value);
   }
+
   function handleDelete(id) {
     deleteConfirmationAlert(() =>
       dispatch(deleteProduct(id, currentPage, userGlobal.branch_id))

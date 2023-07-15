@@ -12,12 +12,13 @@ import pattern from "../assets/pattern.jpg";
 import { numToIDRCurrency } from "../helper/currency";
 import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const generateCart = async () => {
     const cartResponse = await api.get("/cart/" + user.id);
@@ -39,8 +40,9 @@ export default function Cart() {
   };
 
   useEffect(() => {
+    if (!user.id || user.role === "user") navigate("/");
     generateCart();
-  }, []);
+  }, [navigate, user.id, user.role]);
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -67,8 +69,14 @@ export default function Cart() {
           className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
           onSubmit={(event) => event.preventDefault()}
         >
-          <section aria-labelledby="cart-heading" className="lg:col-span-7">
-            <h2 id="cart-heading" className="sr-only">
+          <section
+            aria-labelledby="cart-heading"
+            className="lg:col-span-7"
+          >
+            <h2
+              id="cart-heading"
+              className="sr-only"
+            >
               Items in your shopping cart
             </h2>
 
@@ -77,7 +85,10 @@ export default function Cart() {
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
               {cart.map((value) => (
-                <li key={value.id} className="flex py-6 bg-white sm:py-10">
+                <li
+                  key={value.id}
+                  className="flex py-6 bg-white sm:py-10"
+                >
                   <div className="flex-shrink-0">
                     <img
                       src={`${process.env.REACT_APP_PRODUCT_IMG_BASE_URL}/${value.Product.image_url}`}
@@ -156,7 +167,10 @@ export default function Cart() {
             aria-labelledby="summary-heading"
             className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
           >
-            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
+            <h2
+              id="summary-heading"
+              className="text-lg font-medium text-gray-900"
+            >
               Order summary
             </h2>
 
@@ -168,7 +182,9 @@ export default function Cart() {
                 </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <dt className="text-base font-medium text-gray-900">Order total</dt>
+                <dt className="text-base font-medium text-gray-900">
+                  Order total
+                </dt>
                 <dd className="text-base font-medium text-gray-900">
                   {numToIDRCurrency(calculateTotalPrice())}
                 </dd>

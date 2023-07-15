@@ -16,7 +16,6 @@ const navigation = [
 ];
 
 const Reports = ({ element }) => {
-  console.log(Element);
   return (
     <div>
       <NavDashReports

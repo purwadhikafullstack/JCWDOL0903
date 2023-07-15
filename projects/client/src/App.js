@@ -109,16 +109,16 @@ function App() {
           path="/order_list"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <OrderList />
             </>
           }
         />
-         <Route
+        <Route
           path="/cart/checkout"
           element={
             <>
-            <Navbar />
+              <Navbar />
               <Checkout />
             </>
           }
@@ -162,10 +162,22 @@ function App() {
             </>
           }
         />
-        <Route path="/verification/:token" element={<Verification />} />
-        <Route path={"/changePass/:id"} element={<ChangePassword />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
+        <Route
+          path="/verification/:token"
+          element={<Verification />}
+        />
+        <Route
+          path={"/change-password"}
+          element={<ChangePassword />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          path={"/reset-password/:token"}
+          element={<ResetPassword />}
+        />
         <Route
           path={"/referral-code"}
           element={
@@ -223,7 +235,7 @@ function App() {
           }
         />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -40,6 +40,10 @@ export default function UpdateProfile() {
   // const formattedDate = date.toISOString().split("T")[0];
   // console.log("ini date di updatea", formattedDate);
 
+  const handleChangePass = () => {
+    navigate("/change-password");
+  };
+
   const changePage = () => {
     setPage(!page);
   };
@@ -90,7 +94,10 @@ export default function UpdateProfile() {
   return (
     <div>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+        <label
+          htmlFor="tabs"
+          className="sr-only"
+        >
           Select a tab
         </label>
         <select
@@ -175,6 +182,14 @@ export default function UpdateProfile() {
                       Allowed file extensions: .JPG, .JPEG, .PNG.
                     </h1>
                   </div>
+                  <div>
+                    <button
+                      className="rounded-lg w-3/4 h-12 bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-900"
+                      onClick={handleChangePass}
+                    >
+                      Change Password
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="ml-3">
@@ -253,8 +268,17 @@ export default function UpdateProfile() {
                   className="rounded-lg my-3"
                 />
                 <label for="gender">Gender:</label>
-                <select id="gender" name="gender" className="rounded-lg my-3">
-                  <option value="" disabled selected hidden>
+                <select
+                  id="gender"
+                  name="gender"
+                  className="rounded-lg my-3"
+                >
+                  <option
+                    value=""
+                    disabled
+                    selected
+                    hidden
+                  >
                     Choose your gender
                   </option>
                   <option value="Pria">Pria</option>
@@ -268,7 +292,10 @@ export default function UpdateProfile() {
                   placeholder="birthdate"
                   className="rounded-lg my-3"
                 />
-                <label for="profile_picture" className="mb-3">
+                <label
+                  for="profile_picture"
+                  className="mb-3"
+                >
                   Profile Picture:
                 </label>
                 <input
