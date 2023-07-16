@@ -50,7 +50,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
-app.use(authorize);
+app.use("/api", authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);
@@ -68,24 +68,24 @@ app.get("/api/greetings", (req, res, next) => {
   });
 });
 
-app.use("/auth", authRouter);
-app.use("/admin", adminRouter);
-app.use(changePassRouter);
-app.use("/products", productRouter);
-app.use("/cart", cartRouter);
-app.use("/category", categoryRouter);
-app.use("/profile", profillingRouter);
-app.use("/branch", branchRouter);
-app.use(rajaOngkirRouter);
-app.use("/vouchers", voucherRouter);
-app.use("/stocks", stockRouter);
-app.use("/transaction-header", transactionHeaderRouter);
-app.use("/transaction", transactionRouter);
-app.use("/user-vouchers", userVoucherRouter);
-app.use("/transactions", transactionRouter);
-app.use("/stock-history", stockHistoryRouter);
-app.use("/sales-report", SalesReportRouter);
-app.use(transactionDetailsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api", changePassRouter);
+app.use("/api/products", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/profile", profillingRouter);
+app.use("/api/branch", branchRouter);
+app.use("/api", rajaOngkirRouter);
+app.use("/api/vouchers", voucherRouter);
+app.use("/api/stocks", stockRouter);
+app.use("/api/transaction-header", transactionHeaderRouter);
+app.use("/api/transaction", transactionRouter);
+app.use("/api/user-vouchers", userVoucherRouter);
+app.use("/api/transactions", transactionRouter);
+app.use("/api/stock-history", stockHistoryRouter);
+app.use("/api/sales-report", SalesReportRouter);
+app.use("/api", transactionDetailsRouter);
 
 // ===========================
 

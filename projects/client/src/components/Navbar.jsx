@@ -61,10 +61,10 @@ export default function Navbar() {
   }, [navigate, user.id]);
 
   const navigation = [
-    { name: "Home", href: "http://localhost:3000/", current: false },
+    { name: "Home", href: "/", current: false },
     {
       name: "Products",
-      href: "http://localhost:3000/products",
+      href: "/products",
       current: false,
     },
   ];
@@ -220,44 +220,44 @@ export default function Navbar() {
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href="/user/settings"
+                                <Link
+                                  to="/user/settings"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   Your Profile
-                                </a>
+                                </Link>
                               )}
                             </Menu.Item>
                             {user.role !== "user" && (
                               <Menu.Item>
                                 {({ active }) => (
-                                  <a
-                                    href="/dashboard"
+                                  <Link
+                                    to="/dashboard"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700 text-center"
                                     )}
                                   >
                                     Dashboard
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             )}
 
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href="/order_list"
+                                <Link
+                                  to="/order_list"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   History
-                                </a>
+                                </Link>
                               )}
                             </Menu.Item>
                             {!(
@@ -359,7 +359,7 @@ export default function Navbar() {
                     <img
                       className="h-10 w-10 rounded-full"
                       src={
-                        `http://localhost:2000/static/avatar/${user.profile_picture}` ||
+                        `${process.env.REACT_APP_AVATAR_BASE_URL}/${user.profile_picture}` ||
                         DefaultAvatar
                       }
                       onError={handleErrorImg}
@@ -399,16 +399,16 @@ export default function Navbar() {
                 </div>
                 <div className="mt-3 space-y-1 px-2">
                   <Disclosure.Button
-                    as="a"
-                    href="/user/settings"
+                    as={Link}
+                    to="/user/settings"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     Your Profile
                   </Disclosure.Button>
 
                   <Disclosure.Button
-                    as="a"
-                    href="/order_list"
+                    as={Link}
+                    to="/order_list"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     History
@@ -436,16 +436,16 @@ export default function Navbar() {
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="mt-3 space-y-1 px-2 ">
                   <Disclosure.Button
-                    as="a"
-                    href="/login"
+                    as={Link}
+                    to="/login"
                     className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white hover:text-red-800"
                   >
                     Login
                   </Disclosure.Button>
 
                   <Disclosure.Button
-                    as="a"
-                    href="/register"
+                    as={Link}
+                    to="/register"
                     className="block items-center rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white hover:text-red-800"
                   >
                     Register
