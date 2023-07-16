@@ -16,20 +16,17 @@ const Login = () => {
 
   const OnLogin = async (e) => {
     e.preventDefault();
-    console.log("onLogin");
     const data = {
       email: document.getElementById("email").value,
       password: document.getElementById("password").value,
     };
 
-    console.log("data login", data);
     try {
       const result = await api.post("/auth/login", data);
 
       localStorage.setItem("token", result.data.result.token.token);
 
       //akan menerima token saat login
-      console.log("resultData", result.data.result.user.name);
       const user = result.data.result.user;
       dispatch(login(user));
 
@@ -48,8 +45,7 @@ const Login = () => {
         }
       }, 1500);
     } catch (error) {
-      console.log("error", error);
-
+      // console.log("error", error);
       errorAlertWithMessage(error.response.data.message);
     }
   };

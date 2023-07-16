@@ -60,10 +60,10 @@ export default function Navbar() {
   }, [navigate, user.id]);
 
   const navigation = [
-    { name: "Home", href: "http://localhost:3000/", current: false },
+    { name: "Home", href: "/", current: false },
     {
       name: "Products",
-      href: "http://localhost:3000/products",
+      href: "/products",
       current: false,
     },
   ];

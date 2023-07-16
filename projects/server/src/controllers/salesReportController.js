@@ -61,7 +61,7 @@ async function fetchSalesReport(req, res) {
       JOIN transaction_details TD ON TH.id = TD.transaction_header_id
       JOIN branches B ON TH.branch_id = B.id
       JOIN users U ON TH.user_id = U.id
-      WHERE TH.status = 'Dikirim' 
+      WHERE TH.status = 'Pesanan Dikonfirmasi' 
       ${clauseFilterByDate}
       ${clauseBranchId}
       

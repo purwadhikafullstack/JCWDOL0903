@@ -5,7 +5,6 @@ import { useFormikValidation } from "../helper/formik";
 export default function FormRegister({ onRegister }) {
   const formik = useFormikValidation(onRegister);
 
-  // console.log("formik", formik);
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

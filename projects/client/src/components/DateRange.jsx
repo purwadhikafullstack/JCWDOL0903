@@ -6,7 +6,6 @@ const { RangePicker } = DatePicker;
 
 const DateRange = ({ dates, setDates}) => {
 
-  console.log("inidates",dates);
   return (
     <div>
       <RangePicker

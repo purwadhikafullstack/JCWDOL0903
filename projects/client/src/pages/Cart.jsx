@@ -17,10 +17,8 @@ export default function Cart() {
   const branchesGlobal = useSelector((state) => state.branch);
   const dispatch = useDispatch();
   
-console.log("ini cart", cart)
   const generateCart = async () => {
     const cartResponse = await api.get("/cart/"+user.id+`/${branchesGlobal.selectedBranch.id}`);
-    console.log("inicarfrontend", cartResponse.data.cart);
     setCart(cartResponse.data.cart);
     dispatch(fetchUserCart(user.id));
   };
