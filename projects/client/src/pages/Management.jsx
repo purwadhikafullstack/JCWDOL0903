@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  fetchCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-} from "../reducers/categorySlice";
+
 import BranchFormControl from "../components/BranchFormControl";
 
 import ModalForm from "../components/ModalForm";
@@ -27,10 +22,10 @@ const Management = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchAllAdminBranch());
     if (user.role === "admin") navigate("/dashboard");
+    dispatch(fetchAllAdminBranch());
     //
-  }, []);
+  }, [user.role]);
 
   console.log("adminini semua branches", branchAdmin);
   function handleAddAdmin(e) {

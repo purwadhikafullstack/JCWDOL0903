@@ -16,7 +16,10 @@ export default function DashboardSidebar({ navigation = [], children }) {
   return (
     <>
       <div className="container-screen">
-        <Transition.Root show={sidebarOpen} as={Fragment}>
+        <Transition.Root
+          show={sidebarOpen}
+          as={Fragment}
+        >
           <Dialog
             as="div"
             className="relative z-40 md:hidden"
@@ -160,7 +163,10 @@ export default function DashboardSidebar({ navigation = [], children }) {
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <Bars3Icon
+                className="h-6 w-6"
+                aria-hidden="true"
+              />
             </button>
           </div>
           <main className="flex-1">

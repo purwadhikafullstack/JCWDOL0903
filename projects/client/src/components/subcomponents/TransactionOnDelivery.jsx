@@ -29,7 +29,7 @@ const getTransHead = async() => {
               "Payment"
             ]}
             tableBody={
-              <TransactionTableBody transaction={transHead} status={"Dikirim"} button1={"Deliver"} button2={"Cancle"}
+              <TransactionTableBody transaction={transHead} status={"Dikirim"} 
               />
             }
           />

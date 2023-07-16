@@ -66,12 +66,9 @@ export default function Navbar() {
       href: "http://localhost:3000/products",
       current: false,
     },
-    { name: "Categories", href: "https://www.youtube.com/", current: false },
-    { name: "Calendar", href: "#", current: false },
   ];
 
   function handleAddToCart() {
-    console.log("test");
     if (!user.id) return navigate("/login");
   }
 
@@ -198,7 +195,7 @@ export default function Navbar() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src={user.profile_picture || DefaultAvatar}
+                                src={`http://localhost:2000/static/avatar/${user.profile_picture }` || DefaultAvatar}
                                 onError={handleErrorImg}
                                 alt=""
                               />
@@ -222,7 +219,7 @@ export default function Navbar() {
                                   href="/user/settings"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
+                                    "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   Your Profile
@@ -236,7 +233,7 @@ export default function Navbar() {
                                     href="/dashboard"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 text-center"
                                     )}
                                   >
                                     Dashboard
@@ -251,7 +248,7 @@ export default function Navbar() {
                                   href="/order_list"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
+                                    "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   History
@@ -269,7 +266,7 @@ export default function Navbar() {
                                     to="/referral-code"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
+                                      "block px-4 py-2 text-sm text-gray-700 text-center"
                                     )}
                                   >
                                     Referral Code
@@ -350,69 +347,76 @@ export default function Navbar() {
                 >
                   Dashboard
                 </Disclosure.Button>
-                <Disclosure.Button
-                  as="a"
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Team
-                </Disclosure.Button>
-                <Disclosure.Button
-                  as="a"
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Projects
-                </Disclosure.Button>
-                <Disclosure.Button
-                  as="a"
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Calendar
-                </Disclosure.Button>
+          
+
               </div>
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={user.profile_picture || DefaultAvatar}
+                      src={`http://localhost:2000/static/avatar/${user.profile_picture }` || DefaultAvatar}
                       onError={handleErrorImg}
                       alt=""
                     />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-white">
-                      Tom Cook
+                      {user.name}
                     </div>
                     <div className="text-sm font-medium text-gray-400">
-                      tom@example.com
+                      {user.email}
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                  <div className="relative">
+                  {cart.userCart > 0 ? (
+                    <div className="absolute top-0 left-20 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800">
+                      {" "}
+                      {cart.userCart}{" "}
+                    </div>
+                  ) : null}
+                  <Link to="/cart">
+                    <button
+                      type="button"
+                      className=" ml-20 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
+                      disabled={!user.id}
+                      onClick={handleAddToCart}
+                    >
+                      <span className="sr-only">View notifications</span>
+                      <ShoppingCartIcon
+                        className="h-8 w-8 transition-colors duration-200"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </Link>
+                  </div>
+                  
                 </div>
                 <div className="mt-3 space-y-1 px-2">
                   <Disclosure.Button
                     as="a"
-                    href="#"
+                    href="/user/settings"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     Your Profile
                   </Disclosure.Button>
+
                   <Disclosure.Button
                     as="a"
-                    href="user/settings"
+                    href="/order_list"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
-                    Settings
+                    History
                   </Disclosure.Button>
+
+                  <Disclosure.Button
+                    as={Link}
+                    to="/referral-code"
+                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                  >
+                    Referral Code
+                  </Disclosure.Button>
+
                   <Disclosure.Button
                     onClick={handleLogout}
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"

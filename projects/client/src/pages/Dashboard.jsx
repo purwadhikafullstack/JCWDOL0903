@@ -8,15 +8,13 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import DashboardSidebar from "../components/DashboardSidebar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { fetchTransactionHeaderCategory } from "../reducers/transactionHeaderSlice";
-import TableBranchAdmin from "../components/TableBranchAdmin";
-import AddDataHeader from "../components/AddDataHeader";
+
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard", icon: HomeIcon },
+
   {
     name: "Management",
     path: "/dashboard/management-setting",
@@ -52,14 +50,19 @@ const navigation = [
 export default function Dashboard({ element }) {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // if (!user.id || user.role === "user") navigate("/");
-  }, [navigate, user.id, user.role]);
+  const filteredNavigation =
+    user.role === "admin"
+      ? navigation.filter((item) => item.name !== "Management")
+      : navigation;
 
   return (
     <div>
-      <DashboardSidebar navigation={navigation} children={element} />
+      <DashboardSidebar
+        navigation={filteredNavigation}
+        children={element}
+      />
     </div>
   );
 }

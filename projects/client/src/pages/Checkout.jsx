@@ -24,14 +24,18 @@ export default function Checkout() {
   const [discountVoucher, setDiscountVoucher] = useState(0)
   const user = useSelector((state) => state.user)
   const voucherGlobal = useSelector((state) => state.voucher)
+  const branchGlobal = useSelector((state) => state.branch);
   const dispatch = useDispatch();
 
   const generateCart = async () => {
-    const cart = await api.get("/cart/" + user.id)
+    const cart = await api.get("/cart/"+user.id+`/${branchGlobal.selectedBranch.id}`)
+    console.log("ini cart", cart.data.cart)
     setCart(cart.data.cart)
     dispatch(fetchUserCart(user.id)); 
   }
-  // console.log("ini cart", cart)
+
+  
+  
   // console.log("ini branch id", cart[0].Product.Stocks[0].Branch.id)
 
   const getUserMainAddress = async () => {
@@ -225,7 +229,7 @@ export default function Checkout() {
     setDiscountVoucher(totalDiscount);
   };
   
-  console.log("ini cart",)
+  console.log("ini cart", cart)
   return (
     <div className="bg-white" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">

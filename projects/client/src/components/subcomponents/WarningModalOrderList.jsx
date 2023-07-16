@@ -5,12 +5,12 @@ import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom'
 
-const WarningModalOrderList = ({headersId, getUsersCart}) => {
+const WarningModalOrderList = ({headersId, getUsersCart, transaction}) => {
     const [showModal, setShowModal] = useState(false)
 
     const deleteItemTotally = async() =>{
         try{
-            const result = await api.delete("/transaction-header/user_payment/delete", {data:{id:headersId}} )
+            const result = await api.delete("/transaction-header/user_payment/delete", {data:{id:headersId, cart:transaction}} )
             await Swal.fire({
                 icon: "success",
                 title: result.data.message,
@@ -38,7 +38,7 @@ const WarningModalOrderList = ({headersId, getUsersCart}) => {
     <Fragment>
         <div className='flex flex-col justify-center items-center'>
             <button onClick={()=> setShowModal(true)} className='rounded-lg outline outline-2 outline-red-500 m-3 p-2 text-red-500 px-5 text-center hover:bg-slate-200 transition-all duration-300'>
-                Cancle Order
+                Cancel Order
             </button>
         </div>
         <Modal isVisible={showModal} onClose={() => setShowModal(false)}> 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
-import Filter from "../components/Filter";
+import FilterProductList from "../components/FilterProductList";
 import Pagination from "../components/Pagination";
 import ProductCard from "../components/ProductCard";
 import Dropdown from "../components/Dropdown";
@@ -100,7 +100,7 @@ function ProductList() {
 
   return (
     <div className="container-screen">
-      <Filter>
+      <FilterProductList>
         <Dropdown
           label="Sort"
           options={sortOptions}
@@ -115,7 +115,7 @@ function ProductList() {
           onChange={(c) => setCategoryFilter(c)}
           className="font-medium"
         />
-      </Filter>
+      </FilterProductList>
       <ProductCard
         products={productsGlobal.products}
         isLoading={productsGlobal.isLoading}

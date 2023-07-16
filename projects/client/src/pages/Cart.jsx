@@ -6,31 +6,33 @@ import pattern from "../assets/pattern.jpg";
 import { numToIDRCurrency } from "../helper/currency";
 import WarningModal from "../components/subcomponents/WarningModal";
 import { fetchUserCart } from "../reducers/cartSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NoAddress from "../assets/dontHaveItem.png"
 
 
 export default function Cart() {
+  const navigate = useNavigate()
   const [cart, setCart] = useState([]);
   const user = useSelector((state) => state.user);
+  const branchesGlobal = useSelector((state) => state.branch);
   const dispatch = useDispatch();
   
 console.log("ini cart", cart)
   const generateCart = async () => {
-    const cartResponse = await api.get("/cart/" + user.id);
-    console.log("inicarfrontend", cartResponse);
+    const cartResponse = await api.get("/cart/"+user.id+`/${branchesGlobal.selectedBranch.id}`);
+    console.log("inicarfrontend", cartResponse.data.cart);
     setCart(cartResponse.data.cart);
     dispatch(fetchUserCart(user.id));
   };
 
   const addOne = async (productId, userId) => {
-    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 1 });
+    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 1, branch_id:cart[0].branch_id });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
 
   const addTwo = async (productId, userId) => {
-    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 2 });
+    await api.post("/cart/", { product_id: productId, user_id: userId, qty: 2, branch_id:cart[0].branch_id });
     generateCart();
     dispatch(fetchUserCart(user.id));
   };
@@ -50,8 +52,9 @@ console.log("ini cart", cart)
   };
 
   useEffect(() => {
+    if (!user.id) navigate("/");
     generateCart();
-  }, []);
+  }, [navigate, user.id, user.role]);
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -72,7 +75,7 @@ console.log("ini cart", cart)
           alt="No Address"
         />
         
-        Your Don't Have Any <br/>Item in Your Cart.
+        You Don't Have Any <br/>Items in Your Cart.
       </div>
     </section>
   ):(
@@ -163,7 +166,7 @@ console.log("ini cart", cart)
                     <button
                       className="mx-3"
                       type="button"
-                      onClick={() => deleteTwo(value.product_id)}
+                      onClick={() => deleteOne(value.product_id)}
                     >
                       <MinusCircleIcon className="h-6 w-6 text-red-500 hover:text-red-700" />
                     </button>
@@ -184,7 +187,7 @@ console.log("ini cart", cart)
                              addTwo(value.product_id, value.user_id)
                            }
                          >
-                           <PlusCircleIcon className="h-6 w-6 text-blue-500 hover:text-green-600" />
+                           <PlusCircleIcon className="h-6 w-6 text-green-500 hover:text-green-600" />
                          </button>
                        </div>
                       ):(

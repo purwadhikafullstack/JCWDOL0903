@@ -10,6 +10,8 @@ const rajaOngkirControllers = require("./rajaOngkirController");
 const userVoucherController = require("./userVoucherController");
 const transactionController = require("./transactionController");
 const transactionDetailsController = require("./transactionDetails")
+const stockHistoryController = require("./stockHistoryController");
+const salesReportController = require("./salesReportController");
 
 module.exports = {
   productController,
@@ -23,5 +25,7 @@ module.exports = {
   stockController,
   userVoucherController,
   transactionController,
-  transactionDetailsController
+  transactionDetailsController,
+  stockHistoryController,
+  salesReportController,
 };
