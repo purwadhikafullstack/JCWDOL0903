@@ -4,6 +4,7 @@ import Dropdown from "./Dropdown";
 import { useSelector } from "react-redux";
 
 export default function FilterProduct({
+  searchProductName,
   onSearch,
   sortOptions,
   sortFilter,
@@ -19,7 +20,7 @@ export default function FilterProduct({
 
   return (
     <div className="flex items-center justify-between flex-wrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
-      <SearchBar onSubmit={onSearch} />
+      <SearchBar onSubmit={onSearch} defaultValue={searchProductName} />
       <div className="flex gap-2 items-center flex-wrap">
         <Dropdown
           label="Sort"
