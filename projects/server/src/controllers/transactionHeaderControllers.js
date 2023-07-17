@@ -7,14 +7,7 @@ const status = require("../constant/status");
 module.exports = {
   fetchTransactionHeader: async (req, res) => {
     try {
-      // console.log("ini ini", req.params);
-      // ambil id user
-      // const idUser = req.params.id;
-      // mengambil id untuk fitur sorting branchId
       const SortbranchId = parseInt(req.query.branch_Id);
-
-      // console.log("ini params", idUser);
-      console.log(SortbranchId);
 
       let where = SortbranchId ? `WHERE TH.branch_id = ${SortbranchId} ` : "";
       // 0 1 2 3 4 5 6
@@ -30,6 +23,7 @@ module.exports = {
           GROUP BY C.name`,
         { type: Sequelize.QueryTypes.SELECT }
       );
+
       return res.status(200).send({ data: data });
     } catch (error) {
       console.log("err", error);
@@ -56,8 +50,6 @@ module.exports = {
           where: { id: req.params.id },
         }
       );
-      // console.log("user_", user_payment)
-      console.log("ini status", status);
 
       res.status(200).json({
         message: "transhead updated successfully",
