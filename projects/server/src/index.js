@@ -49,27 +49,16 @@ app.use(
 app.use(cors());
 app.use(express.json());
 
-const clientPath = "../../client/build";
-app.use(express.static(join(__dirname, clientPath)));
+
 
 // // Serve the HTML page
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, clientPath, "index.html"));
-});
 
-db.connect((err) => {
-  if (err) return console.log(err);
-  console.log("Success connect to mysql");
-});
-
-db.connect((err) => {
-  if (err) return console.log(err);
-  console.log("Success connect to mysql");
-});
 // ini kak yang kita pindahin 
 
 app.use("/static", express.static(join(__dirname, "..", "public")));
-app.use("/api", authorize);
+const clientPath = "../../client/build";
+app.use(express.static(join(__dirname, clientPath)));
+// app.use("/api", authorize);
 
 //#region API ROUTES
 // app.use("/auth", authRouters);
@@ -86,6 +75,7 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+
 
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
@@ -131,6 +121,19 @@ app.use((err, req, res, next) => {
 
 // #region CLIENT
 
+// app.get("*", (req, res) => {
+//   res.sendFile(join(__dirname, clientPath, "index.html"));
+// });
+
+// db.connect((err) => {
+//   if (err) return console.log(err);
+//   console.log("Success connect to mysql");
+// });
+
+// db.connect((err) => {
+//   if (err) return console.log(err);
+//   console.log("Success connect to mysql");
+// });
 
 // #endregion
 
