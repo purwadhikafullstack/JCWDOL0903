@@ -33,17 +33,21 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const productId = useParams().id;
-  const promo = document.getElementById("b1g1")
+  const promo = document.getElementById("b1g1");
 
   const addOne = async (productId, userId, branchId) => {
     const response = await api.post("/cart/", {
       product_id: productId,
       user_id: userId,
       branch_id: branchId,
-      qty: product.Vouchers.length > 0 ? product.Vouchers[0].voucher_type === "Buy One Get One" ? quantity * 2 : quantity : quantity
+      qty:
+        product.Vouchers.length > 0
+          ? product.Vouchers[0].voucher_type === "Buy One Get One"
+            ? quantity * 2
+            : quantity
+          : quantity,
     });
 
-    
     dispatch(fetchUserCart(user.id));
 
     await Swal.fire({
@@ -135,8 +139,14 @@ export default function ProductDetail() {
               {product.name}
             </h1>
           </div>
-          <section aria-labelledby="information-heading" className="mt-1">
-            <h2 id="information-heading" className="sr-only">
+          <section
+            aria-labelledby="information-heading"
+            className="mt-1"
+          >
+            <h2
+              id="information-heading"
+              className="sr-only"
+            >
               Product information
             </h2>
             <div className="flex items-center">
@@ -192,7 +202,10 @@ export default function ProductDetail() {
         </div>
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
-            <h2 id="options-heading" className="sr-only">
+            <h2
+              id="options-heading"
+              className="sr-only"
+            >
               Product options
             </h2>
             <form onSubmit={handleSubmit}>
@@ -221,7 +234,13 @@ export default function ProductDetail() {
               </div>
               <div className="mt-10">
                 <button
-                  onClick={() => addOne(product.id, user.id, branchesGlobal.selectedBranch.id)}
+                  onClick={() =>
+                    addOne(
+                      product.id,
+                      user.id,
+                      branchesGlobal.selectedBranch.id
+                    )
+                  }
                   type="submit"
                   className="flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 py-3 px-8 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={!productStock || !user.id}
