@@ -15,7 +15,7 @@ export default function FilterDiscount({
   const [productName, setProductName] = useState("");
 
   return (
-    <div className="flex items-center justify-between flex-wrap sm:flex-nowrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
+    <div className="flex items-center justify-between flex-wrap gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
       <AsyncSelect
         className="w-full md:w-1/2"
         onInputChange={setProductName}
@@ -28,7 +28,7 @@ export default function FilterDiscount({
         isClearable
         placeholder="Search product"
       />
-      <div className="flex gap-2 items-center">
+      <div className="flex flex-wrap gap-2 items-center">
         <Dropdown
           label="Sort"
           options={sortOptions}
