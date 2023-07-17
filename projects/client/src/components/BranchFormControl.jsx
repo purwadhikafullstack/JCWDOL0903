@@ -1,4 +1,12 @@
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAllBranches } from "../reducers/branchSlice";
+import { useEffect } from "react";
 export default function BranchFormControl({ category = {} }) {
+const allBranches = useSelector((state)=> (state.branch.allBranches))
+const dispatch = useDispatch()
+useEffect(() => {
+  dispatch(fetchAllBranches())
+},[])
   return (
     <div>
       <label
@@ -43,11 +51,11 @@ export default function BranchFormControl({ category = {} }) {
             className="block w-full  rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500  sm:text-sm"
           >
             <option>. . .</option>
-            <option>Malang 1</option>
-            <option>Jakarta 1</option>
-            <option>Jakarta 2</option>
-            <option>Tanggerang 1</option>
-            <option>Cilegon 1</option>
+            {allBranches.map((value) => (
+              <option>{value.name}</option>
+            ))}
+            {/* <option>Malang 1</option>
+            <option>JStore</option> */}
           </select>
         </div>
       </div>

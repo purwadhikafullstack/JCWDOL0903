@@ -17,10 +17,8 @@ export default function Cart() {
   const branchesGlobal = useSelector((state) => state.branch);
   const dispatch = useDispatch();
   
-console.log("ini cart", cart)
   const generateCart = async () => {
     const cartResponse = await api.get("/cart/"+user.id+`/${branchesGlobal.selectedBranch.id}`);
-    console.log("inicarfrontend", cartResponse.data.cart);
     setCart(cartResponse.data.cart);
     dispatch(fetchUserCart(user.id));
   };
@@ -199,7 +197,7 @@ console.log("ini cart", cart)
                             addOne(value.product_id, value.user_id)
                           }
                         >
-                          <PlusCircleIcon className="h-6 w-6 text-blue-500 hover:text-green-600" />
+                          <PlusCircleIcon className="h-6 w-6 text-green-500 hover:text-green-600" />
                         </button>
                       </div>
                       ):(

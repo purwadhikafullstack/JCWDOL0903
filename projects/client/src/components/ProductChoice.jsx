@@ -4,7 +4,7 @@ import api from "../api/api";
 import { useSelector } from "react-redux";
 
 export default function ProductChoice({ className }) {
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const branchGlobal = useSelector((state) => state.branch);
 
@@ -18,7 +18,6 @@ export default function ProductChoice({ className }) {
       })
       .catch((err) => setIsLoading(false));
   }, [branchGlobal.selectedBranch.id]);
-
   return (
     <div className={`relative bg-gray-800 ${className}`}>
       <div className="py-24 container-screen">
@@ -42,7 +41,11 @@ export default function ProductChoice({ className }) {
           </p>
         </div>
         <section className="relative mx-auto mt-8 max-w-7xl">
-          <ProductCard products={products} isLoading={isLoading} />
+          <ProductCard
+            products={products}
+            isLoading={isLoading}
+            darkMode={true}
+          />
         </section>
       </div>
     </div>

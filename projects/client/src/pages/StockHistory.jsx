@@ -36,7 +36,7 @@ const StockHistory = () => {
   // console.log("productName", productName);
   // console.log("branFilter", branchFilter);
   // console.log("sortDate", sortDate);
-  console.log("dates", dates);
+  // console.log("dates", dates);
   useEffect(() => {
     if (!(user.role === "superadmin")) return;
     dispatch(fetchAllBranches());
@@ -60,7 +60,7 @@ const StockHistory = () => {
         },
       });
       setStockHistoryData(result.data.df);
-      console.log("result", result.data.df);
+      // console.log("result", result.data.df);
     } catch (error) {
       errorAlertWithMessage(error.result);
     }
@@ -68,12 +68,12 @@ const StockHistory = () => {
 
   useEffect(() => {
     getData();
-    console.log("test");
+    // console.log("test");
   }, [branchFilter.value, sortDate.label, productName, dates]);
 
   function handleSearch(e) {
     e.preventDefault();
-    console.log("e");
+    // console.log("e");
     setProductName(e.target.searchBar?.value);
   }
   return (

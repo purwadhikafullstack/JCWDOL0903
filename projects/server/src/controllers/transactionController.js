@@ -10,7 +10,7 @@ async function updateTransaction(req, res) {
     const transactionHeaderId = parseInt(req.params.id);
     if (!Object.values(ORDER_STATUS).includes(status))
       throw new Error("Status not supported");
-
+    
     if (
       !(req.user.role === "admin" || req.user.role === "superadmin") &&
       !(
@@ -39,7 +39,7 @@ async function updateTransaction(req, res) {
       )
         throw new Error("Order cannot be canceled");
     }
-
+    
     const [isUpdated] = await transHead.update(
       { status },
       {

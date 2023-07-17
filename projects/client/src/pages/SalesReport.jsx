@@ -27,7 +27,7 @@ const SalesReport = () => {
   const branchGlobal = useSelector((state) => state.branch);
   //
   const [currentPage, setCurrentPage] = useState(1);
-  console.log("curret", currentPage);
+  // console.log("curret", currentPage);
 
   const [dates, setDates] = useState([]);
   const [productName, setProductName] = useState("");
@@ -41,7 +41,7 @@ const SalesReport = () => {
   const [transTotal, setTransTotal] = useState([]);
   const [totalCustomer, setTotalCustomer] = useState([]);
 
-  console.log("totalcus", totalCustomer);
+  // console.log("totalcus", totalCustomer);
 
   const totalPages = SalesReportData;
 

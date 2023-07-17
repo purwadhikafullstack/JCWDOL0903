@@ -43,7 +43,7 @@ const CategoryTab = ({ className }) => {
           >
             <div className="rounded-full flex flex-col items-center">
               <img
-                className="object-cover object-center h-48 sm:h-64 snap-center"
+                className="object-cover object-center h-48 lg:h-64 snap-center"
                 src={category.src}
                 alt={category.name}
               />

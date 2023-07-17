@@ -27,9 +27,6 @@ export default function ImageDragAndDrop({ className, image, setImage }) {
       onDropRejected,
     });
 
-  // useEffect(() => {
-  //   URL.revokeObjectURL(file.preview);
-  // }, [file]);
 
   function handleRemoveFile() {
     URL.revokeObjectURL(image.preview);

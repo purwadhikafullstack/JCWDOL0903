@@ -36,7 +36,9 @@ export default function Product() {
   const branchGlobal = useSelector((state) => state.branch);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
-  const [productName, setProductName] = useState(searchParams.get("q") || "");
+  const [searchProductName, setSearchProductName] = useState(
+    searchParams.get("q") || ""
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const sortFilterInitial = sortOptions.findIndex(
@@ -99,7 +101,9 @@ export default function Product() {
     userGlobal.branch_id || branchFilter.value
       ? searchParams.set("branchId", userGlobal.branch_id || branchFilter.value)
       : searchParams.delete("branchId");
-    productName ? searchParams.set("q", productName) : searchParams.delete("q");
+    searchProductName
+      ? searchParams.set("q", searchProductName)
+      : searchParams.delete("q");
     sortFilter.value
       ? searchParams.set("sort", sortFilter.value)
       : searchParams.delete("sort");
@@ -115,7 +119,7 @@ export default function Product() {
     userGlobal.role,
     userGlobal.branch_id,
     branchFilter.value,
-    productName,
+    searchProductName,
     sortFilter.value,
     categoryFilter.value,
     currentPage,
@@ -132,7 +136,7 @@ export default function Product() {
 
   function handleSearch(e) {
     e.preventDefault();
-    setProductName(e.target.searchBar?.value);
+    setSearchProductName(e.target.searchBar?.value);
   }
 
   function handleDelete(id) {
@@ -183,6 +187,7 @@ export default function Product() {
             onAddClick={() => setShowAddProductForm(true)}
           />
           <FilterProduct
+            searchProductName={searchProductName}
             onSearch={handleSearch}
             sortOptions={sortOptions}
             sortFilter={sortFilter}

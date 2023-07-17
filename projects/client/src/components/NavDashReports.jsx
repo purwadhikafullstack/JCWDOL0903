@@ -10,10 +10,8 @@ function classNames(...classes) {
 export default function NavDashReports({ navigation = [], children }) {
   const currentPath = window.location.pathname;
   const handleOnclick = (event, path) => {
-    // console.log("navigasi", path);
   };
-  // console.log("nav1", navigation.path);
-  // console.log("nav2", navigation[1].path);
+
   return (
     <div className="min-h-full">
       <Disclosure
