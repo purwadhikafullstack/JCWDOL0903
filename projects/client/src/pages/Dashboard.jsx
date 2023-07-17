@@ -8,6 +8,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import DashboardSidebar from "../components/DashboardSidebar";
+import { useSelector } from "react-redux";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard", icon: HomeIcon },
@@ -46,8 +47,6 @@ const navigation = [
 
 export default function Dashboard({ element }) {
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const filteredNavigation =
     user.role === "admin"

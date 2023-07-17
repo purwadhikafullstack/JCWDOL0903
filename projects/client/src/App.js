@@ -107,7 +107,10 @@ function App() {
             </>
           }
         />
-        <Route path="/*" element={<Error />} />
+        <Route
+          path="/*"
+          element={<Error />}
+        />
         <Route
           path="/products"
           element={
@@ -146,15 +149,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path={"/changePass/:id"}
-          element={
-            <>
-              <ChangePassword />
-              <Footer />
-            </>
-          }
-        />
+
         <Route
           path="/forgot-password"
           element={
@@ -248,15 +243,13 @@ function App() {
             </ProtectedPage>
           }
         />
-        
+
         <Route
           path="/dashboard/reports"
           element={
-            
             <ProtectedPage adminOnly={true}>
-              <Dashboard element={<Reports element={<SalesReport />} />
-          } />
-          </ProtectedPage>
+              <Dashboard element={<Reports element={<SalesReport />} />} />
+            </ProtectedPage>
           }
         />
         <Route
