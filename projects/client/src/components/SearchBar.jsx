@@ -1,4 +1,4 @@
-export default function SearchBar({ className, onSubmit }) {
+export default function SearchBar({ className, onSubmit, defaultValue = "" }) {
   return (
     <div className={`w-full md:w-1/2 ${className}`}>
       <form onSubmit={onSubmit} className="flex items-center">
@@ -27,6 +27,7 @@ export default function SearchBar({ className, onSubmit }) {
             id="simple-search"
             className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
             placeholder="Search"
+            defaultValue={defaultValue}
           />
         </div>
       </form>
