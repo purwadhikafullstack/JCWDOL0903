@@ -98,7 +98,7 @@ module.exports = {
 
       return res.status(200).send({
         data: result,
-        message: "register Succesfully",
+        message: "Register Succesfully",
       });
     } catch (err) {
       console.log(err);
@@ -126,7 +126,6 @@ module.exports = {
 
       const userId = data.dataValues.user_id;
       const tokenId = data.dataValues.id;
-
 
       await user.update(
         {
