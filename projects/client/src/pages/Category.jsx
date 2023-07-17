@@ -138,7 +138,7 @@ export default function Category() {
           addButtonText="Add category"
           onAddClick={() => setOpenAddModal(true)}
         />
-        <div className="flex items-center justify-between gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
           <SearchBar
             onSubmit={handleSubmit}
             defaultValue={searchCategoryName}

@@ -6,10 +6,16 @@ import { getProductDiscountAmount } from "../helper/voucher";
 import BrokenImg from "../assets/broken-img.png";
 import ProductVoucherBadge from "./ProductVoucherBadge";
 import ProductListSkeleton from "./ProductListSkeleton";
+import ProductNotFoundDark from "./ProductNotFoundDark";
 
-export default function ProductCard({ products = [], isLoading = false }) {
+export default function ProductCard({
+  products = [],
+  isLoading = false,
+  darkMode = false,
+}) {
   if (isLoading) return <ProductListSkeleton />;
-  if (!products.length && !isLoading) return <ProductNotFound />;
+  if (!products.length && !isLoading)
+    return darkMode ? <ProductNotFoundDark /> : <ProductNotFound />;
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
