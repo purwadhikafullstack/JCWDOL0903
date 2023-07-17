@@ -23,7 +23,7 @@ export const fetchTransactionHeaderCategory =
     try {
       // console.log("id", id);
       // alert(branchId);
-      console.log(branchId);
+      // console.log(branchId);
       let response = await api.get(`transaction-header`, {
         params: {
           branch_Id: branchId,

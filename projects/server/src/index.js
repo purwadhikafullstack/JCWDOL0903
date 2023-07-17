@@ -49,6 +49,25 @@ app.use(
 app.use(cors());
 app.use(express.json());
 
+const clientPath = "../../client/build";
+app.use(express.static(join(__dirname, clientPath)));
+
+// // Serve the HTML page
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, clientPath, "index.html"));
+});
+
+db.connect((err) => {
+  if (err) return console.log(err);
+  console.log("Success connect to mysql");
+});
+
+db.connect((err) => {
+  if (err) return console.log(err);
+  console.log("Success connect to mysql");
+});
+// ini kak yang kita pindahin 
+
 app.use("/static", express.static(join(__dirname, "..", "public")));
 app.use("/api", authorize);
 
@@ -108,28 +127,12 @@ app.use((err, req, res, next) => {
   }
 });
 
-//#endregion
+// #endregion
 
-//#region CLIENT
-// const clientPath = "../../client/build";
-// app.use(express.static(join(__dirname, clientPath)));
+// #region CLIENT
 
-// // Serve the HTML page
-// app.get("*", (req, res) => {
-//   res.sendFile(join(__dirname, clientPath, "index.html"));
-// });
 
-// db.connect((err) => {
-//   if (err) return console.log(err);
-//   console.log("Success connect to mysql");
-// });
-
-// db.connect((err) => {
-//   if (err) return console.log(err);
-//   console.log("Success connect to mysql");
-// });
-
-//#endregion
+// #endregion
 
 app.listen(PORT, (err) => {
   if (err) {
