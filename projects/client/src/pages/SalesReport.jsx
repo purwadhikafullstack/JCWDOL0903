@@ -47,10 +47,6 @@ const SalesReport = () => {
 
   const [countItem, setCountItem] = useState([]);
 
-  // console.log("sales", SalesReportData);
-
-  // console.log("countItem", countItem);
-
   useEffect(() => {
     if (!(user.role === "superadmin")) return;
     dispatch(fetchAllBranches());

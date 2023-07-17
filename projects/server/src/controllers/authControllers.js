@@ -23,7 +23,7 @@ module.exports = {
         birthdate,
       } = req.body;
 
-      // console.log("gender", gender);
+  
       if (
         !name ||
         !username ||
@@ -93,7 +93,7 @@ module.exports = {
         html: `<p> Click <a href="${process.env.WHITELISTED_DOMAIN}/verification/${generateToken}">here </a> to verify your account </p>`,
       };
 
-      console.log("email nih", email);
+
       await nodemailer.sendMail(mail);
 
       return res.status(200).send({
@@ -101,7 +101,7 @@ module.exports = {
         message: "Register Succesfully",
       });
     } catch (err) {
-      console.log(err);
+
       res.status(400).send(err);
     }
   },
@@ -150,7 +150,6 @@ module.exports = {
       );
       return res.status(200).send({ message: "Verified" });
     } catch (error) {
-      console.log(error.message);
       return res.status(400).json({ error: error.message });
     }
   },
@@ -302,7 +301,7 @@ module.exports = {
         status: "FORGOT-PASSWORD",
       });
 
-      console.log("ini toke after reset pass", token);
+ 
 
       let mail = {
         from: `Admin <${process.env.EMAIL}>`,
@@ -311,7 +310,7 @@ module.exports = {
         html: `<p> Click <a href="${process.env.WHITELISTED_DOMAIN}/reset-password/${token.dataValues.token}">here </a> to verify your account </p>`,
       };
       await nodemailer.sendMail(mail);
-      console.log("ini token", token);
+  
 
       return res.send({ message: "Please check your email" });
     } catch (error) {
@@ -370,8 +369,8 @@ module.exports = {
       return res.send({ message: "updated password" });
       // let token = req.headers.authorization;
     } catch (error) {
-      // return res.status(400).json({ error: error.message });
-      console.log(error);
+      return res.status(400).json({ error: error.message });
+  
     }
   },
   getByTokenForgotPass: async (req, res) => {
@@ -392,8 +391,6 @@ module.exports = {
       if (!dataToken) {
         throw new Error("Token has expired");
       }
-
-      console.log("dataToke:", dataToken.dataValues);
 
       const user_id = dataToken.dataValues.user_id;
       const tokenId = dataToken.dataValues.id;

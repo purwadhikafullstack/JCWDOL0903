@@ -11,10 +11,6 @@ async function fetchStockHistory(req, res) {
     const filterByproduct = req.query.searchProduct;
     const filterByDate = req.query.date;
 
-    console.log("branchid", branch_id);
-    console.log("sortBydate", sortByDate);
-    console.log("product", filterByproduct);
-    console.log("filterBydate", filterByDate);
 
     let startDate = filterByDate ? filterByDate[0] : null;
     let endDate = filterByDate ? filterByDate[1] : null;
@@ -24,17 +20,18 @@ async function fetchStockHistory(req, res) {
       endDate += " 23:59:59";
     }
 
-    console.log("start", startDate);
-    console.log("end", endDate);
 
     let clauseFilterByDate =
       startDate && endDate
-        ? `WHERE SH.createdAt BETWEEN '${startDate}' AND '${endDate}'`
+        ? `where SH.createdAt BETWEEN '${startDate}' AND '${endDate}'`
         : "";
+        
+       
 
-    let clauseFilterByProduct = filterByproduct
-      ? `WHERE (P.name LIKE '%${filterByproduct}%' OR TD.product_name LIKE '%${filterByproduct}%')`
-      : "";
+        let clauseFilterByProduct = filterByproduct
+        ? clauseFilterByDate ? `AND p.name LIKE '%${filterByproduct}%'`: `WHERE p.name LIKE '%${filterByproduct}%'`
+        : "";
+      
 
     let clauseBranchId = branch_id
       ? `WHERE (S.branch_id = ${branch_id} OR TH.branch_id = ${branch_id})`
@@ -47,36 +44,28 @@ async function fetchStockHistory(req, res) {
         ? "ORDER BY SH.createdAt DESC"
         : "";
 
-    /**
-     * Question:
-     * 1. kenapa filter dari tanggal awal di database hingga 2023-12-05 tidak keluar tgl 5 ya
-     */
+  
     const data = await sequelize.query(
-      `SELECT SH.id, SH.qty, SH.status, SH.createdAt,
-      IFNULL(S.stock, '-') stock_saat_ini,
-      IFNULL(P.name, '-') PRODUCT_IN,
-      IFNULL(B.name, '-') BRANCH_IN,
-      IFNULL(B_TRANS.name, '-') BRANCH_OUT,
-      IFNULL(TD.product_name, '-') PRODUCT_OUT
-      FROM stock_histories SH
-      LEFT JOIN transaction_headers TH ON SH.transaction_header_id = TH.id
-      LEFT JOIN transaction_details TD ON TH.id = TD.transaction_header_id
-      LEFT JOIN branches B_TRANS ON TH.branch_id = B_TRANS.id
-      LEFT JOIN stocks S ON SH.stock_id = S.id
-      LEFT JOIN products P ON S.product_id = P.id
-      LEFT JOIN branches B ON S.branch_id = B.id
+      `select sh.id, sh.status, sh.qty, sh.createdAt date,
+      ifnull(th.branch_id, s.branch_id) Branch_id,
+      b.name branch_name,
+      p.name product_name
+      from stock_histories sh
+      LEFT JOIN transaction_headers th on sh.transaction_header_id = th.id
+      LEFT JOIN stocks s on sh.stock_id = s.id
+      LEFT JOIN products p on s.product_id = p.id
+      LEFT JOIN branches b on s.branch_id = b.id
       ${clauseFilterByDate} 
       ${clauseBranchId}
       ${clauseFilterByProduct}
-
       ${ClauseSortByDate};`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    // console.log("ini datanya", data);
+
     return res.status(200).send({ df: data });
   } catch (error) {
-    console.log("error", error);
+    return res.status(400).send(error)
   }
 }
 

@@ -111,16 +111,7 @@ const StockHistory = () => {
       </div>
       <Table
         className="mb-4"
-        headCols={[
-          "Product In",
-          "Product Out",
-          "Status",
-          "Quantity",
-          "Stock",
-          "Branch In",
-          "Branch Out",
-          "Date",
-        ]}
+        headCols={["Product Name", "Status", "Quantity", "Branch Name", "Date"]}
         tableBody={<StockHistoryTableBody products={stockHistoryData} />}
       />
     </div>

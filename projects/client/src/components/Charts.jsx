@@ -2,10 +2,8 @@ import Plot from "react-plotly.js";
 import { numToIDRCurrency } from "../helper/currency";
 
 export default function Charts({ data }) {
-
   const dataRender = () => {
     return data.transactionHeaderCategory.map((data2) => {
-      // console.log("data2", data2);
       return {
         x: [data2.category_name],
         y: [data2.total_transaction_amount],
@@ -21,7 +19,7 @@ export default function Charts({ data }) {
     barmode: "group",
     title: "Transaction vs Category",
     yaxis: {
-      tickformat: ",.0f", 
+      tickformat: ",.0f",
       title: "Rp",
     },
   };
@@ -33,6 +31,5 @@ export default function Charts({ data }) {
         layout={layout}
       />
     </div>
-
   );
 }
