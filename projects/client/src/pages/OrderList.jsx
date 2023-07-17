@@ -26,8 +26,8 @@ const sortOptions = [
 
 const sortBy = [
   { value: "", label: "None" },
-  { value: "invoice_asc", label: "Invoice (newer - older)" },
-  { value: "invoice_desc", label: "Invoice (older - newer)" },
+  { value: "invoice_asc", label: "Invoice (older - newer)" },
+  { value: "invoice_desc", label: "Invoice (newer - older)" },
   { value: "date_asc", label: "Date (older - newer)" },
   { value: "date_desc", label: "Date (newer - older)" },
 ];

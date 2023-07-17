@@ -35,7 +35,7 @@ const getTransHead = async() => {
       deleteConfirmationAlert(() =>
         api
           .patch(`/transactions/${transactionId}`, {
-            status: "Dibatalkan",
+            status: "Menunggu Pembayaran",
           })
           .then((res) => {
             if (res.status === 200) successAlert("Order Canceled!");

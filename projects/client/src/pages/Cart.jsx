@@ -197,7 +197,7 @@ export default function Cart() {
                             addOne(value.product_id, value.user_id)
                           }
                         >
-                          <PlusCircleIcon className="h-6 w-6 text-blue-500 hover:text-green-600" />
+                          <PlusCircleIcon className="h-6 w-6 text-green-500 hover:text-green-600" />
                         </button>
                       </div>
                       ):(
