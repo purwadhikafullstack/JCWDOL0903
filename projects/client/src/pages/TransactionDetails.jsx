@@ -23,7 +23,7 @@ export default function TransactionDetails() {
   const getTransDet = async (transHeadId) => {
     try {
       const result = await api.get(`/transdet/${transHeadId}`);
-      console.log("Result:", result.data.data.Transaction_Details);
+      // console.log("Result:", result.data.data.Transaction_Details);
       setTransDet(result.data.data.Transaction_Details);
       setMessage(result.data.data.Transaction_Details[0].Transaction_Header.invoice);
 
@@ -34,7 +34,7 @@ export default function TransactionDetails() {
       );
       setTotalAmount(totalPrice);
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
     }
   };
 

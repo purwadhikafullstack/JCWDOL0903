@@ -34,7 +34,9 @@ export default function Category() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedCategory, setEditedCategory] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [categoryName, setCategoryName] = useState(searchParams.get("q") || "");
+  const [searchCategoryName, setSearchCategoryName] = useState(
+    searchParams.get("q") || ""
+  );
   const sortFilterInitial = sortOptions.findIndex(
     (s) => s.value === searchParams.get("sort")
   );
@@ -46,8 +48,8 @@ export default function Category() {
     if (!(userGlobal.role === "admin" || userGlobal.role === "superadmin"))
       return;
     let query = `page=${currentPage}`;
-    categoryName
-      ? searchParams.set("q", categoryName)
+    searchCategoryName
+      ? searchParams.set("q", searchCategoryName)
       : searchParams.delete("q");
     sortFilter.value
       ? searchParams.set("sort", sortFilter.value)
@@ -60,7 +62,7 @@ export default function Category() {
     dispatch,
     userGlobal.role,
     currentPage,
-    categoryName,
+    searchCategoryName,
     sortFilter.value,
     searchParams,
     setSearchParams,
@@ -100,7 +102,7 @@ export default function Category() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setCategoryName(e.target.searchBar?.value);
+    setSearchCategoryName(e.target.searchBar?.value);
   }
 
   if (
@@ -136,8 +138,11 @@ export default function Category() {
           addButtonText="Add category"
           onAddClick={() => setOpenAddModal(true)}
         />
-        <div className="flex items-center justify-between gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
-          <SearchBar onSubmit={handleSubmit} />
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 mt-12 border-b border-gray-200">
+          <SearchBar
+            onSubmit={handleSubmit}
+            defaultValue={searchCategoryName}
+          />
           <Dropdown
             label="Sort"
             options={sortOptions}

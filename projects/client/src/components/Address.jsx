@@ -24,7 +24,6 @@ const Address = ({fetchAddress, setAddress, address}) => {
 
   useEffect(() => {  
     fetchAddress()
-    console.log("ini address",address)
   },[])
 
 

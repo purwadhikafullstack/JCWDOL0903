@@ -9,8 +9,6 @@ export default function Pagination({
   currentPage,
   setCurrentPage,
 }) {
-  console.log("item", itemsInPage);
-  console.log("current", currentPage);
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = startItem + itemsInPage - 1;
 

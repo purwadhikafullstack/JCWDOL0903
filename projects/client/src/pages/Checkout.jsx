@@ -29,20 +29,14 @@ export default function Checkout() {
 
   const generateCart = async () => {
     const cart = await api.get("/cart/"+user.id+`/${branchGlobal.selectedBranch.id}`)
-    console.log("ini cart", cart.data.cart)
     setCart(cart.data.cart)
     dispatch(fetchUserCart(user.id)); 
   }
-
-  
-  
-  // console.log("ini branch id", cart[0].Product.Stocks[0].Branch.id)
 
   const getUserMainAddress = async () => {
     const result = await api.get("/profile/mainaddress/" + user.id)
     setAddress(result.data.data)
   }
-  console.log("ini address", address)
 
   const getRajaOngkirCity = async () => {
     const result = await api.post("/city/rajaongkir", {
@@ -59,12 +53,10 @@ export default function Checkout() {
     getRajaOngkirCity()
     discountVouchers()
   },[selectedShippingOption])
-  console.log("ini dikon vocer", discountVoucher )
 
   useEffect(() => {
     dispatch(fetchVouchers())
     setVoucher(voucherGlobal.vouchers)
-    console.log("ini voucher",voucher)
   },[dispatch])
 
   
@@ -82,7 +74,7 @@ export default function Checkout() {
       const city_id = findDestination.city_id;
       setCityId(city_id);
     } else {
-      console.log("Kota destination tidak ditemukan dalam data.");
+      // console.log("Kota destination tidak ditemukan dalam data.");
     }
 
     const findOrigin = cityRaja.find((val) => val.city_name === origin);
@@ -90,16 +82,11 @@ export default function Checkout() {
       const city_id = findOrigin.city_id;
       setOriginId(city_id);
     } else {
-      console.log("Kota origin tidak ditemukan dalam data.");
+      // console.log("Kota origin tidak ditemukan dalam data.");
     }
     }
     
   }, [address, cityRaja, origin]);
-
-  // console.log("ini origin", origin)
-  // console.log("ini destination", address.kota)
-  // console.log("ini city id", cityId)
-  // console.log("ini origin id", originId)
 
   useEffect(() => {
     const fetchOngkir = async () => {
@@ -117,12 +104,10 @@ export default function Checkout() {
               key: process.env.REACT_APP_RAJA_ONGKIR_API_KEY
             }
           });
-          console.log("ini response", response.data.rajaongkir.results)
           setOngkir(response.data.rajaongkir.results[0].costs)
-          console.log("ini hasil formData", response.data.rajaongkir.results[0].costs);
         }
       } catch (error) {
-        console.log("Error fetching city data:", error);
+        // console.log("Error fetching city data:", error);
       }
     };
   
@@ -229,7 +214,6 @@ export default function Checkout() {
     setDiscountVoucher(totalDiscount);
   };
   
-  console.log("ini cart", cart)
   return (
     <div className="bg-white" style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem'}}>
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">

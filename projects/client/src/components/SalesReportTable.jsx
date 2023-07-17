@@ -7,12 +7,7 @@ export default function SalesReportTable({
   transactionTotals = [],
   totalCustomer = [],
 }) {
-  // console.log("salesReport", salesReport);
   const total = parseInt(subTotal);
-  // console.log("subTotal2", subTotal);
-  // console.log("Total", total);
-  // console.log("transTotal", transactionTotals);
-  // console.log("customerTotal", totalCustomer);
 
   return (
     <>

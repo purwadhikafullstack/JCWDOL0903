@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { logout } from "../reducers/userSlice";
@@ -29,6 +29,7 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const user = useSelector((state) => state.user);
   const cart = useSelector((state) => state.cart);
   const [userHasReferralVoucher, setUserHasReferralVoucher] = useState(false);
@@ -60,10 +61,10 @@ export default function Navbar() {
   }, [navigate, user.id]);
 
   const navigation = [
-    { name: "Home", href: "http://localhost:3000/", current: false },
+    { name: "Home", href: "/", current: false },
     {
       name: "Products",
-      href: "http://localhost:3000/products",
+      href: "/products",
       current: false,
     },
   ];
@@ -131,6 +132,7 @@ export default function Navbar() {
                         className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 focus:border-white focus:bg-white focus:text-gray-900 focus:outline-none focus:ring-white sm:text-sm"
                         placeholder="Search"
                         type="search"
+                        defaultValue={searchParams.get("q") || ""}
                       />
                       <input type="submit" hidden />
                     </form>
@@ -195,7 +197,10 @@ export default function Navbar() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-8 w-8 rounded-full"
-                                src={`http://localhost:2000/static/avatar/${user.profile_picture }` || DefaultAvatar}
+                                src={
+                                  `http://localhost:2000/static/avatar/${user.profile_picture}` ||
+                                  DefaultAvatar
+                                }
                                 onError={handleErrorImg}
                                 alt=""
                               />
@@ -215,44 +220,44 @@ export default function Navbar() {
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href="/user/settings"
+                                <Link
+                                  to="/user/settings"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   Your Profile
-                                </a>
+                                </Link>
                               )}
                             </Menu.Item>
                             {user.role !== "user" && (
                               <Menu.Item>
                                 {({ active }) => (
-                                  <a
-                                    href="/dashboard"
+                                  <Link
+                                    to="/dashboard"
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700 text-center"
                                     )}
                                   >
                                     Dashboard
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             )}
 
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href="/order_list"
+                                <Link
+                                  to="/order_list"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700 text-center"
                                   )}
                                 >
                                   History
-                                </a>
+                                </Link>
                               )}
                             </Menu.Item>
                             {!(
@@ -341,21 +346,22 @@ export default function Navbar() {
               <div className="space-y-1 px-2 pt-2 pb-3">
                 {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
                 <Disclosure.Button
-                  as="a"
-                  href="#"
+                  as={Link}
+                  to="/dashboard"
                   className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
                 >
                   Dashboard
                 </Disclosure.Button>
-          
-
               </div>
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={`http://localhost:2000/static/avatar/${user.profile_picture }` || DefaultAvatar}
+                      src={
+                        `${process.env.REACT_APP_AVATAR_BASE_URL}/${user.profile_picture}` ||
+                        DefaultAvatar
+                      }
                       onError={handleErrorImg}
                       alt=""
                     />
@@ -369,41 +375,40 @@ export default function Navbar() {
                     </div>
                   </div>
                   <div className="relative">
-                  {cart.userCart > 0 ? (
-                    <div className="absolute top-0 left-20 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800">
-                      {" "}
-                      {cart.userCart}{" "}
-                    </div>
-                  ) : null}
-                  <Link to="/cart">
-                    <button
-                      type="button"
-                      className=" ml-20 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
-                      disabled={!user.id}
-                      onClick={handleAddToCart}
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <ShoppingCartIcon
-                        className="h-8 w-8 transition-colors duration-200"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </Link>
+                    {cart.userCart > 0 ? (
+                      <div className="absolute top-0 left-20 bg-yellow-400 rounded-full w-4 h-4 flex items-center justify-center text-xs text-red-800">
+                        {" "}
+                        {cart.userCart}{" "}
+                      </div>
+                    ) : null}
+                    <Link to="/cart">
+                      <button
+                        type="button"
+                        className=" ml-20 flex-shrink-0 rounded-lg p-1 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 disabled-button"
+                        disabled={!user.id}
+                        onClick={handleAddToCart}
+                      >
+                        <span className="sr-only">View notifications</span>
+                        <ShoppingCartIcon
+                          className="h-8 w-8 transition-colors duration-200"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </Link>
                   </div>
-                  
                 </div>
                 <div className="mt-3 space-y-1 px-2">
                   <Disclosure.Button
-                    as="a"
-                    href="/user/settings"
+                    as={Link}
+                    to="/user/settings"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     Your Profile
                   </Disclosure.Button>
 
                   <Disclosure.Button
-                    as="a"
-                    href="/order_list"
+                    as={Link}
+                    to="/order_list"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     History
@@ -431,16 +436,16 @@ export default function Navbar() {
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="mt-3 space-y-1 px-2 ">
                   <Disclosure.Button
-                    as="a"
-                    href="/login"
+                    as={Link}
+                    to="/login"
                     className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white hover:text-red-800"
                   >
                     Login
                   </Disclosure.Button>
 
                   <Disclosure.Button
-                    as="a"
-                    href="/register"
+                    as={Link}
+                    to="/register"
                     className="block items-center rounded-md px-3 py-2 text-base font-medium text-white hover:bg-white hover:text-red-800"
                   >
                     Register

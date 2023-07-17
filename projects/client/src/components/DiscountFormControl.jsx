@@ -8,6 +8,7 @@ export default function DiscountFormControl({ voucher = {} }) {
   const voucherTypeInitial = voucherTypes.findIndex(
     (v) => v.value === voucher.voucher_type
   );
+  
   const [voucherType, setVoucherType] = useState(
     voucherTypeInitial === -1 ? {} : voucherTypes[voucherTypeInitial]
   );

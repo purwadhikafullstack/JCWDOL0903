@@ -26,8 +26,8 @@ const sortOptions = [
 
 const sortBy = [
   { value: "", label: "None" },
-  { value: "invoice_asc", label: "Invoice (newer - older)" },
-  { value: "invoice_desc", label: "Invoice (older - newer)" },
+  { value: "invoice_asc", label: "Invoice (older - newer)" },
+  { value: "invoice_desc", label: "Invoice (newer - older)" },
   { value: "date_asc", label: "Date (older - newer)" },
   { value: "date_desc", label: "Date (newer - older)" },
 ];
@@ -59,7 +59,7 @@ const OrderList = () => {
         timer: 1500,
       });
     }catch (error) {
-      console.log(error);
+      // console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,
@@ -93,7 +93,7 @@ const OrderList = () => {
           });
           getUsersCart()
         }catch (error) {
-          console.log(error);
+          // console.log(error);
           Swal.fire({
             icon: "error",
             title: error.response.data.message,
@@ -115,12 +115,6 @@ const OrderList = () => {
     const searchFilter = e.target.search.value.trim();
     setSearchFilter(searchFilter);
   }
-  
-  // console.log("ini user Cart", usersCart)
-  // console.log("ini count", count)
-  // console.log("ini statusFilter", statusFilter)
-  // console.log("ini sortBy", sortByOption)
-  // console.log("ini searchFilter", searchFilter)
 
   return (
     <div style={{ backgroundImage: `url(${pattern})`, backgroundRepeat: 'repeat', backgroundSize: '20rem 20rem' }}>
@@ -192,7 +186,6 @@ const OrderList = () => {
             <div className=''>
               <p className='font-bold text-xl mb-2'>{value.Transaction_Details[0].product_name}</p>
               <p className='mb-2'>{value.Transaction_Details[0].qty} X {numToIDRCurrency(value.Transaction_Details[0].Product.price)}</p>
-              {console.log("ini bingung",value)}
               {value.Transaction_Details.length > 1 ? <p className='mb-2'>+{(value.Transaction_Details.length) -1} other products</p>
               : null}
               
