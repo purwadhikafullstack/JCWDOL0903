@@ -13,9 +13,12 @@ async function fetchSalesReport(req, res) {
     let endDate = filterByDate ? filterByDate[1] : null;
 
     if (startDate && endDate) {
-      startDate += " 00:00:01";
+      startDate += " 00:00:00";
       endDate += " 23:59:59";
     }
+
+    console.log('start', startDate)
+    console.log('end', endDate)
 
     let clauseFilterByDate =
       startDate && endDate
@@ -36,14 +39,14 @@ async function fetchSalesReport(req, res) {
         : "";
 
     const data = await sequelize.query(
-      `SELECT Th.id,TH.total_price, TH.date,TH.status ,
+      `SELECT TH.id,TH.total_price, TH.date,TH.status ,
       TD.product_name, TD.qty , TD.qty * TD.product_price total,
       B.name Branch_name,
       U.name User_name
-      FROM transaction_headers TH
-      JOIN transaction_details TD ON TH.id = TD.transaction_header_id
-      JOIN branches B ON TH.branch_id = B.id
-      JOIN users U ON TH.user_id = U.id
+      FROM Transaction_Headers TH
+      JOIN Transaction_Details TD ON TH.id = TD.transaction_header_id
+      JOIN Branches B ON TH.branch_id = B.id
+      JOIN Users U ON TH.user_id = U.id
       WHERE TH.status = 'Pesanan Dikonfirmasi' 
       ${clauseFilterByDate}
       ${clauseBranchId}
@@ -57,10 +60,10 @@ async function fetchSalesReport(req, res) {
       `SELECT COUNT(DISTINCT U.id) AS total_customers,
       COUNT(*) AS transaction_totals, 
       SUM(TD.qty * TD.product_price) subTotal
-      FROM transaction_headers TH
-      JOIN transaction_details TD ON TH.id = TD.transaction_header_id
-      JOIN branches B ON TH.branch_id = B.id
-      JOIN users U ON TH.user_id = U.id
+      FROM Transaction_Headers TH
+      JOIN Transaction_Details TD ON TH.id = TD.transaction_header_id
+      JOIN Branches B ON TH.branch_id = B.id
+      JOIN Users U ON TH.user_id = U.id
       WHERE TH.status = 'Pesanan Dikonfirmasi' 
       ${clauseFilterByDate}
       ${clauseBranchId}
