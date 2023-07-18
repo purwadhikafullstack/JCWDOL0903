@@ -9,21 +9,22 @@ module.exports = {
     try {
       const SortbranchId = parseInt(req.query.branch_Id);
 
-      let where = SortbranchId ? `WHERE TH.branch_id = ${SortbranchId} ` : "";
+      let where = SortbranchId ? `WHERE th.branch_id = ${SortbranchId} ` : "";
       // 0 1 2 3 4 5 6
       const data = await sequelize.query(
         `SELECT 
         c.name AS category_name,
         IFNULL(SUM(td.qty * td.product_price), 0) AS total_transaction_amount
-        FROM categories c
-        LEFT JOIN products p ON c.id = p.category_id
-        LEFT JOIN transaction_details td ON p.id = td.product_id
-        LEFT JOIN transaction_headers th ON td.transaction_header_id = th.id
+        FROM Categories c
+        LEFT JOIN Products p ON c.id = p.category_id
+        LEFT JOIN Transaction_Details td ON p.id = td.product_id
+        LEFT JOIN Transaction_Headers th ON td.transaction_header_id = th.id
         ${where}
-          GROUP BY C.name`,
+          GROUP BY c.name`,
         { type: Sequelize.QueryTypes.SELECT }
       );
 
+      console.log('datanya', data)
       return res.status(200).send({ data: data });
     } catch (error) {
       return res.status(400).send({ data: error });

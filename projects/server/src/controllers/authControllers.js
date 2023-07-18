@@ -192,6 +192,7 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
+      console.log('p')
 
       if (!email || !password) throw "Please your complete data";
 

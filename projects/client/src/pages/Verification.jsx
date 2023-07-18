@@ -30,20 +30,20 @@ const Verification = () => {
   }, []);
 
   return (
-    <div>
-      <div className=" flex flex-col text-center text-4xl h-28 mt-11 ">
+    <div className="text-center">
+      <div className=" flex flex-col items-center text-center text-4xl h-28 mt-11 ">
         {isVerified ? <p>Activated Register Succesfully</p> : <Spinner />}
       </div>
-      <div>
-        <button
-          className="w-32 h-auto flex-shrink-0 rounded-lg bg-red-800 p-1 text-white  hover:bg-red-100 transition-colors duration-300 ease-in-out hover:text-red-700"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Login
-        </button>
-      </div>
+      {/* <div> */}
+      <button
+        className="mx-auto w-32 h-auto flex-shrink-0 rounded-lg bg-red-800 p-1 text-white  hover:bg-red-100 transition-colors duration-300 ease-in-out hover:text-red-700"
+        onClick={() => {
+          navigate("/login");
+        }}
+      >
+        Login
+      </button>
+      {/* </div> */}
     </div>
   );
 };
