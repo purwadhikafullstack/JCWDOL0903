@@ -25,9 +25,12 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
 
   const [product, setProduct] = useState({});
-  const productPriceAfterDiscount = product.price
-    ? product.price - getProductDiscountAmount(product.Vouchers)
-    : 0;
+  let productPriceAfterDiscount = 0;
+  if (product.price) {
+    const discountPrice =
+      product.price - getProductDiscountAmount(product.Vouchers);
+    productPriceAfterDiscount = discountPrice < 0 ? 0 : discountPrice;
+  }
   const productStock = product?.Stocks?.[0]?.stock || 0;
   const productBranch = product?.Stocks?.[0]?.Branch || {};
   const [quantity, setQuantity] = useState(1);
@@ -139,14 +142,8 @@ export default function ProductDetail() {
               {product.name}
             </h1>
           </div>
-          <section
-            aria-labelledby="information-heading"
-            className="mt-1"
-          >
-            <h2
-              id="information-heading"
-              className="sr-only"
-            >
+          <section aria-labelledby="information-heading" className="mt-1">
+            <h2 id="information-heading" className="sr-only">
               Product information
             </h2>
             <div className="flex items-center">
@@ -165,9 +162,7 @@ export default function ProductDetail() {
             </div>
             <div className="py-4 border-b">
               <p className="text-xl text-gray-900 font-bold sm:text-2xl mb-1">
-                {numToIDRCurrency(
-                  productPriceAfterDiscount <= 0 ? 0 : productPriceAfterDiscount
-                )}
+                {numToIDRCurrency(productPriceAfterDiscount)}
               </p>
               <ProductVoucherBadge product={product} />
             </div>
@@ -202,10 +197,7 @@ export default function ProductDetail() {
         </div>
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
-            <h2
-              id="options-heading"
-              className="sr-only"
-            >
+            <h2 id="options-heading" className="sr-only">
               Product options
             </h2>
             <form onSubmit={handleSubmit}>

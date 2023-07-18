@@ -46,7 +46,7 @@ export function fetchCategories(query = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -62,7 +62,7 @@ export function createCategory(name, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -77,7 +77,7 @@ export function updateCategory(id, data, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -92,7 +92,7 @@ export function deleteCategory(id, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }

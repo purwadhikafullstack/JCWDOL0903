@@ -46,7 +46,7 @@ export function fetchVouchers(query = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -62,7 +62,7 @@ export function createVoucher(data, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -77,7 +77,7 @@ export function updateVoucher(id, data, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -92,7 +92,7 @@ export function deleteVoucher(id, currPage = 1) {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
