@@ -50,9 +50,9 @@ useEffect(() => {
     try {
       const response = await api.get("/province");
       setProvinceData(response.data.data.data);
-      console.log("ini province data", provinceData)
+      // console.log("ini province data", provinceData)
     } catch (error) {
-      console.log("Error fetching province data:", error);
+      // console.log("Error fetching province data:", error);
     }
   };
 
@@ -66,9 +66,8 @@ useEffect(() => {
     try {
       const response = await api.post("/city", { provinsiCode: selectedProvince });
       setCityData(response.data.data.data);
-      console.log("ini  city data", cityData)
     } catch (error) {
-      console.log("Error fetching city data:", error);
+      // console.log("Error fetching city data:", error);
     }
   };
 
@@ -80,9 +79,8 @@ useEffect(() => {
     try {
       const response = await api.post("/kecamatan", { kabkotCode: selectedCity });
       setKecamatanData(response.data.data.data);
-      console.log("ini response kecamatan", response.data.data.data)
     } catch (error) {
-      console.log("Error fetching city data:", error);
+      // console.log("Error fetching city data:", error);
     }
   };
 

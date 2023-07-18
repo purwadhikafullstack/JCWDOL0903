@@ -85,7 +85,7 @@ async function createUserVoucher(req, res) {
         voucher_id: isReferralVoucherExist.dataValues.id,
         user_id: userId,
         expired_date: moment().add(7, "days"),
-        is_active: true,
+        is_active: 1,
       });
     }
 
