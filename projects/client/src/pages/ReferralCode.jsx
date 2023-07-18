@@ -57,6 +57,7 @@ export default function ReferralCode() {
                 name="referralCode"
                 id="referralCode"
                 className="block w-full max-w-[500px] min-w-0 flex-1 rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                required
               />
               <button className=" text-white rounded-md mt-2 bg-red-500 py-3 px-6 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                 Redeem
