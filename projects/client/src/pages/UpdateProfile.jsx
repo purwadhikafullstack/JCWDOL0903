@@ -10,6 +10,7 @@ import PopModel from "../components/subcomponents/PopModel";
 import DefaultAvatar from "../assets/default-avatar.jpg";
 import {convertToDate} from "../helper/date"
 import OrderList from "./OrderList";
+import Voucher from "../components/VoucherPageProfile"
 
 
 const initialTabs = [
@@ -298,7 +299,7 @@ export default function UpdateProfile() {
                 <input
                   id="birthdate"
                   name="birthdate"
-                  type="text"
+                  type="date"
                   placeholder="birthdate"
                   className="rounded-lg my-3"
                 />
@@ -335,7 +336,7 @@ export default function UpdateProfile() {
       )}
       {tabs.find((tab) => tab.current && tab.name === "My Address") && (
         <div
-          className="container-screen flex flex-col justify-center items-center"
+          className="flex flex-col justify-center items-center"
           style={{
             backgroundImage: `url(${pattern})`,
             backgroundRepeat: "repeat",
@@ -359,6 +360,20 @@ export default function UpdateProfile() {
         >
           {/* Your address box component */}
           <OrderList/>
+        </div>
+      )}
+
+    {tabs.find((tab) => tab.current && tab.name === "Voucher") && (
+        <div
+          className="flex flex-col justify-center items-center"
+          style={{
+            backgroundImage: `url(${pattern})`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "20rem 20rem",
+          }}
+        >
+          {/* Your address box component */}
+          <Voucher/>
         </div>
       )}
     </div>

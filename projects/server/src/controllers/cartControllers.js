@@ -67,6 +67,7 @@ module.exports = {
       
       console.log("ini qty", qty)
       
+
       // untuk cek apakah sudah ada produk di dalam cart user
       const findUserCart = await Cart.findOne({
         where: {
@@ -80,6 +81,26 @@ module.exports = {
           user_id,
         },
       });
+
+      const findStockQTy = await db.Stocks.findOne({
+        where: {
+          product_id,
+          branch_id
+        }
+      })
+
+      if(findUserCart){
+        if(findStockQTy.stock < (findUserCart.qty)-1){
+          return qty = 0
+        }
+      }
+      
+      if(findUserExist){
+        if(findStockQTy.stock < qty){
+          return qty = findStockQTy.stock
+        }
+      }
+
       if (!findUserCart && !findUserExist) {
         const addNewProductCart = await Cart.create({
           product_id,
@@ -105,11 +126,7 @@ module.exports = {
             },
           },
         });
-        // const findInputBranch = await db.Stocks.findOne({
-        //   where: {
-        //     product_id,
-        //   },
-        // });
+
         const branchCart =
           findAvailableCart.branch_id
 
@@ -145,8 +162,8 @@ module.exports = {
             });
           } else {
             const currentQty = findUserCart.dataValues.qty;
-            const updatedQty = currentQty + qty;
-
+            const updatedQty = currentQty >= findStockQTy.stock ?  currentQty : currentQty + qty
+      
             const addProductCart = await Cart.update(
               { qty: updatedQty },
               {
@@ -236,5 +253,30 @@ module.exports = {
       console.log(err);
       res.status(400).send(err);
     }
-  }  
+  } ,
+  
+ getUsersVoucher: async (req, res) => {
+    try{
+      const {user_id} = req.body
+      console.log("kepanggil")
+      const result = await db.Users_Voucher.findAll({
+        where: {
+          user_id,
+          is_active:1
+        },
+        include:{
+          model: db.Voucher,
+          attributes:["voucher_type", "amount"]
+        }
+      })
+  
+      await res.status(200).send({
+        message: `success get users voucher`,
+        data:  result,
+      });
+    }catch (err) {
+      console.log(err.message);
+      return res.status(400).json({ error: err.message });
+    }
+  }
 };

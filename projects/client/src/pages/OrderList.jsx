@@ -84,7 +84,7 @@ const OrderList = () => {
     }).then(async (result) => {
       if(result.isConfirmed) {
         try{
-          const result = await api.patch(`/transaction/update_transaction/confirm/${value}`)
+          const result = await api.patch(`/transaction/update_transaction/confirm/${value}`,{user_id:user.id})
           await Swal.fire({
             icon: "success",
             title: result.data.message,
@@ -197,7 +197,6 @@ const OrderList = () => {
           </div>
   
           <div className='flex items-center relative'>
-            {/* <button className='rounded-lg bg-red-500 m-3 py-2 text-white px-5 text-center hover:bg-red-600 hover:text-white transition-all duration-300'>Upload Payment</button> */}
             {value.status === "Menunggu Pembayaran" ? (
              <>
               <DropImageModal id={value.id} getUsersCart={()=>getUsersCart()} usersCart={value}/>

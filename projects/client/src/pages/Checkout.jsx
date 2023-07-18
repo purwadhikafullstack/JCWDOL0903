@@ -19,8 +19,10 @@ export default function Checkout() {
   const [origin, setOrigin] = useState("")
   const [originId, setOriginId] = useState("")
   const [ongkir, setOngkir] = useState([])
+  const [voucherId, setVoucherid]= useState("")
   const [selectedShippingOption, setSelectedShippingOption] = useState("0");
   const [voucher, setVoucher] = useState([])
+  const [usersVoucher, setUsersVoucher] = useState("0")
   const [discountVoucher, setDiscountVoucher] = useState(0)
   const user = useSelector((state) => state.user)
   const voucherGlobal = useSelector((state) => state.voucher)
@@ -52,12 +54,14 @@ export default function Checkout() {
     getUserMainAddress()   
     getRajaOngkirCity()
     discountVouchers()
+    getUsersVoucher()
   },[selectedShippingOption])
 
-  useEffect(() => {
-    dispatch(fetchVouchers())
-    setVoucher(voucherGlobal.vouchers)
-  },[dispatch])
+const getUsersVoucher = async() => {
+  const result = await api.get("/vouchers/users_voucher", {user_id:user.id})
+  setVoucher(result.data.vouchers.rows)
+  // console.log("ini result get voucher", result.data.vouchers.rows)
+}
 
   
   useEffect(() => {
@@ -144,7 +148,8 @@ export default function Checkout() {
             cart,
             selectedShippingOption,
             branch_id: cart[0].Product.Stocks[0].Branch.id,
-            invoice: generateInvoiceNumber()
+            invoice: generateInvoiceNumber(),
+            user_voucher_id: voucherId
           }
         );
   
@@ -181,14 +186,9 @@ export default function Checkout() {
     }
   };
   
-  
-
-  const voucherTotalBelanja = voucher.filter((value) => (
-    value.voucher_type === "Total Belanja"
-  ))
 
   const totalPrice = calculateTotalPrice()
-  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) - discountVoucher : 0);
+  const totalPriceWithShipping = totalPrice + (selectedShippingOption ? parseInt(selectedShippingOption) - discountVoucher - usersVoucher : 0);
   
   const discountVouchers = () => {
     let totalDiscount = 0;
@@ -339,13 +339,24 @@ export default function Checkout() {
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Users Voucher</dt>
                 <dd className="text-sm font-medium text-gray-900">
-                <select className="block w-full appearance-none rounded-md border border-gray-300 pl-3 pr-8 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm">
-                  {voucherTotalBelanja.map((value) => {
-                    if (value.min_purchase <= totalPriceWithShipping) {
-                      return <option key={value.id} value={value.amount}>- {numToIDRCurrency(value.amount)}</option>;
-                    }
-                    return <option key={value.id} value={value.amount}>No voucher available</option>;
-                  })}
+                <select 
+                className="block w-full appearance-none rounded-md border border-gray-300 pl-3 pr-8 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500 sm:text-sm"
+                onChange={(e) => {
+                  setUsersVoucher(e.target.value)
+                  const selectedOption= e.target.options[e.target.selectedIndex]
+                  const voucherId = selectedOption.getAttribute("data-voucher-id")
+                  setVoucherid(voucherId)
+                }}
+                value={usersVoucher}
+                >
+                  <option value={0}>
+                    Select Users Vouchers
+                  </option>
+                {voucher.length && voucher.map(value => (
+                  <option key={value.id} value={value.Voucher.amount} data-voucher-id={value.id}>
+                    {numToIDRCurrency(value.Voucher.amount)}
+                  </option>
+                ))}
                 </select>
                 </dd>
               </div>

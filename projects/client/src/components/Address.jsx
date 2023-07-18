@@ -1,8 +1,9 @@
 import api from "../api/api.js"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import NoAddress from "../assets/noAddress.png"
+
 
 const Address = ({fetchAddress, setAddress, address}) => {
  

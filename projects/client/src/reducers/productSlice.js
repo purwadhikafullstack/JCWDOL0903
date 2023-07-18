@@ -46,7 +46,7 @@ export function fetchProducts(query = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.message);
+      // console.log(err.message);
     }
   };
 }
@@ -61,7 +61,7 @@ export function createProduct(data, currPage = 1, branchId = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -76,7 +76,7 @@ export function updateProduct(id, data, currPage = 1, branchId = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlertWithMessage(err.response.data.error);
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
@@ -91,7 +91,7 @@ export function deleteProduct(id, currPage = 1, branchId = "") {
     } catch (err) {
       dispatch(setLoading(false));
       errorAlert();
-      console.log(err.response.data.error);
+      // console.log(err.response.data.error);
     }
   };
 }
