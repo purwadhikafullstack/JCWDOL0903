@@ -21,17 +21,13 @@ export default transactionHeaderSlice.reducer;
 export const fetchTransactionHeaderCategory =
   (branchId) => async (dispatch) => {
     try {
-      // console.log("id", id);
-      // alert(branchId);
-      // console.log(branchId);
       let response = await api.get(`transaction-header`, {
         params: {
           branch_Id: branchId,
         },
       });
-      // console.log("response 12", response.data.data);
       dispatch(setTransactionHeaderCategory(response.data.data));
     } catch (error) {
-      console.log("error nih", error.message);
+      // console.log("error nih", error.message);
     }
   };

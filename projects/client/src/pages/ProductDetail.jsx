@@ -142,14 +142,8 @@ export default function ProductDetail() {
               {product.name}
             </h1>
           </div>
-          <section
-            aria-labelledby="information-heading"
-            className="mt-1"
-          >
-            <h2
-              id="information-heading"
-              className="sr-only"
-            >
+          <section aria-labelledby="information-heading" className="mt-1">
+            <h2 id="information-heading" className="sr-only">
               Product information
             </h2>
             <div className="flex items-center">
@@ -203,10 +197,7 @@ export default function ProductDetail() {
         </div>
         <div className="mt-10 lg:mt-0">
           <section aria-labelledby="options-heading">
-            <h2
-              id="options-heading"
-              className="sr-only"
-            >
+            <h2 id="options-heading" className="sr-only">
               Product options
             </h2>
             <form onSubmit={handleSubmit}>
