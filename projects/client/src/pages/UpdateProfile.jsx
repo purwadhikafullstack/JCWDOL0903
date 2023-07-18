@@ -36,7 +36,7 @@ export default function UpdateProfile() {
   async function fetchAddress() {
     try {
       const address = await api.get("/profile/address/" + user.id);
-      console.log(address);
+      // console.log(address);
       setAddress(address.data.data);
     } catch (err) {
       console.log(err);
@@ -91,7 +91,7 @@ export default function UpdateProfile() {
         timer: 1500,
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,

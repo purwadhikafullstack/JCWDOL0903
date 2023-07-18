@@ -7,7 +7,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onRegister = async (values) => {
-    console.log("registeron");
     try {
       const data = {
         name: values.name,
@@ -31,7 +30,7 @@ const Register = () => {
 
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,

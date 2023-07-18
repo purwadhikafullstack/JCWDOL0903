@@ -26,7 +26,6 @@ export default function NavDashGlobal({init}) {
   async function fetchAddress() {
     try {
       const address = await api.get("/profile/address/" + user.id);
-      console.log(address);
       setAddress(address.data.data);
     } catch (err) {
       console.log(err);

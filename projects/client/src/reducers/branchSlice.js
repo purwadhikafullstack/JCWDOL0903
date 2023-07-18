@@ -56,7 +56,7 @@ export function fetchAllBranches() {
       dispatch(setBranch(data.data.data));
       dispatch(setSelectedBranch(data.data.data[0]));
     } catch (err) {
-      console.log("bransc slice", err.response.data.error);
+      console.log(err.response.data.error);
     }
   };
 }

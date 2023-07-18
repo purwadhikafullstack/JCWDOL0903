@@ -9,27 +9,23 @@ import Swal from "sweetalert2";
 import { successAlert, errorAlertWithMessage } from "../helper/alerts";
 import logo from "../assets/logo.png";
 
-
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const OnLogin = async (e) => {
     e.preventDefault();
-    console.log("onLogin");
     const data = {
       email: document.getElementById("email").value,
       password: document.getElementById("password").value,
     };
 
-    console.log("data login", data);
     try {
       const result = await api.post("/auth/login", data);
 
       localStorage.setItem("token", result.data.result.token.token);
 
       //akan menerima token saat login
-      console.log("resultData", result.data.result.user.name);
       const user = result.data.result.user;
       dispatch(login(user));
 
@@ -48,8 +44,6 @@ const Login = () => {
         }
       }, 1500);
     } catch (error) {
-      console.log("error", error);
-
       errorAlertWithMessage(error.response.data.message);
     }
   };
@@ -77,7 +71,10 @@ const Login = () => {
           </Link>
         </p>
       </div>
-      <form className="space-y-6" onSubmit={OnLogin}>
+      <form
+        className="space-y-6"
+        onSubmit={OnLogin}
+      >
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
             <div>

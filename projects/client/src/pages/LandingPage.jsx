@@ -21,7 +21,6 @@ function LandingPage() {
   const productsGlobal = useSelector((state) => state.product);
 
   useEffect(() => {
-    console.log("ini API KEY", API_key);
     navigator.geolocation.getCurrentPosition((position) => {
       setLatitude(position.coords.latitude);
       setLongitude(position.coords.longitude);
@@ -35,7 +34,7 @@ function LandingPage() {
         .then((res) => {
           setSuburb(res.results[0].components.suburb);
           setKota(res.results[0].components.city_district);
-          console.log(res);
+          // console.log(res);
         })
         .catch((error) => {
           console.log("error", error.message);

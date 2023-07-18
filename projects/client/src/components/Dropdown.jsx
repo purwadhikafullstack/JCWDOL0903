@@ -10,7 +10,6 @@ function Dropdown({
   selectedValue = {},
   onChange = () => {},
 }) {
-  // console.log("dropDown", Dropdown);
   return (
     <Listbox
       value={selectedValue}

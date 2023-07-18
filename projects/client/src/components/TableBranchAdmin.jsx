@@ -1,12 +1,6 @@
 import { useDispatch } from "react-redux";
 
 export default function TableBranchAdmin(value) {
-  // const dispatch = useDispatch();
-  console.log("value", value);
-
-  // pada saat memanggil dispatch untuk get semua branch
-  // sudah render => data kosong
-  //set state sifatnya async => butuh waktu untuk isi valuenya
 
   return (
     <div>

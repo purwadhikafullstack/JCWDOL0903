@@ -34,7 +34,7 @@ const ResetPassword = () => {
       }, 1500);
     } catch (error) {
       errorAlertWithMessage(error.response.data.message);
-      console.log("ini err reset pass", error);
+      // console.log("ini err reset pass", error);
       // Swal.fire({
       //   icon: "error",
       //   title: error.response.data.message,

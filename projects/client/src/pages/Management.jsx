@@ -27,7 +27,6 @@ const Management = () => {
     //
   }, [user.role]);
 
-  console.log("adminini semua branches", branchAdmin);
   function handleAddAdmin(e) {
     e.preventDefault();
     const email = e.target.email.value;

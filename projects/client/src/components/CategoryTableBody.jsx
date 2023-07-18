@@ -3,7 +3,6 @@ export default function CategoryTableBody({
   onEdit,
   onDelete,
 }) {
-  console.log("categori", categories);
   return (
     <tbody className="divide-y divide-gray-200 bg-white">
       {categories.map((category) => (
