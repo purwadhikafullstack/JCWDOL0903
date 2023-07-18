@@ -123,7 +123,6 @@ app.use(express.static(join(__dirname, clientPath)));
 //   if (err) return console.log(err);
 //   console.log("Success connect to mysql");
 // });
-// ini kak yang kita pindahin
 
 // // Serve the HTML page
 app.get("*", (req, res) => {
