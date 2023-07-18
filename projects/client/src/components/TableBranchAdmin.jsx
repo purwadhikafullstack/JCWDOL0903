@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 
 export default function TableBranchAdmin(value) {
-
   return (
     <div>
       <div className="mt-8 flex flex-col">
