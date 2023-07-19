@@ -21,7 +21,7 @@ module.exports = {
         try {
           const { name, gender, email, birthdate} = req.body;
           const profile_picture = req.file
-          console.log("ini gambar", profile_picture)
+          // console.log("ini gambar", profile_picture)
         
           if (!name && !gender && !email && !birthdate && ! profile_picture) {
             throw {
