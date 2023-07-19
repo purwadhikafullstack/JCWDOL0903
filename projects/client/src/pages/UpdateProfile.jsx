@@ -171,7 +171,7 @@ export default function UpdateProfile() {
                     <img
                       className="rounded-lg object-cover shadow-lg w-3/4"
                       src={
-                        `http://localhost:2000/static/avatar/${user.profile_picture}` ||
+                        `${process.env.REACT_APP_AVATAR_BASE_URL}/${user.profile_picture}` ||
                         DefaultAvatar
                       }
                       onError={({ currentTarget }) => {

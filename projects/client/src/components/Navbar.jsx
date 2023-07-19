@@ -198,7 +198,7 @@ export default function Navbar() {
                               <img
                                 className="h-8 w-8 rounded-full"
                                 src={
-                                  `http://localhost:2000/static/avatar/${user.profile_picture}` ||
+                                  `${process.env.REACT_APP_AVATAR_BASE_URL}/${user.profile_picture}` ||
                                   DefaultAvatar
                                 }
                                 onError={handleErrorImg}
