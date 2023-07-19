@@ -58,8 +58,9 @@ export default function Checkout() {
   },[selectedShippingOption])
 
 const getUsersVoucher = async() => {
-  const result = await api.get("/vouchers/users_voucher", {user_id:user.id})
-  setVoucher(result.data.vouchers.rows)
+  const result = await api.post("/cart/users_voucher", {user_id:user.id})
+  console.log("ini result", result.data.data)
+  setVoucher(result.data.data)
   // console.log("ini result get voucher", result.data.vouchers.rows)
 }
 

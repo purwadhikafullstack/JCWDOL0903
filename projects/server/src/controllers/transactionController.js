@@ -65,11 +65,11 @@ async function createTransaction(req, res) {
       return total + product.Product.price * product.qty;
     }, 0);
 
-
+    // console.log("ini users voucher", ...user_voucher_id)
     const transactionHeader = await transHead.create({
       user_id,
       branch_id,
-      user_voucher_id,
+      user_voucher_id: user_voucher_id? user_voucher_id : null,
       expedition_id: 1,
       total_price: totalPrice,
       date: new Date(),
@@ -78,12 +78,14 @@ async function createTransaction(req, res) {
       invoice,
     });
 
-    const deleteVoucher = await db.Users_Voucher.update({is_active: 0}, 
-      {
-        where:{
-          id: user_voucher_id
-        }
-      })
+    if(user_voucher_id){
+      await db.Users_Voucher.update({is_active: 0}, 
+        {
+          where:{
+            id: user_voucher_id
+          }
+        })
+    } 
 
     const newTransaction = await transDet.bulkCreate(
       cart.map((product) => {
